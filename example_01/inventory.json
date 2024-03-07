@@ -1,0 +1,20 @@
+[
+    {
+        "hostname": "sw-3750",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.2",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    },
+    {
+        "hostname": "huawei",
+        "vendor": "Huawei",
+        "breed": "vrp55",
+        "address": "10.0.10.100",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    }
+]

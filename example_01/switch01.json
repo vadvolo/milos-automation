@@ -1,0 +1,304 @@
+{
+    "hostname": "switch01",
+    "login": "milos",
+    "password": "admin",
+    "address": "10.0.10.2",
+    "vendor": "Cisco",
+    "breed": "ios",
+    "interfaces": [
+      {
+        "name": "FastEthernet0/1",
+        "shortname": "Fa0/1",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/2",
+        "shortname": "Fa0/2",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/3",
+        "shortname": "Fa0/3",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/4",
+        "shortname": "Fa0/4",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/5",
+        "shortname": "Fa0/5",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/6",
+        "shortname": "Fa0/6",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/7",
+        "shortname": "Fa0/7",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/8",
+        "shortname": "Fa0/8",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/9",
+        "shortname": "Fa0/9",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/10",
+        "shortname": "Fa0/10",
+        "description": "",
+        "neighbor": "KX-TGP600RU"
+      },
+      {
+        "name": "FastEthernet0/11",
+        "shortname": "Fa0/11",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/12",
+        "shortname": "Fa0/12",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/13",
+        "shortname": "Fa0/13",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/14",
+        "shortname": "Fa0/14",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/15",
+        "shortname": "Fa0/15",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/16",
+        "shortname": "Fa0/16",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/17",
+        "shortname": "Fa0/17",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/18",
+        "shortname": "Fa0/18",
+        "description": "",
+        "neighbor": "SART_BIG_ROOM"
+      },
+      {
+        "name": "FastEthernet0/19",
+        "shortname": "Fa0/19",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/20",
+        "shortname": "Fa0/20",
+        "description": "",
+        "neighbor": "SART_BIG_ROOM"
+      },
+      {
+        "name": "FastEthernet0/21",
+        "shortname": "Fa0/21",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/22",
+        "shortname": "Fa0/22",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/23",
+        "shortname": "Fa0/23",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/24",
+        "shortname": "Fa0/24",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/25",
+        "shortname": "Fa0/25",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/26",
+        "shortname": "Fa0/26",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/27",
+        "shortname": "Fa0/27",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/28",
+        "shortname": "Fa0/28",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/29",
+        "shortname": "Fa0/29",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/30",
+        "shortname": "Fa0/30",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/31",
+        "shortname": "Fa0/31",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/32",
+        "shortname": "Fa0/32",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/33",
+        "shortname": "Fa0/33",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/34",
+        "shortname": "Fa0/34",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/35",
+        "shortname": "Fa0/35",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/36",
+        "shortname": "Fa0/36",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/37",
+        "shortname": "Fa0/37",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/38",
+        "shortname": "Fa0/38",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/39",
+        "shortname": "Fa0/39",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/40",
+        "shortname": "Fa0/40",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/41",
+        "shortname": "Fa0/41",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/42",
+        "shortname": "Fa0/42",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/43",
+        "shortname": "Fa0/43",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/44",
+        "shortname": "Fa0/44",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/45",
+        "shortname": "Fa0/45",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/46",
+        "shortname": "Fa0/46",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/47",
+        "shortname": "Fa0/47",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "FastEthernet0/48",
+        "shortname": "Fa0/48",
+        "description": "",
+        "neighbor": ""
+      },
+      {
+        "name": "Loopback0",
+        "shortname": "",
+        "description": "",
+        "neighbor": ""
+      }
+    ]
+  }
