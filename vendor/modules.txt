@@ -1,0 +1,63 @@
+# github.com/annetutil/gnetcli v1.0.13
+## explicit; go 1.20
+github.com/annetutil/gnetcli/pkg/cmd
+github.com/annetutil/gnetcli/pkg/credentials
+github.com/annetutil/gnetcli/pkg/device
+github.com/annetutil/gnetcli/pkg/device/cisco
+github.com/annetutil/gnetcli/pkg/device/genericcli
+github.com/annetutil/gnetcli/pkg/device/huawei
+github.com/annetutil/gnetcli/pkg/expr
+github.com/annetutil/gnetcli/pkg/gerror
+github.com/annetutil/gnetcli/pkg/streamer
+github.com/annetutil/gnetcli/pkg/streamer/ssh
+github.com/annetutil/gnetcli/pkg/terminal
+github.com/annetutil/gnetcli/pkg/trace
+# github.com/kevinburke/ssh_config v1.2.0
+## explicit
+github.com/kevinburke/ssh_config
+# github.com/kr/fs v0.1.0
+## explicit
+github.com/kr/fs
+# github.com/mitchellh/go-homedir v1.1.0
+## explicit
+github.com/mitchellh/go-homedir
+# github.com/pkg/sftp v1.13.6
+## explicit; go 1.15
+github.com/pkg/sftp
+github.com/pkg/sftp/internal/encoding/ssh/filexfer
+# go.uber.org/multierr v1.11.0
+## explicit; go 1.19
+go.uber.org/multierr
+# go.uber.org/zap v1.27.0
+## explicit; go 1.19
+go.uber.org/zap
+go.uber.org/zap/buffer
+go.uber.org/zap/internal
+go.uber.org/zap/internal/bufferpool
+go.uber.org/zap/internal/color
+go.uber.org/zap/internal/exit
+go.uber.org/zap/internal/pool
+go.uber.org/zap/internal/stacktrace
+go.uber.org/zap/zapcore
+# golang.org/x/crypto v0.14.0
+## explicit; go 1.17
+golang.org/x/crypto/blowfish
+golang.org/x/crypto/chacha20
+golang.org/x/crypto/curve25519
+golang.org/x/crypto/curve25519/internal/field
+golang.org/x/crypto/internal/alias
+golang.org/x/crypto/internal/poly1305
+golang.org/x/crypto/ssh
+golang.org/x/crypto/ssh/agent
+golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
+golang.org/x/crypto/ssh/knownhosts
+# golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
+## explicit; go 1.20
+golang.org/x/exp/constraints
+golang.org/x/exp/slices
+# golang.org/x/sync v0.4.0
+## explicit; go 1.17
+golang.org/x/sync/errgroup
+# golang.org/x/sys v0.13.0
+## explicit; go 1.17
+golang.org/x/sys/cpu
