@@ -111,7 +111,6 @@ func (d *CiscoDevice) SendCommands(commands ...string) ([]cmd.CmdRes, error) {
 		return nil, err
 	}
 	defer dev.Close()
-	fmt.Println(commands)
 	reses, _ := dev.ExecuteBulk(cmd.NewCmdList(commands))
 	for _, res := range reses {
 		if res.Status() == 0 {
@@ -233,7 +232,7 @@ func (d *CiscoDevice) GenInterfaceDescription() []string {
 	for _, c := range ret {
 		fmt.Println(c)
 	}
-	return nil
+	return ret
 }
 
 func (d *CiscoDevice) SetInterfaceDescription() error {

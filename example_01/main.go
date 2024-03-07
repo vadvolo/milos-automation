@@ -15,7 +15,7 @@ func main() {
 		fmt.Println(device.GetInterfaces())
 		fmt.Println(device.GetLLDPNeigbours())
 		device.ShowDeviceInfo()
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		device.SetInterfaceDescription()
 	}
 	// host := "10.0.10.2"
