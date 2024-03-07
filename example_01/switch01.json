@@ -1,7 +1,7 @@
 {
     "hostname": "switch01",
     "login": "milos",
-    "password": "admin",
+    "password": "supermilos",
     "address": "10.0.10.2",
     "vendor": "Cisco",
     "breed": "ios",

@@ -4,8 +4,8 @@
         "vendor": "Cisco",
         "breed": "ios",
         "address": "10.0.10.2",
-        "login": "vdm",
-        "password": "123qwe",
+        "login": "milos",
+        "password": "supermilos",
         "interfaces": []
     },
     {
@@ -13,8 +13,8 @@
         "vendor": "Huawei",
         "breed": "vrp55",
         "address": "10.0.10.100",
-        "login": "vdm",
-        "password": "123qwe",
+        "login": "milos",
+        "password": "supermilos",
         "interfaces": []
     }
 ]

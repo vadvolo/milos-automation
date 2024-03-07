@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -14,6 +15,7 @@ import (
 	"github.com/annetutil/gnetcli/pkg/cmd"
 	dcreds "github.com/annetutil/gnetcli/pkg/credentials"
 	"github.com/annetutil/gnetcli/pkg/device/cisco"
+	"github.com/annetutil/gnetcli/pkg/device/genericcli"
 	"github.com/annetutil/gnetcli/pkg/device/huawei"
 	"github.com/annetutil/gnetcli/pkg/streamer/ssh"
 	"go.uber.org/zap"
@@ -34,6 +36,7 @@ type Device struct {
 	Vendor     string       `json:"vendor"`
 	Breed      string       `json:"breed"`
 	Interfaces []*Interface `json:"interfaces"`
+	Connector  *ssh.Streamer
 }
 
 func NewDeivce(hostname, login, address, breed string) *Device {
@@ -43,6 +46,44 @@ func NewDeivce(hostname, login, address, breed string) *Device {
 		Address:  address,
 		Breed:    breed,
 	}
+}
+
+func (d *Device) GetConnector() *ssh.Streamer {
+	logger := zap.Must(zap.NewDevelopmentConfig().Build())
+	creds := dcreds.NewSimpleCredentials(
+		dcreds.WithUsername(d.Login),
+		dcreds.WithPassword(dcreds.Secret(d.Password)),
+		dcreds.WithLogger(logger),
+	)
+	return ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
+}
+
+func (d *Device) SendCommands(commands ...string) ([]cmd.CmdRes, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	dev := genericcli.GenericDevice{}
+	switch d.Vendor {
+	case "Cisco":
+		dev = cisco.NewDevice(d.GetConnector())
+	case "Huawei":
+		dev = huawei.NewDevice(d.GetConnector())
+	default:
+		return nil, errors.New("unknown vendor")
+	}
+	err := dev.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer dev.Close()
+	reses, _ := dev.ExecuteBulk(cmd.NewCmdList(commands))
+	for _, res := range reses {
+		if res.Status() == 0 {
+			fmt.Printf("Result: %s\n", res.Output())
+		} else {
+			fmt.Printf("Error: %d\nStatus: %d\n", res.Status(), res.Error())
+		}
+	}
+	return reses, nil
 }
 
 func ImportDevices() ([]AbstractDevice, error) {
@@ -94,34 +135,6 @@ type CiscoDevice struct {
 	*Device
 }
 
-func (d *CiscoDevice) SendCommands(commands ...string) ([]cmd.CmdRes, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	logger := zap.Must(zap.NewDevelopmentConfig().Build())
-
-	creds := dcreds.NewSimpleCredentials(
-		dcreds.WithUsername(d.Login),
-		dcreds.WithPassword(dcreds.Secret(d.Password)),
-		dcreds.WithLogger(logger),
-	)
-	connector := ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
-	dev := cisco.NewDevice(connector)
-	err := dev.Connect(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer dev.Close()
-	reses, _ := dev.ExecuteBulk(cmd.NewCmdList(commands))
-	for _, res := range reses {
-		if res.Status() == 0 {
-			fmt.Printf("Result: %s\n", res.Output())
-		} else {
-			fmt.Printf("Error: %d\nStatus: %d\n", res.Status(), res.Error())
-		}
-	}
-	return reses, nil
-}
-
 func (d *CiscoDevice) ShowDeviceInfo() {
 	b, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
@@ -140,7 +153,7 @@ func (d *CiscoDevice) CutIfaceName(name string) string {
 }
 
 func (d *CiscoDevice) GetInterfaces() error {
-	res, err := d.SendCommands("show ip interface brief")
+	res, err := d.Device.SendCommands("show ip interface brief")
 	if err != nil {
 		return err
 	}
@@ -223,10 +236,9 @@ func (d *CiscoDevice) GenInterfaceDescription() []string {
 	for _, iface := range d.Interfaces {
 		if len(iface.Neighbor) > 0 {
 			description := iface.Neighbor + "_" + iface.NeighborPort
-			ret = append(ret, "interface " + iface.Name)
-			ret = append(ret, "description " + description)
+			ret = append(ret, "interface "+iface.Name)
+			ret = append(ret, "description "+description)
 			ret = append(ret, "!")
-			break
 		}
 	}
 	for _, c := range ret {
@@ -237,40 +249,12 @@ func (d *CiscoDevice) GenInterfaceDescription() []string {
 
 func (d *CiscoDevice) SetInterfaceDescription() error {
 	cmds := d.GenInterfaceDescription()
-	d.SendCommands(cmds...)
-	return nil
+	_, err := d.SendCommands(cmds...)
+	return err
 }
 
 type HuaweiDevice struct {
 	*Device
-}
-
-func (d *HuaweiDevice) SendCommands(commands []string) ([]cmd.CmdRes, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	logger := zap.Must(zap.NewDevelopmentConfig().Build())
-
-	creds := dcreds.NewSimpleCredentials(
-		dcreds.WithUsername(d.Login),
-		dcreds.WithPassword(dcreds.Secret(d.Password)),
-		dcreds.WithLogger(logger),
-	)
-	connector := ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
-	dev := huawei.NewDevice(connector)
-	err := dev.Connect(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer dev.Close()
-	reses, _ := dev.ExecuteBulk(cmd.NewCmdList(commands))
-	for _, res := range reses {
-		if res.Status() == 0 {
-			fmt.Printf("Result: %s\n", res.Output())
-		} else {
-			fmt.Printf("Error: %d\nStatus: %d\n", res.Status(), res.Error())
-		}
-	}
-	return nil, nil
 }
 
 func (d *HuaweiDevice) ShowDeviceInfo() {
