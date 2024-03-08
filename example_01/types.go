@@ -22,6 +22,7 @@ import (
 )
 
 type AbstractDevice interface {
+	GetHostname() string
 	ShowDeviceInfo()
 	GetInterfaces() error
 	GetLLDPNeigbours() error
@@ -48,6 +49,10 @@ func NewDeivce(hostname, login, address, breed string) *Device {
 	}
 }
 
+func (d *Device) GetHostname() string {
+	return d.Hostname
+} 
+
 func (d *Device) GetConnector() *ssh.Streamer {
 	logger := zap.Must(zap.NewDevelopmentConfig().Build())
 	creds := dcreds.NewSimpleCredentials(
@@ -56,6 +61,17 @@ func (d *Device) GetConnector() *ssh.Streamer {
 		dcreds.WithLogger(logger),
 	)
 	return ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
+}
+
+func (d *Device) SendCommand(command string) (cmd.CmdRes, error) {
+	res, err := d.SendCommands(command)
+	if err != nil {
+		return nil, err
+	}
+	if len(res) == 0 {
+		return nil, errors.New("empty results")
+	}
+	return res[0], nil
 }
 
 func (d *Device) SendCommands(commands ...string) ([]cmd.CmdRes, error) {
@@ -153,13 +169,11 @@ func (d *CiscoDevice) CutIfaceName(name string) string {
 }
 
 func (d *CiscoDevice) GetInterfaces() error {
-	res, err := d.Device.SendCommands("show ip interface brief")
+	data, err := d.Device.SendCommand("show ip interface brief")
 	if err != nil {
 		return err
 	}
-	data := res[0]
-	reader := bytes.NewReader(data.Output())
-	scanner := bufio.NewScanner(reader)
+	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
 	scanner.Split(bufio.ScanLines)
 	var txtlines []string
 	for scanner.Scan() {
@@ -191,13 +205,11 @@ func (d *CiscoDevice) GetInterfaces() error {
 }
 
 func (d *CiscoDevice) GetLLDPNeigbours() error {
-	res, err := d.SendCommands("show lldp neighbors")
+	data, err := d.Device.SendCommand("show lldp neighbors")
 	if err != nil {
 		return nil
 	}
-	data := res[0]
-	reader := bytes.NewReader(data.Output())
-	scanner := bufio.NewScanner(reader)
+	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
 	scanner.Split(bufio.ScanLines)
 	var txtlines []string
 	for scanner.Scan() {

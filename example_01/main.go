@@ -10,9 +10,11 @@ func main() {
 		panic(err)
 	}
 	for _, device := range devices {
-		fmt.Println(device.GetInterfaces())
-		fmt.Println(device.GetLLDPNeigbours())
-		device.ShowDeviceInfo()
-		device.SetInterfaceDescription()
+		if device.GetHostname() == "switch01" {
+			fmt.Println(device.GetInterfaces())
+			fmt.Println(device.GetLLDPNeigbours())
+			device.ShowDeviceInfo()
+			device.SetInterfaceDescription()
+		}
 	}
 }
