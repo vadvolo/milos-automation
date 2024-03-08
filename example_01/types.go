@@ -51,7 +51,16 @@ func NewDeivce(hostname, login, address, breed string) *Device {
 
 func (d *Device) GetHostname() string {
 	return d.Hostname
-} 
+}
+
+func (d *Device) ShowDeviceInfo() {
+	b, err := json.MarshalIndent(d, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(b))
+}
 
 func (d *Device) GetConnector() *ssh.Streamer {
 	logger := zap.Must(zap.NewDevelopmentConfig().Build())
@@ -149,15 +158,6 @@ type Interface struct {
 
 type CiscoDevice struct {
 	*Device
-}
-
-func (d *CiscoDevice) ShowDeviceInfo() {
-	b, err := json.MarshalIndent(d, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(string(b))
 }
 
 func (d *CiscoDevice) CutIfaceName(name string) string {
@@ -274,14 +274,108 @@ func (d *HuaweiDevice) ShowDeviceInfo() {
 		d.Address,
 	)
 }
+
+func (d *HuaweiDevice) CutIfaceName(name string) string {
+	if strings.Contains(name, "FastEthernet") {
+		r := regexp.MustCompile(`FastEthernet`)
+		return r.ReplaceAllString(name, "Fa")
+	}
+	return ""
+}
+
 func (d *HuaweiDevice) GetInterfaces() error {
+	data, err := d.Device.SendCommand("display interface brief")
+	if err != nil {
+		return err
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
+	scanner.Split(bufio.ScanLines)
+	var txtlines []string
+	for scanner.Scan() {
+		txtlines = append(txtlines, scanner.Text())
+	}
+	start_line := 0
+	for i, line := range txtlines {
+		if strings.Contains(line, "Interface") {
+			start_line = i + 1
+			break
+		}
+	}
+	if start_line == 0 {
+		return nil
+	}
+	for i := start_line; i < len(txtlines); i++ {
+		space := regexp.MustCompile(`\s+`)
+		line := space.ReplaceAllString(txtlines[i], " ")
+		if len(line) == 0 {
+			break
+		}
+		split_line := strings.Split(line, " ")
+		d.Interfaces = append(d.Interfaces, &Interface{
+			Name:      split_line[0],
+			ShortName: d.CutIfaceName(split_line[0]),
+		})
+	}
 	return nil
 }
 
 func (d *HuaweiDevice) GetLLDPNeigbours() error {
+	data, err := d.Device.SendCommand("display lldp neighbor brief")
+	if err != nil {
+		return nil
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
+	scanner.Split(bufio.ScanLines)
+	var txtlines []string
+	for scanner.Scan() {
+		txtlines = append(txtlines, scanner.Text())
+	}
+	start_line := 0
+	for i, line := range txtlines {
+		if strings.Contains(line, "Local Interface") {
+			start_line = i + 2
+			break
+		}
+	}
+	if start_line == 0 {
+		return nil
+	}
+	for i := start_line; i < len(txtlines); i++ {
+		space := regexp.MustCompile(`\s+`)
+		line := space.ReplaceAllString(txtlines[i], " ")
+		if len(line) == 0 {
+			break
+		}
+		split_line := strings.Split(line, " ")
+
+		iface := d.GetInterfaceByName(split_line[0])
+		if iface != nil {
+			iface.Neighbor = split_line[3]
+			iface.NeighborPort = split_line[2]
+		}
+	}
 	return nil
 }
 
+func (d *HuaweiDevice) GenInterfaceDescription() []string {
+	ret := []string{}
+	ret = append(ret, "system-view")
+	for _, iface := range d.Interfaces {
+		if len(iface.Neighbor) > 0 {
+			description := iface.Neighbor + "_" + iface.NeighborPort
+			ret = append(ret, "interface "+iface.Name)
+			ret = append(ret, "description "+description)
+			ret = append(ret, "#")
+		}
+	}
+	for _, c := range ret {
+		fmt.Println(c)
+	}
+	return ret
+}
+
 func (d *HuaweiDevice) SetInterfaceDescription() error {
-	return nil
+	cmds := d.GenInterfaceDescription()
+	_, err := d.SendCommands(cmds...)
+	return err
 }
