@@ -18,6 +18,7 @@ import (
 	"github.com/annetutil/gnetcli/pkg/device/genericcli"
 	"github.com/annetutil/gnetcli/pkg/device/huawei"
 	"github.com/annetutil/gnetcli/pkg/streamer/ssh"
+	"github.com/annetutil/gnetcli/pkg/streamer/telnet"
 	"go.uber.org/zap"
 )
 
@@ -70,6 +71,16 @@ func (d *Device) GetConnector() *ssh.Streamer {
 		dcreds.WithLogger(logger),
 	)
 	return ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
+}
+
+func (d *Device) TelnetConnector() *telnet.Streamer {
+	logger := zap.Must(zap.NewDevelopmentConfig().Build())
+	creds := dcreds.NewSimpleCredentials(
+		dcreds.WithUsername(d.Login),
+		dcreds.WithPassword(dcreds.Secret(d.Password)),
+		dcreds.WithLogger(logger),
+	)
+	return telnet.NewStreamer(d.Address, creds, telnet.WithLogger(logger))
 }
 
 func (d *Device) SendCommand(command string) (cmd.CmdRes, error) {
@@ -207,7 +218,7 @@ func (d *CiscoDevice) GetInterfaces() error {
 func (d *CiscoDevice) GetLLDPNeigbours() error {
 	data, err := d.Device.SendCommand("show lldp neighbors")
 	if err != nil {
-		return nil
+		return err
 	}
 	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
 	scanner.Split(bufio.ScanLines)
@@ -269,12 +280,6 @@ type HuaweiDevice struct {
 	*Device
 }
 
-func (d *HuaweiDevice) ShowDeviceInfo() {
-	fmt.Println(
-		d.Address,
-	)
-}
-
 func (d *HuaweiDevice) CutIfaceName(name string) string {
 	if strings.Contains(name, "FastEthernet") {
 		r := regexp.MustCompile(`FastEthernet`)
@@ -322,7 +327,7 @@ func (d *HuaweiDevice) GetInterfaces() error {
 func (d *HuaweiDevice) GetLLDPNeigbours() error {
 	data, err := d.Device.SendCommand("display lldp neighbor brief")
 	if err != nil {
-		return nil
+		return err
 	}
 	scanner := bufio.NewScanner(bytes.NewReader(data.Output()))
 	scanner.Split(bufio.ScanLines)

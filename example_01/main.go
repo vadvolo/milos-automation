@@ -11,10 +11,12 @@ func main() {
 	}
 	for _, device := range devices {
 		if device.GetHostname() == "switch01" {
-			fmt.Println(device.GetInterfaces())
+			// fmt.Println(device.GetInterfaces())
 			fmt.Println(device.GetLLDPNeigbours())
-			device.ShowDeviceInfo()
-			device.SetInterfaceDescription()
+			// device.ShowDeviceInfo()
+			// device.SetInterfaceDescription()
 		}
 	}
+	inventoryDevices := ImportInventoryDevices(devices)
+	WriteInventoryToCVS(inventoryDevices)
 }
