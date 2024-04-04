@@ -8,7 +8,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"regexp"
+	"runtime"
 	"strings"
 	"time"
 
@@ -23,11 +25,17 @@ import (
 )
 
 type AbstractDevice interface {
-	GetHostname() string
+	_Hostname() string
+	_Vendor() string
+	_Address() string
+	ShowInterfaces() []string
 	ShowDeviceInfo()
 	GetInterfaces() error
 	GetLLDPNeigbours() error
 	SetInterfaceDescription() error
+	Ping() error
+	GetStatus() bool
+	SetStatus(s bool)
 }
 
 type Device struct {
@@ -38,6 +46,7 @@ type Device struct {
 	Vendor     string       `json:"vendor"`
 	Breed      string       `json:"breed"`
 	Interfaces []*Interface `json:"interfaces"`
+	Active     bool         `json:"active"`
 	Connector  *ssh.Streamer
 }
 
@@ -50,8 +59,24 @@ func NewDeivce(hostname, login, address, breed string) *Device {
 	}
 }
 
-func (d *Device) GetHostname() string {
+func (d *Device) _Hostname() string {
 	return d.Hostname
+}
+
+func (d *Device) _Vendor() string {
+	return d.Vendor
+}
+
+func (d *Device) _Address() string {
+	return d.Address
+}
+
+func (d *Device) ShowInterfaces() []string {
+	var ret []string
+	for _, iface := range d.Interfaces {
+		ret = append(ret, iface.Name)
+	}
+	return ret
 }
 
 func (d *Device) ShowDeviceInfo() {
@@ -159,6 +184,38 @@ func (d *Device) GetInterfaceByName(name string) *Interface {
 	return nil
 }
 
+func (d *Device) Ping() error {
+	var cmd *exec.Cmd
+
+	// Checking the type of OS because the ping command varies in structure according to the OS type
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("ping", "-n", "1", d.Address)
+	} else {
+		cmd = exec.Command("ping", "-c", "1", d.Address)
+	}
+
+	out, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("there was an error pinging the host: %e", err)
+	}
+
+	outStr := string(out)
+	if strings.Contains(outStr, "Request timeout") || strings.Contains(outStr, "Destination Host Unreachable") || strings.Contains(outStr, "100% packet loss") {
+		return fmt.Errorf("the host is not reachable")
+	} else {
+		return nil
+	}
+}
+
+func (d *Device) GetStatus() bool {
+	return d.Active
+}
+
+func (d *Device) SetStatus(s bool) {
+	d.Active = s
+}
+
 type Interface struct {
 	Name         string `json:"name"`
 	ShortName    string `json:"shortname"`
@@ -175,6 +232,10 @@ func (d *CiscoDevice) CutIfaceName(name string) string {
 	if strings.Contains(name, "FastEthernet") {
 		r := regexp.MustCompile(`FastEthernet`)
 		return r.ReplaceAllString(name, "Fa")
+	}
+	if strings.Contains(name, "GigabitEthernet") {
+		r := regexp.MustCompile(`GigabitEthernet`)
+		return r.ReplaceAllString(name, "Gi")
 	}
 	return ""
 }
@@ -247,7 +308,7 @@ func (d *CiscoDevice) GetLLDPNeigbours() error {
 		iface := d.GetInterfaceByName(split_line[1])
 		if iface != nil {
 			iface.Neighbor = split_line[0]
-			iface.NeighborPort = split_line[4]
+			iface.NeighborPort = split_line[len(split_line)-1]
 		}
 	}
 	return nil

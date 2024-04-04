@@ -43,6 +43,7 @@ type GenericCLI struct {
 	passwordError    expr.Expr
 	pager            expr.Expr
 	autoCommands     []cmd.Cmd
+	initWait         time.Duration
 	echoExprFormat   func(cmd.Cmd) expr.Expr
 	credsInterceptor func(credentials.Credentials) credentials.Credentials
 	writeNewline     []byte
@@ -87,6 +88,13 @@ func WithPager(pager expr.Expr) GenericCLIOption {
 func WithAutoCommands(commands []cmd.Cmd) GenericCLIOption {
 	return func(h *GenericCLI) {
 		h.autoCommands = commands
+	}
+}
+
+// WithInitialWait sets sleep duration before first reading after login
+func WithInitialWait(duration time.Duration) GenericCLIOption {
+	return func(h *GenericCLI) {
+		h.initWait = duration
 	}
 }
 
@@ -143,6 +151,7 @@ func MakeGenericCLI(prompt, error expr.Expr, opts ...GenericCLIOption) GenericCL
 		passwordError:    nil,
 		pager:            nil,
 		autoCommands:     nil,
+		initWait:         0,
 		echoExprFormat:   nil,
 		credsInterceptor: nil,
 		writeNewline:     defaultWriteNewLine,
@@ -247,6 +256,10 @@ func (m *GenericDevice) connectCLI(ctx context.Context) (err error) {
 			return err
 		}
 	}
+	// TODO: fix case with question or manual login
+	if m.cli.initWait > 0 {
+		time.Sleep(m.cli.initWait)
+	}
 	_, err = m.ExecuteBulk(m.cli.autoCommands)
 	if err != nil {
 		return err
@@ -334,65 +347,78 @@ func genericLogin(ctx context.Context, connector streamer.Connector, cli Generic
 	if cli.login == nil {
 		return errors.New("login Expr is not set but required for login procedure")
 	}
-	_, err = connector.ReadTo(ctx, cli.login)
-	if err != nil {
-		return err
-	}
-
-	username, err := connector.GetCredentials().GetUsername()
-	if err != nil {
-		return err
-	}
-
-	err = connector.Write([]byte(username))
-	if err != nil {
-		return err
-	}
-	newline := cli.writeNewline
-	if len(newline) > 0 {
-		err := connector.Write(newline)
-		if err != nil {
-			return fmt.Errorf("write error %w", err)
-		}
-	}
-
-	_, err = connector.ReadTo(ctx, cli.password)
-	if err != nil {
-		return err
-	}
 
 	passwords := connector.GetCredentials().GetPasswords()
 	if len(passwords) == 0 {
 		return errors.New("empty password")
 	}
-	// TODO: add multiple password support
-	err = connector.Write([]byte(passwords[0].Value()))
-	if err != nil {
-		return err
-	}
-	if len(newline) > 0 {
-		err := connector.Write(newline)
-		if err != nil {
-			return fmt.Errorf("write error %w", err)
-		}
-	}
 
+	i := 0
 	checkExprs := []expr.NamedExpr{
+		{Name: "login", Exprs: []expr.Expr{cli.login}},
+		{Name: "password", Exprs: []expr.Expr{cli.password}},
 		{Name: "prompt", Exprs: []expr.Expr{cli.prompt}},
 		{Name: "passwordError", Exprs: []expr.Expr{cli.passwordError}},
 	}
+
+	for i < len(passwords) {
+
+		exprsLogin := expr.NewSimpleExprListNamedOrdered(checkExprs)
+		readResLogin, err := connector.ReadTo(ctx, exprsLogin)
+		if err != nil {
+			return err
+		}
+
+		matchedExprNameLogin := exprsLogin.GetName(readResLogin.GetPatternNo())
+		if matchedExprNameLogin == "login" {
+			username, err := connector.GetCredentials().GetUsername()
+			if err != nil {
+				return err
+			}
+
+			err = connector.Write([]byte(username))
+			if err != nil {
+				return err
+			}
+			newline := cli.writeNewline
+			if len(newline) > 0 {
+				err := connector.Write(newline)
+				if err != nil {
+					return fmt.Errorf("write error %w", err)
+				}
+			}
+		} else if matchedExprNameLogin == "password" {
+			err = connector.Write([]byte(passwords[i].Value()))
+			if err != nil {
+				return err
+			}
+			newline := cli.writeNewline
+			if len(newline) > 0 {
+				err := connector.Write(newline)
+				if err != nil {
+					return fmt.Errorf("write error %w", err)
+				}
+			}
+			i++
+		} else if matchedExprNameLogin == "passwordError" {
+			continue
+		} else if matchedExprNameLogin == "prompt" {
+			return nil
+		}
+	}
 	exprs := expr.NewSimpleExprListNamedOrdered(checkExprs)
-	readRes, err := connector.ReadTo(ctx, exprs)
+	readResLogin, err := connector.ReadTo(ctx, exprs)
 	if err != nil {
 		return err
 	}
 
-	matchedExprName := exprs.GetName(readRes.GetPatternNo())
-	if matchedExprName == "passwordError" {
-		return gerror.NewAuthException("cli auth user")
+	matchedExprNameLogin := exprs.GetName(readResLogin.GetPatternNo())
+	if matchedExprNameLogin == "prompt" {
+		return nil
 	}
 
-	return nil
+	return gerror.NewAuthException("cli auth user")
+
 }
 
 func GenericExecute(command cmd.Cmd, connector streamer.Connector, cli GenericCLI) (cmd.CmdRes, error) {

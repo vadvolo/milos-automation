@@ -1,13 +1,16 @@
 package main
 
 import (
-	"bytes"
-
-	"github.com/mohae/struct2csv"
+	"encoding/csv"
+	"fmt"
+	"log"
+	"os"
+	"reflect"
+	"strings"
 )
 
 type InventoryDevice struct {
-	Name               string
+	Name               string `json:"name"`
 	Status             string
 	Tenant             string
 	Site               string
@@ -68,20 +71,62 @@ func NewInventoryDevice(name string, opts ...InventoryDeviceOption) *InventoryDe
 func ImportInventoryDevices(devices []AbstractDevice) []*InventoryDevice {
 	var inventoryDevices []*InventoryDevice
 	for _, device := range devices {
-		inventoryDevice := NewInventoryDevice(
-			device.GetHostname(),
-			WithStatus("OPERATIONAL"),
-		)
-		inventoryDevices = append(inventoryDevices, inventoryDevice)
+		fmt.Println(device._Hostname())
+		if device.GetStatus() {
+			inventoryDevice := NewInventoryDevice(
+				device._Hostname(),
+				WithStatus("ACTIVE"),
+				WithManufacturer(device._Vendor()),
+				WithIPv4Address(device._Address()),
+				WithInterfaces(device.ShowInterfaces()),
+			)
+			inventoryDevices = append(inventoryDevices, inventoryDevice)
+		} else {
+			inventoryDevice := NewInventoryDevice(
+				device._Hostname(),
+				WithStatus("NOTACTIVE"),
+				WithIPv4Address(device._Address()),
+				WithManufacturer(device._Vendor()),
+			)
+			inventoryDevices = append(inventoryDevices, inventoryDevice)
+		}
 	}
 	return inventoryDevices
 }
 
-func WriteInventoryToCVS(devices []*InventoryDevice) error {
-	buff := &bytes.Buffer{}
-	w := struct2csv.NewWriter(buff)
-	err := w.WriteStructs(devices)
-	return err
+func WriteInventoryToCSV(devices []*InventoryDevice) error {
+	var data [][]string
+	csvFile, err := os.Create("exportInventory.csv")
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+	csvwriter := csv.NewWriter(csvFile)
+	csvwriter.Comma = ','
+	defer csvFile.Close()
+	for _, device := range devices {
+		s := reflect.ValueOf(device).Elem()
+		row := []string{}
+		for i := 0; i < s.NumField(); i++ {
+			if s.Field(i).Kind() == reflect.Slice {
+				val := s.Field(i)
+				ret := new(strings.Builder)
+				delim := ";"
+				for i := 0; i < val.Len(); i++ {
+					if val.Index(i).Kind() == reflect.String {
+						// fmt.Println(val.Index(i).String())
+						ret.WriteString(val.Index(i).String())
+						ret.WriteString(delim)
+					}
+				}
+				row = append(row, ret.String())
+			} else {
+				row = append(row, s.Field(i).String())
+			}
+		}
+		data = append(data, row)
+	}
+	csvwriter.WriteAll(data)
+	return nil
 }
 
 type InventoryDeviceOption func(*InventoryDevice)
@@ -89,5 +134,53 @@ type InventoryDeviceOption func(*InventoryDevice)
 func WithStatus(s string) InventoryDeviceOption {
 	return func(d *InventoryDevice) {
 		d.Status = s
+	}
+}
+
+func WithTenant(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Tenant = s
+	}
+}
+
+func WithSite(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Site = s
+	}
+}
+
+func WithLocation(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Location = s
+	}
+}
+
+func WithRack(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Rack = s
+	}
+}
+
+func WithRole(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Role = s
+	}
+}
+
+func WithManufacturer(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Manufacturer = s
+	}
+}
+
+func WithIPv4Address(s string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.IPv4Address = s
+	}
+}
+
+func WithInterfaces(s []string) InventoryDeviceOption {
+	return func(d *InventoryDevice) {
+		d.Interfaces = s
 	}
 }

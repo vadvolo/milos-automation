@@ -1,4 +1,4 @@
-# github.com/annetutil/gnetcli v1.0.13
+# github.com/annetutil/gnetcli v1.0.15
 ## explicit; go 1.20
 github.com/annetutil/gnetcli/pkg/cmd
 github.com/annetutil/gnetcli/pkg/credentials
@@ -10,8 +10,16 @@ github.com/annetutil/gnetcli/pkg/expr
 github.com/annetutil/gnetcli/pkg/gerror
 github.com/annetutil/gnetcli/pkg/streamer
 github.com/annetutil/gnetcli/pkg/streamer/ssh
+github.com/annetutil/gnetcli/pkg/streamer/telnet
 github.com/annetutil/gnetcli/pkg/terminal
 github.com/annetutil/gnetcli/pkg/trace
+# github.com/go-ping/ping v1.1.0
+## explicit; go 1.14
+# github.com/google/uuid v1.6.0
+## explicit
+# github.com/kanocz/go-fastping v0.0.0-20220207145104-e3ac88fd408a
+## explicit; go 1.17
+github.com/kanocz/go-fastping
 # github.com/kevinburke/ssh_config v1.2.0
 ## explicit
 github.com/kevinburke/ssh_config
@@ -39,8 +47,8 @@ go.uber.org/zap/internal/exit
 go.uber.org/zap/internal/pool
 go.uber.org/zap/internal/stacktrace
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.14.0
-## explicit; go 1.17
+# golang.org/x/crypto v0.21.0
+## explicit; go 1.18
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
@@ -55,9 +63,19 @@ golang.org/x/crypto/ssh/knownhosts
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
-# golang.org/x/sync v0.4.0
-## explicit; go 1.17
+# golang.org/x/net v0.22.0
+## explicit; go 1.18
+golang.org/x/net/bpf
+golang.org/x/net/icmp
+golang.org/x/net/internal/iana
+golang.org/x/net/internal/socket
+golang.org/x/net/ipv4
+golang.org/x/net/ipv6
+# golang.org/x/sync v0.6.0
+## explicit; go 1.18
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.13.0
-## explicit; go 1.17
+# golang.org/x/sys v0.18.0
+## explicit; go 1.18
 golang.org/x/sys/cpu
+golang.org/x/sys/unix
+golang.org/x/sys/windows
