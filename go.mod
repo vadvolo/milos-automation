@@ -4,12 +4,15 @@ go 1.20
 
 require (
 	github.com/annetutil/gnetcli v1.0.13
+	github.com/mohae/struct2csv v0.0.0-20151122200941-e72239694eae
+	github.com/olekukonko/tablewriter v0.0.5
 	go.uber.org/zap v1.27.0
 )
 
 require (
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/pkg/sftp v1.13.6 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
