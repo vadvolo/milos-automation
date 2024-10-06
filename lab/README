@@ -1,0 +1,31 @@
+# Network Automation Lab
+
+## Installation
+
+```
+make build
+make run
+```
+
+## How to use
+
+Go to annet:
+```
+docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
+```
+
+Run:
+- diff
+```
+python3 -m annet.annet diff lab-r1.nh.com
+```
+- patch
+```
+python3 -m annet.annet patch lab-r1.nh.com
+```
+- deploy
+```
+python3 -m annet.annet deploy lab-r1.nh.com
+```
+
+

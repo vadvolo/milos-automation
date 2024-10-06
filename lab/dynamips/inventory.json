@@ -1,0 +1,29 @@
+[
+    {
+        "hostname": "lab-r1",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "172.20.0.100",
+        "login": "milos",
+        "password": "milos",
+        "interfaces": []
+    },
+    {
+        "hostname": "lab-r2",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "172.20.0.101",
+        "login": "milos",
+        "password": "milos",
+        "interfaces": []
+    },
+    {
+        "hostname": "lab-r3",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "172.20.0.102",
+        "login": "milos",
+        "password": "milos",
+        "interfaces": []
+    }
+]

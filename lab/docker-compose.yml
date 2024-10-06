@@ -1,0 +1,115 @@
+version: '3.4'
+networks:  
+  net1:
+    enable_ipv6: false
+    driver: bridge
+  net100:
+    enable_ipv6: false
+    driver: bridge
+  net200:
+    enable_ipv6: false
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.200.0/24
+        gateway: 192.168.200.1
+  link:mgmt:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 11.11.255.0/24
+      driver: default
+  link:routeros:vyos:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 11.11.0.0/24
+      driver: default
+  link:vyos:lab1:
+    driver: bridge
+  link:routeros:frr:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 11.11.2.0/24
+      driver: default
+  link:frr:vyos:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 11.11.1.0/24
+      driver: default
+
+services:
+  netbox:
+    ports:
+      - 8000:8080
+    environment:
+      - ALLOWED_HOSTS=*
+  
+  dynamips-lab:
+    image: ubuntu:bionic
+    tty: true
+    volumes:
+      - ../dynamips:/home/ubuntu/
+    command: sh "/home/ubuntu/install.sh"
+    cap_add:
+          - net_admin
+          - net_raw
+          - sys_module
+    devices: [/dev/net/tun:/dev/net/tun]
+    networks:
+      - default
+      - link:vyos:lab1
+
+  annet:
+    build: ../annet/
+    command: tail -f /dev/null
+    volumes:
+      - type: bind
+        source: ../annet/config.yaml
+        target: /config.yaml
+      - type: bind
+        source: ../annet/my_generators
+        target: /my_generators
+    environment:
+      - NETBOX_TOKEN=${NETBOX_TOKEN}
+      - NETBOX_URL=${NETBOX_URL}
+
+  # vyos:
+  #   image: afla/vyos:1.4
+  #   command: /sbin/init
+  #   networks:
+  #   - default
+  #   - link:mgmt
+  #   - link:vyos:lab1
+  #   - link:routeros:vyos
+  #   - link:frr:vyos
+  #   ports:
+  #   - '2000:22'
+  #   privileged: true
+  #   volumes:
+  #     - /lib/modules:/lib/modules
+  #   sysctls:
+  #     - net.ipv6.conf.all.disable_ipv6=0
+
+  # routeros:
+  #   image: evilfreelancer/docker-routeros:latest
+  #   # build:
+  #   #   context: ../routeros
+  #   #   dockerfile: ./Dockerfile
+  #   command: tail -f /dev/null
+  #   cap_add:
+  #     - NET_ADMIN
+  #   networks:
+  #   - link:mgmt
+  #   - link:routeros:vyos
+  #   - link:routeros:frr
+  #   devices:
+  #     - /dev/net/tun
+  #     - /dev/kvm
+  #   ports:
+  #   - '2001:22'
+  #   - '22223:23'
+  #   privileged: true
