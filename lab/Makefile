@@ -1,10 +1,8 @@
 build:
-	mkdir ~/lab && \
-	cd ~/lab && \
-	git clone -b release https://github.com/netbox-community/netbox-docker.git && \
-	git clone https://github.com/EvilFreelancer/docker-routeros.git && \
-	cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml \
-	docker-compose build --no-cache
+	@git clone -b release https://github.com/netbox-community/netbox-docker.git
+	@git clone https://github.com/EvilFreelancer/docker-routeros.git
+	@cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml
+	@docker-compose build --no-cache
 
 rebuild:
 	cd ./netbox-docker && \

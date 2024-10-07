@@ -1,19 +1,11 @@
 version: '3.4'
-networks:  
-  net1:
-    enable_ipv6: false
-    driver: bridge
-  net100:
-    enable_ipv6: false
-    driver: bridge
-  net200:
-    enable_ipv6: false
-    driver: bridge
+networks:
+  defaut:
     ipam:
       driver: default
       config:
-      - subnet: 192.168.200.0/24
-        gateway: 192.168.200.1
+      - subnet: 172.20.0.0/24
+        gateway: 172.20.0.1
   link:mgmt:
     driver: bridge
     ipam:
@@ -45,8 +37,6 @@ services:
   netbox:
     ports:
       - 8000:8080
-    environment:
-      - ALLOWED_HOSTS=*
   
   dynamips-lab:
     image: ubuntu:bionic
