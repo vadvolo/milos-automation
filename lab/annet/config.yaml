@@ -1,0 +1,43 @@
+connection:
+  default:
+    adapter: gnetcli
+    params:
+      login: log
+      passwords: pass
+
+fetcher:
+  default:
+    adapter: gnetcli
+    params: &gnetcli_patams
+      dev_login: milos
+      dev_password: milos
+
+deployer:
+  default:
+    adapter: gnetcli
+    params:
+      <<: *gnetcli_patams
+
+generators:
+  default:
+    - my_generators
+
+storage:
+  default:
+    adapter: file
+    params:
+      path: /file_inventory.yaml
+  netbox:
+    adapter: netbox
+    params:
+      url: http://127.0.0.1:8000
+      token: mytoken
+context:
+  default:
+    fetcher: default
+    deployer: default
+    connection: default
+    generators: default
+    storage: netbox
+
+selected_context: default

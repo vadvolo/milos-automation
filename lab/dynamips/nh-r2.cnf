@@ -1,0 +1,99 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname lab-r2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication enable default none
+aaa authorization exec default local
+!
+aaa session-id common
+!
+!
+ip cef
+ip domain name nh.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username milos secret 5 $1$zCwP$hCKzCFg/1aqX0LygJ/eIK.
+!
+!
+ip ssh version 2
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 172.20.0.101 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet1/0
+ ip address 10.0.0.1 255.255.255.252
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ ip address 10.0.0.5 255.255.255.252
+ negotiation auto
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ transport input telnet ssh
+line vty 5 14
+ transport input all
+!
+!
+end
