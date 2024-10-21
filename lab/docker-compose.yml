@@ -47,6 +47,7 @@ services:
     tty: true
     volumes:
       - ../dynamips:/home/ubuntu/
+      - ../discovery:/home/ubuntu/discovery
     command: sh "/home/ubuntu/install.sh"
     cap_add:
           - net_admin
