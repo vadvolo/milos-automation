@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt update
-apt install -y sudo dynamips dynagen telnet telnetd net-tools bridge-utils iproute2 uml-utilities openvpn inetutils-ping wget
+apt install -y sudo ssh dynamips dynagen telnet telnetd net-tools bridge-utils iproute2 uml-utilities openvpn inetutils-ping wget
 
 mkdir /home/ubuntu/ios-7200
 mkdir /home/ubuntu/next-hop-lab
@@ -25,11 +25,8 @@ ifconfig tap2 up
 
 ifconfig br0 172.20.0.20/16
 
-mkdir /home/ubuntu/next-hop-lab
-
 cd /home/ubuntu/
 dynamips -H 7200 &
-dynagen /home/ubuntu/lab.net
-
+dynagen lab.net
 
 tail -f /dev/null
