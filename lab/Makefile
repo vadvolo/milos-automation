@@ -13,10 +13,8 @@ rebuild:
 clean:
 	rm -rf docker-routeros/ netbox-docker/
 
-
 annet_restart:
-	@source ./netbox_env.sh
-	@docker restart netbox-docker-annet-1
+	@./netbox_env.sh
 
 start_compose:
 	cd ./netbox-docker && \
