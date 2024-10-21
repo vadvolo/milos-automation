@@ -13,9 +13,10 @@ You need to install Docker and Docker Compose softaware on yours device:
 Pull lab environment from repository:
 ```
 git clone https://github.com/vadvolo/milos-automation.git
+cd milos-automation
 ```
 
-And switch to the `lab` branch:
+And switch to the `temp` branch:
 ```
 git checkout lab
 ```
@@ -30,6 +31,14 @@ Build and run lab
 make build
 make run
 ```
+
+### How to connect to containers
+
+Netbox: `docker exec -u root -t -i netbox-docker-netbox-1 /bin/bash`
+
+Annet: `docker exec -u root -t -i netbox-docker-annet-1 /bin/bash`
+
+Dynamips: `docker exec -u root -t -i netbox-docker-dynamips-1 /bin/bash`
 
 ### NETBOX TOKEN
 

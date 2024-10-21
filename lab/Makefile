@@ -14,7 +14,9 @@ clean:
 	rm -rf docker-routeros/ netbox-docker/
 
 annet_restart:
-	@./netbox_env.sh
+	source ./netbox_env.sh && \
+	cd ./netbox-docker && \
+	docker-compose up -d
 
 start_compose:
 	cd ./netbox-docker && \
