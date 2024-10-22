@@ -26,6 +26,9 @@ start_compose:
 create_netbox_superuser:
 	@docker compose exec netbox-docker-netbox-1 /opt/netbox/netbox/manage.py createsuperuser
 
+build_discovery:
+	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
+
 run: start_compose annet_restart
 
 test:
