@@ -12,6 +12,9 @@ rebuild:
 
 clean:
 	rm -rf docker-routeros/ netbox-docker/
+	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
+	netbox-docker-netbox-1 netbox-docker-annet-1 netbox-docker-redis-cache-1 \
+	netbox-docker-dynamips-lab-1 netbox-docker-redis-1 netbox-docker-postgres-1
 
 annet_restart:
 	source ./netbox_env.sh && \
