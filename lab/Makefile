@@ -31,8 +31,9 @@ build_discovery:
 
 run: start_compose annet_restart
 
-test:
-	@source ./netbox_env.sh
-	@echo ${NETBOX_IP}
-	@echo ${NETBOX_URL}
+netbox_export:
+	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py dumpdata -a -o netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
 	
+netbox_import:
+	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+

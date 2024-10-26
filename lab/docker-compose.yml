@@ -6,37 +6,19 @@ networks:
       config:
       - subnet: 172.20.0.0/24
         gateway: 172.20.0.1
-  link:mgmt:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 11.11.255.0/24
-      driver: default
-  link:routeros:vyos:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 11.11.0.0/24
-      driver: default
-  link:vyos:lab1:
-    driver: bridge
-  link:routeros:frr:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 11.11.2.0/24
-      driver: default
   link:frr:vyos:
     driver: bridge
-    ipam:
-      config:
-      - subnet: 11.11.1.0/24
-      driver: default
+  link:frr:r1-r2:
+    driver: bridge
+  link:frr:r2-r3:
+    driver: bridge
 
 services:
   netbox:
     ports:
       - 8000:8080
+    volumes:
+      - ../src/:/home/ubuntu/src
   
   dynamips-lab:
     image: ubuntu:bionic
@@ -52,7 +34,6 @@ services:
     devices: [/dev/net/tun:/dev/net/tun]
     networks:
       - default
-      - link:vyos:lab1
 
   annet:
     build: ../annet/
@@ -70,15 +51,12 @@ services:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}
 
-  # vyos:
+  # lab-r4.nh.com
+  # vyos-r1:
   #   image: afla/vyos:1.4
   #   command: /sbin/init
   #   networks:
-  #   - default
-  #   - link:mgmt
-  #   - link:vyos:lab1
-  #   - link:routeros:vyos
-  #   - link:frr:vyos
+  #     - default
   #   ports:
   #   - '2000:22'
   #   privileged: true
@@ -87,22 +65,42 @@ services:
   #   sysctls:
   #     - net.ipv6.conf.all.disable_ipv6=0
 
-  # routeros:
-  #   image: evilfreelancer/docker-routeros:latest
-  #   # build:
-  #   #   context: ../routeros
-  #   #   dockerfile: ./Dockerfile
-  #   command: tail -f /dev/null
-  #   cap_add:
-  #     - NET_ADMIN
-  #   networks:
-  #   - link:mgmt
-  #   - link:routeros:vyos
-  #   - link:routeros:frr
-  #   devices:
-  #     - /dev/net/tun
-  #     - /dev/kvm
-  #   ports:
-  #   - '2001:22'
-  #   - '22223:23'
-  #   privileged: true
+  frr-r1:
+    image: frr-debian:latest
+    build: ../frr
+    privileged: true
+    environment:
+      HOSTNAME: frr-r1
+      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
+    command: /ENTRYPOINT.sh
+    tty: true
+    networks:
+      - default
+      - link:frr:r1-r2
+  
+  frr-r2:
+    image: frr-debian:latest
+    build: ../frr
+    privileged: true
+    environment:
+      HOSTNAME: frr-r2
+      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
+    command: /ENTRYPOINT.sh
+    tty: true
+    networks:
+      - default
+      - link:frr:r1-r2
+      - link:frr:r2-r3
+
+  frr-r3:
+    image: frr-debian:latest
+    build: ../frr
+    privileged: true
+    environment:
+      HOSTNAME: frr-r3
+      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
+    command: /ENTRYPOINT.sh
+    tty: true
+    networks:
+      - default
+      - link:frr:r2-r3
