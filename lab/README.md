@@ -21,7 +21,7 @@ cd milos-automation
 And switch to the `temp` branch:
 
 ```
-git checkout lab
+git checkout temp
 ```
 
 Navigate to the lab folder:
@@ -49,8 +49,8 @@ Installed 742 object(s) from 1 fixture(s)
 
 ### How to connect to containers
 
-Netbox: `docker exec -u root -t -i netbox-docker-netbox-1 /bin/bash`  
-Annet: `docker exec -u root -t -i netbox-docker-annet-1 /bin/bash`  
+Netbox: `docker exec -u root -t -i netbox-docker-netbox-1 /bin/bash`
+Annet: `docker exec -u root -t -i netbox-docker-annet-1 /bin/bash`
 Dynamips: `docker exec -u root -t -i netbox-docker-dynamips-lab-1 /bin/bash`
 
 ### Create Netbox SuperUser [optional]
@@ -76,6 +76,25 @@ Superuser created successfully.
 5. exit from netbox container
 6. `export NETBOX_TOKEN=a630dcef...`
 7. `make annet_restart`
+
+## Lab management
+
+Lab topologies are managed by [Containerlab](https://containerlab.dev/), which is itself deployed in a container. Executable `lab/containerlab` is a simple wrapper for accessing Containerlab container. Available topologies can be found in `lab/topologies`. To spin up the topology:
+```bash
+./containerlab deploy --topo topologies/lab01_frr-only-test/frr-only-test.clab.yml
+```
+
+Connect to a node:
+```bash
+docker exec -it clab-frr-only-test-frr-r2 bash
+```
+
+Destroy the topology:
+```bash
+./containerlab destroy --topo topologies/lab01_frr-only-test/frr-only-test.clab.yml
+```
+
+Full list of commands can be found [here](https://containerlab.dev/cmd/deploy/).
 
 ## How to use
 
