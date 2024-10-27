@@ -1,0 +1,35 @@
+name: ceos-test
+
+mgmt:
+  network: clab-mgmt
+  ipv4-subnet: 172.20.0.0/24
+
+topology:
+  kinds:
+    ceos:
+      image: arista-ceos:4.33.0F
+      env:
+        INTFTYPE: et
+
+  nodes:
+    frr-r1:
+      kind: linux
+      mgmt-ipv4: 172.20.0.110
+      image: frrouting/frr:v8.4.1
+      binds:
+        - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
+        - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+        - ../../configs/lab01_frr-only-test/frr-r1.conf:/etc/frr/frr.conf
+    ceos-r2:
+      kind: ceos
+      mgmt-ipv4: 172.20.0.113
+      startup-config: ../../configs/lab02_ceos-test/ceos-r2.conf
+    ceos-r3:
+      kind: ceos
+      mgmt-ipv4: 172.20.0.114
+      startup-config: ../../configs/lab02_ceos-test/ceos-r3.conf
+
+  links:
+    - endpoints: ["frr-r1:eth1", "ceos-r2:et1"]
+    - endpoints: ["frr-r1:eth2", "ceos-r3:et1"]
+    - endpoints: ["ceos-r2:et2", "ceos-r3:et2"]

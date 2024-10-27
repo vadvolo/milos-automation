@@ -8,42 +8,42 @@ networks:
         gateway: 172.20.0.1
 
 services:
-  netbox:
-    ports:
-      - 8000:8080
-    volumes:
-      - ../src/:/home/ubuntu/src
+  # netbox:
+  #   ports:
+  #     - 8000:8080
+  #   volumes:
+  #     - ../src/:/home/ubuntu/src
 
-  dynamips-lab:
-    image: ubuntu:bionic
-    tty: true
-    volumes:
-      - ../dynamips:/home/ubuntu/
-      - ../discovery:/home/ubuntu/discovery
-    command: sh "/home/ubuntu/install.sh"
-    cap_add:
-          - net_admin
-          - net_raw
-          - sys_module
-    devices: [/dev/net/tun:/dev/net/tun]
-    networks:
-      - default
+  # dynamips-lab:
+  #   image: ubuntu:bionic
+  #   tty: true
+  #   volumes:
+  #     - ../dynamips:/home/ubuntu/
+  #     - ../discovery:/home/ubuntu/discovery
+  #   command: sh "/home/ubuntu/install.sh"
+  #   cap_add:
+  #         - net_admin
+  #         - net_raw
+  #         - sys_module
+  #   devices: [/dev/net/tun:/dev/net/tun]
+  #   networks:
+  #     - default
 
-  annet:
-    build: ../annet/
-    command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../annet/my_generators:/my_generators
-      # - type: bind
-      #   source: ../annet/config.yaml
-      #   target: /config.yaml
-      # - type: bind
-      #   source: ../annet/my_generators
-      #   target: /my_generators
-    environment:
-      - NETBOX_TOKEN=${NETBOX_TOKEN}
-      - NETBOX_URL=${NETBOX_URL}
+  # annet:
+  #   build: ../annet/
+  #   command: tail -f /dev/null
+  #   volumes:
+  #     - ../annet/config.yaml:/config.yaml
+  #     - ../annet/my_generators:/my_generators
+  #     # - type: bind
+  #     #   source: ../annet/config.yaml
+  #     #   target: /config.yaml
+  #     # - type: bind
+  #     #   source: ../annet/my_generators
+  #     #   target: /my_generators
+  #   environment:
+  #     - NETBOX_TOKEN=${NETBOX_TOKEN}
+  #     - NETBOX_URL=${NETBOX_URL}
 
   containerlab:
     container_name: containerlab
