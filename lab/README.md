@@ -84,9 +84,16 @@ Lab topologies are managed by [Containerlab](https://containerlab.dev/), which i
 ./containerlab deploy --topo topologies/lab01_frr-only-test/frr-only-test.clab.yml
 ```
 
-Connect to a node:
+Connect to an FRR node:
 ```bash
 docker exec -it clab-frr-only-test-frr-r2 bash
+```
+
+Connect to an Arista cEOS node:
+```bash
+docker exec -it clab-ceos-test-ceos-r3 Cli
+  <OR>
+ssh admin@clab-ceos-test-ceos-r3
 ```
 
 Destroy the topology:
