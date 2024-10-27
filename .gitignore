@@ -1,5 +1,2 @@
 *.bak
-.tls
-ansible-inventory.yml
-authorized_keys
-topology-data.json
+clab-*
