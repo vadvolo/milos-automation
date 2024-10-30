@@ -6,12 +6,6 @@ networks:
       config:
       - subnet: 172.20.0.0/24
         gateway: 172.20.0.1
-  link:frr:vyos:
-    driver: bridge
-  link:frr:r1-r2:
-    driver: bridge
-  link:frr:r2-r3:
-    driver: bridge
 
 services:
   netbox:
@@ -19,7 +13,7 @@ services:
       - 8000:8080
     volumes:
       - ../src/:/home/ubuntu/src
-  
+
   dynamips-lab:
     image: ubuntu:bionic
     tty: true
@@ -51,6 +45,23 @@ services:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}
 
+  containerlab:
+    container_name: containerlab
+    image: ghcr.io/srl-labs/clab
+    command: bash
+    network_mode: host
+    privileged: true
+    tty: true
+    stdin_open: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/netns:/var/run/netns
+      - /etc/hosts:/etc/hosts
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ${PWD}:${PWD}
+    working_dir: ${PWD}
+    pid: host
+
   # lab-r4.nh.com
   # vyos-r1:
   #   image: afla/vyos:1.4
@@ -64,43 +75,3 @@ services:
   #     - /lib/modules:/lib/modules
   #   sysctls:
   #     - net.ipv6.conf.all.disable_ipv6=0
-
-  frr-r1:
-    image: frr-debian:latest
-    build: ../frr
-    privileged: true
-    environment:
-      HOSTNAME: frr-r1
-      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
-    command: /install.sh
-    tty: true
-    networks:
-      - default
-      - link:frr:r1-r2
-  
-  frr-r2:
-    image: frr-debian:latest
-    build: ../frr
-    privileged: true
-    environment:
-      HOSTNAME: frr-r2
-      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
-    command: /install.sh
-    tty: true
-    networks:
-      - default
-      - link:frr:r1-r2
-      - link:frr:r2-r3
-
-  frr-r3:
-    image: frr-debian:latest
-    build: ../frr
-    privileged: true
-    environment:
-      HOSTNAME: frr-r3
-      FRR_DAEMONS: "zebra bgpd ospfd ldpd"
-    command: /install.sh
-    tty: true
-    networks:
-      - default
-      - link:frr:r2-r3
