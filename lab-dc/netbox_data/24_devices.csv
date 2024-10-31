@@ -1,0 +1,6 @@
+name,role,manufacturer,device_type,platform,status,site
+spine-1-1.nh.com,Spine,Cisco,7200-dynamips,7200,active,lab
+spine-1-2.nh.com,Spine,Cisco,7200-dynamips,7200,active,lab
+tor-1-1.nh.com,ToR,Cisco,7200-dynamips,7200,active,lab
+tor-1-2.nh.com,ToR,Cisco,7200-dynamips,7200,active,lab
+tor-1-3.nh.com,ToR,Cisco,7200-dynamips,7200,active,lab
