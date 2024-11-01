@@ -1,0 +1,5 @@
+\c postgres
+DROP DATABASE netbox WITH (FORCE);
+CREATE DATABASE netbox OWNER netbox;
+GRANT ALL PRIVILEGES ON DATABASE netbox TO netbox;
+\q
