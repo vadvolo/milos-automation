@@ -9,8 +9,8 @@ fetcher:
   default:
     adapter: gnetcli
     params: &gnetcli_params
-      dev_login: milos
-      dev_password: milos
+      dev_login: cisco
+      dev_password: cisco
 
 deployer:
   default:

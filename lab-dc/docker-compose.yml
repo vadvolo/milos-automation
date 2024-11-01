@@ -17,7 +17,7 @@ services:
     tty: true
     volumes:
       - ../dynamips:/home/ubuntu/
-      - ../discovery:/home/ubuntu/discovery
+#      - ../discovery:/home/ubuntu/discovery
     command: sh "/home/ubuntu/install.sh"
     cap_add:
           - net_admin
@@ -32,7 +32,7 @@ services:
     command: tail -f /dev/null
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../annet/generators:/generators
+      - ../annet/lab_generators:/generators
     environment:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}

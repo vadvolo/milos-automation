@@ -33,7 +33,7 @@ def parse_device_name(device_name: str) -> dict[str, int]:
     raise RuntimeError(f"Could parse name '{device_name}'")
 
 
-def get_asnum(device: Device):
+def get_asnum(device: Device) -> str:
     """Return AS number follow by role and name of the device"""
     if device.device_role.name == "Spine":
         parsed_name_spine: dict[str, int] = parse_device_name(device.name)
@@ -44,11 +44,13 @@ def get_asnum(device: Device):
         tor_pod: int = parsed_name_tor["pod"]
         tor_num: int = parsed_name_tor["num"]
         return f"651{tor_pod}{tor_num}"
+    elif device.device_role.name == "Unknown":
+        return ""
     else:
         raise RuntimeError(f"Unknown device role '{device.device_role.name}' of '{device.name}'")
 
 
-def get_rid(device: Device):
+def get_rid(device: Device) -> str:
     """Return Router ID follow by role and name of the device"""
     if device.device_role.name == "Spine":
         parsed_name_spine: dict[str, int] = parse_device_name(device.name)
@@ -60,6 +62,8 @@ def get_rid(device: Device):
         tor_pod: int = parsed_name_tor["pod"]
         tor_num: int = parsed_name_tor["num"]
         return f"1.1.{tor_pod}.{tor_num}"
+    elif device.device_role.name == "Unknown":
+        return ""
     else:
         raise RuntimeError(f"Unknown device role '{device.device_role.name}' of '{device.name}'")
 
@@ -72,27 +76,29 @@ def bgp_peers(device: Device) -> list[BgpPeer]:
         parsed_name_spine: dict[str, int] = parse_device_name(device.name)
         spine_plane: int = parsed_name_spine["plane"]
         for remote_device in device.neighbours:
-            parsed_name_tor: dict[str, int] = parse_device_name(remote_device.name)
-            tor_num: int = parsed_name_tor["num"]
-            res.append(
-                BgpPeer(
-                    addr=f"192.168.{spine_plane}{tor_num}.2",
-                    asnum=get_asnum(remote_device),
+            if remote_device.device_role.name == "ToR":
+                parsed_name_tor: dict[str, int] = parse_device_name(remote_device.name)
+                tor_num: int = parsed_name_tor["num"]
+                res.append(
+                    BgpPeer(
+                        addr=f"192.168.{spine_plane}{tor_num}.2",
+                        asnum=get_asnum(remote_device),
+                    )
                 )
-            )
 
     elif device.device_role.name == "ToR":
         parsed_name_tor: dict[str, int] = parse_device_name(device.name)
         tor_num: int = parsed_name_tor["num"]
         for remote_device in device.neighbours:
-            parsed_name_spine: dict[str, int] = parse_device_name(remote_device.name)
-            spine_plane: int = parsed_name_spine["plane"]
-            res.append(
-                BgpPeer(
-                    addr=f"192.168.{spine_plane}{tor_num}.1",
-                    asnum=get_asnum(remote_device),
+            if remote_device.device_role.name == "Spine":
+                parsed_name_spine: dict[str, int] = parse_device_name(remote_device.name)
+                spine_plane: int = parsed_name_spine["plane"]
+                res.append(
+                    BgpPeer(
+                        addr=f"192.168.{spine_plane}{tor_num}.1",
+                        asnum=get_asnum(remote_device),
+                    )
                 )
-            )
 
     return res
 
@@ -111,8 +117,12 @@ class Bgp(PartialGenerator):
         """
     
     def run_cisco(self, device: Device):
-        with self.block("router bgp", get_asnum(device)):
-            yield "bgp router-id", get_rid(device)
+        asnum: str = get_asnum(device)
+        rid: str = get_rid(device)
+        if not asnum or not rid:
+            return
+        with self.block("router bgp", asnum):
+            yield "bgp router-id", rid
             yield "bgp log-neighbor-changes"
             if device.device_role.name == "Spine":
                 yield "neighbor TOR peer-group"

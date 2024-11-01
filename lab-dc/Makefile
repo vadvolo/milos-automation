@@ -10,7 +10,7 @@ rebuild:
 	docker-compose build --no-cache
 
 clean:
-	rm -rf netbox-docker/
+	rm -rf netbox-docker/ dynamips/ios-7200/
 	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
 	netbox-docker-netbox-1 netbox-docker-annet-1 netbox-docker-redis-cache-1 \
 	netbox-docker-dynamips-lab-1 netbox-docker-redis-1 netbox-docker-postgres-1
@@ -34,6 +34,6 @@ create_netbox_root:
 
 run: start_compose annet_restart netbox_db_load
 
-# pg_dump -Fc -v --host=localhost --username=netbox --dbname=netbox -f netbox.dump
+# pg_dump -Fc -v --host=localhost --username=netbox --dbname=netbox -f /netbox_data/netbox.dump
 # psql -U netbox -f /netbox_data/drop_netbox.psql
 # pg_restore -v --no-owner --host=localhost --username=netbox --dbname=netbox /netbox_data/netbox.dump
