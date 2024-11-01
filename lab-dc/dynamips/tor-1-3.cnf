@@ -21,6 +21,7 @@ aaa session-id common
 !
 !
 ip cef
+no ip domain lookup
 ip domain name nh.com
 !
 !
@@ -96,8 +97,12 @@ line aux 0
  stopbits 1
 line vty 0 4
  transport input telnet ssh
+ logging synchronous
+ exec-timeout 0 0
 line vty 5 14
  transport input all
+ logging synchronous
+ exec-timeout 0 0
 !
 !
 end
