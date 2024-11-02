@@ -35,12 +35,6 @@ services:
     volumes:
       - ../annet/config.yaml:/config.yaml
       - ../annet/my_generators:/my_generators
-      # - type: bind
-      #   source: ../annet/config.yaml
-      #   target: /config.yaml
-      # - type: bind
-      #   source: ../annet/my_generators
-      #   target: /my_generators
     environment:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}
@@ -61,17 +55,3 @@ services:
       - ${PWD}:${PWD}
     working_dir: ${PWD}
     pid: host
-
-  # lab-r4.nh.com
-  # vyos-r1:
-  #   image: afla/vyos:1.4
-  #   command: /sbin/init
-  #   networks:
-  #     - default
-  #   ports:
-  #   - '2000:22'
-  #   privileged: true
-  #   volumes:
-  #     - /lib/modules:/lib/modules
-  #   sysctls:
-  #     - net.ipv6.conf.all.disable_ipv6=0

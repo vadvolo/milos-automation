@@ -1,10 +1,20 @@
 # Network Automation Lab
 
+## General information
+
+In this repo are located a virtual lab equipment for demonstrating network automation scenarious.
+
+Table of the content:
+- [Installation](#installation)
+- [Annet description](#annet-description)
+- [Lab]
+  - []
+
 ## Installation
 
 ### Preparation
 
-You need to install Docker and Docker Compose softaware on yours device:
+First of all, you need to install Docker and Docker Compose softaware on yours device:
 
 - [Docker](https://docs.docker.com/engine/install/)
   - [Linux](https://docs.docker.com/desktop/install/linux/)
@@ -37,7 +47,7 @@ make build
 make run
 ```
 
-To perform import data into netbox please run `make netbox_import`
+To import data into netbox please run `make netbox_import`
 ```
 ❯ make netbox_import
 🧬 loaded config '/etc/netbox/config/configuration.py'
@@ -53,7 +63,9 @@ Netbox: `docker exec -u root -t -i netbox-docker-netbox-1 /bin/bash`
 Annet: `docker exec -u root -t -i netbox-docker-annet-1 /bin/bash`
 Dynamips: `docker exec -u root -t -i netbox-docker-dynamips-lab-1 /bin/bash`
 
-### Create Netbox SuperUser [optional]
+### How to create Netbox SuperUser [optional]
+
+You don't need to generate your own token if you've made `make netbox_import`.
 
 1. Go to the netbox container: `docker exec -u root -t -i netbox-docker-netbox-1 /bin/bash`
 2. Run command: `/opt/netbox/netbox/manage.py createsuperuser`
@@ -67,7 +79,9 @@ Password (again): milos
 Superuser created successfully.
 ```
 
-### NETBOX TOKEN [optional]
+### How to create Netbox Token [optional]
+
+You don't need to generate your own token if you've made `make netbox_import`.
 
 1. Go to [LOCAL NETBOX INSTALLATION](http://localhost:8000/users/tokens/)
 2. Push `+ Add` button
@@ -76,6 +90,7 @@ Superuser created successfully.
 5. exit from netbox container
 6. `export NETBOX_TOKEN=a630dcef...`
 7. `make annet_restart`
+
 
 ## Lab management
 
@@ -130,3 +145,15 @@ python3 -m annet.annet patch lab-r1.nh.com
 ```
 python3 -m annet.annet deploy lab-r1.nh.com
 ```
+
+## Annet description
+
+Annet is an solution for the network configuration management. It provides capabilities for storing templates of configuration, generating and implimentation network configuration. There are four main command for it:
+- `gen`
+- `diff`
+- `patch`
+- `deploy`
+
+Annet uses Netbox as Source of Truth about network topology, equipment and resources.
+
+To use annet at presented labs you should prepare generators located at `annet/my_generators`.
