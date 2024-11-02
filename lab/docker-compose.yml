@@ -55,17 +55,3 @@ services:
       - ${PWD}:${PWD}
     working_dir: ${PWD}
     pid: host
-
-  # lab-r4.nh.com
-  # vyos-r1:
-  #   image: afla/vyos:1.4
-  #   command: /sbin/init
-  #   networks:
-  #     - default
-  #   ports:
-  #   - '2000:22'
-  #   privileged: true
-  #   volumes:
-  #     - /lib/modules:/lib/modules
-  #   sysctls:
-  #     - net.ipv6.conf.all.disable_ipv6=0
