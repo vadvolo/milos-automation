@@ -114,19 +114,19 @@ docker exec -ti netbox-docker-annet-1 python3 -m annet.annet deploy spine-1-1.nh
 ![lab-topology](nh2024-lab.png "Title")
 
 Naming:
-- Spine - "spine-<pod>-<plnane>"
-- ToR - "tor-<pod>-<num>"
-- Router ID Spine - "1.2.<pod>.<plane>"
-- Router ID ToR - "1.1.<pod>.<num>"
-- ASNUM Spine - "6520<pod>"
-- ASNUM ToR - "6510<pod><num>"
+- Spine - `spine-<pod>-<plnane>`
+- ToR - `tor-<pod>-<num>`
+- Router ID Spine - `1.2.<pod>.<plane>`
+- Router ID ToR - `1.1.<pod>.<num>`
+- ASNUM Spine - `6520<pod>`
+- ASNUM ToR - `6510<pod><num>`
 
 ### Lab actions:
 1. Deploy whole configuration.
 2. Replace role of one of the ToR's to "Unknown" and deploy configuration on the ToR and every Spine.
 3. Restore role of the ToR to "ToR" and deploy configuration on the ToR and every Spine.
-4. Assign tag "maintenance" to one of the Spine's and deploy configuration on the Spine. **This step is under construction**
-5. Remove tag "maintenance" from the Spine and deploy configuration again. **This step is under construction**
+4. Assign tag "maintenance" to one of the Spine's and deploy configuration on the Spine.
+5. Remove tag "maintenance" from the Spine and deploy configuration again.
 
 ### Some comments
 
@@ -145,6 +145,8 @@ Naming:
 3. fix Order
 4. cisco deploy error `gnetclisdk.exceptions.GnetcliException: AioRpcError read timeout error. last seen: "Destination filename [startup-config]? "`
 5. ann deploy without progress
+6. ann doesn't failed if faced with config command error on Cisco IOS
+7. after changing rpl do `clear ip bgp * soft`
 
 #### Annet changes
 
@@ -187,7 +189,13 @@ index 741770c..3d09f54 100644
 +
  # удалять eth-trunk можно только после того, как вычистим member interfaces
  undo interface */port-channel\d+/  %order_reverse
-
+ 
+ router bgp
++    neighbor */[\da-f\.\:]+/ remote-as
++    neighbor */[\da-f\.\:]+/ peer-group
+ 
+ line
+\ No newline at end of file
 diff --git a/annet/rulebook/texts/cisco.rul b/annet/rulebook/texts/cisco.rul
 index 4486a28..5dd2683 100644
 --- a/annet/rulebook/texts/cisco.rul
