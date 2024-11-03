@@ -94,7 +94,10 @@ func (d *Device) SendCommands(commands ...cmd.Cmd) ([]cmd.CmdRes, error) {
 		return nil, err
 	}
 	defer dev.Close()
-	reses, _ := dev.ExecuteBulk(commands)
+	reses, err := dev.ExecuteBulk(commands)
+	if err != nil {
+		return nil, err
+	}
 	for _, res := range reses {
 		if res.Status() == 0 {
 			fmt.Printf("Result: %s\n", res.Output())
