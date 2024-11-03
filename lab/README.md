@@ -8,7 +8,7 @@ Table of the content:
 - [Installation](#installation)
 - [Annet description](#annet-description)
 - [Useful commands](#useful-commands)
-- [Labs]
+- [Labs](#labs)
   - [lab00. Cisco Base Scenario](./topologies/lab00_cisco_base)
   - [lab01. FRR Base Scenario](./topologies/lab01_frr-only-test)
   - [lab02. Arista Base Scenario](./topologies/lab02_ceos-test)
@@ -127,6 +127,12 @@ You don't need to generate your own token if you've made `make netbox_import`.
 5. exit from netbox container
 6. `export NETBOX_TOKEN=a630dcef...`
 7. `make annet_restart`
+
+## Labs
+
+| Lab | Description |
+|:---:|:-----------:|
+| lab00 | Basic Scenarion with Cisco devices. |
 
 
 ## Lab management
