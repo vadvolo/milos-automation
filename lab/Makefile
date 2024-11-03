@@ -39,7 +39,7 @@ build_discovery:
 
 netbox_export:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
-	
+
 netbox_import:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
@@ -54,3 +54,9 @@ lab03: stop_compose
 	cd netbox-docker/ && docker-compose up -d && cd ..
 
 run: start_compose annet_restart
+
+lab01_up:
+	@cd topologies/lab01_frr-only-test && docker-compose up -d --build
+
+lab01_down:
+	@cd topologies/lab01_frr-only-test && docker-compose down
