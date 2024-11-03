@@ -7,8 +7,12 @@ In this repo are located a virtual lab equipment for demonstrating network autom
 Table of the content:
 - [Installation](#installation)
 - [Annet description](#annet-description)
-- [Lab]
-  - []
+- [Useful commands](#useful-commands)
+- [Labs]
+  - [lab00. Cisco Base Scenario](./topologies/lab00_cisco_base)
+  - [lab01. FRR Base Scenario](./topologies/lab01_frr-only-test)
+  - [lab02. Arista Base Scenario](./topologies/lab02_ceos-test)
+  - [lab03. Cisco DC Scenario](./topologies/lab03_dc_cisco)
 
 ## Installation
 
@@ -44,18 +48,51 @@ Build and run lab
 
 ```
 make build
-make run
 ```
 
-To import data into netbox please run `make netbox_import`
+Now you can choose which scenaro you want to run. To start lab you need to run a command `make labXX`, where `XX` is index of the lab. For instance `make lab00`
+
+## Annet description
+
+Annet is an solution for the network configuration management. It provides capabilities for storing templates of configuration, generating and implimentation network configuration. There are four main command for it:
+- `gen`
+- `diff`
+- `patch`
+- `deploy`
+
+Annet uses Netbox as Source of Truth about network topology, equipment and resources.
+
+To use annet at presented labs you should prepare generators located at `annet/my_generators`.
+
+### How to use Annet
+
+Go to annet:
+
 ```
-❯ make netbox_import
-🧬 loaded config '/etc/netbox/config/configuration.py'
-🧬 loaded config '/etc/netbox/config/extra.py'
-🧬 loaded config '/etc/netbox/config/logging.py'
-🧬 loaded config '/etc/netbox/config/plugins.py'
-Installed 742 object(s) from 1 fixture(s)
+docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 ```
+
+Run:
+
+- diff
+
+```
+python3 -m annet.annet diff lab-r1.nh.com
+```
+
+- patch
+
+```
+python3 -m annet.annet patch lab-r1.nh.com
+```
+
+- deploy
+
+```
+python3 -m annet.annet deploy lab-r1.nh.com
+```
+
+## Useful commands
 
 ### How to connect to containers
 
@@ -117,43 +154,3 @@ Destroy the topology:
 ```
 
 Full list of commands can be found [here](https://containerlab.dev/cmd/deploy/).
-
-## How to use
-
-Go to annet:
-
-```
-docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
-```
-
-Run:
-
-- diff
-
-```
-python3 -m annet.annet diff lab-r1.nh.com
-```
-
-- patch
-
-```
-python3 -m annet.annet patch lab-r1.nh.com
-```
-
-- deploy
-
-```
-python3 -m annet.annet deploy lab-r1.nh.com
-```
-
-## Annet description
-
-Annet is an solution for the network configuration management. It provides capabilities for storing templates of configuration, generating and implimentation network configuration. There are four main command for it:
-- `gen`
-- `diff`
-- `patch`
-- `deploy`
-
-Annet uses Netbox as Source of Truth about network topology, equipment and resources.
-
-To use annet at presented labs you should prepare generators located at `annet/my_generators`.
