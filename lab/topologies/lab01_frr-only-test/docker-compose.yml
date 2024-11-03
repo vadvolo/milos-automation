@@ -1,0 +1,83 @@
+version: '3'
+
+networks:
+  frr_mgmt:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  r1r2_net:
+    driver: bridge
+  r1r3_net:
+    driver: bridge
+  r2r3_net:
+    driver: bridge
+
+x-frr-defaults: &frr-defaults
+  image: frrouting/frr:v8.4.1
+  privileged: true
+  networks:
+    frr_mgmt: {}
+  cap_add:
+    - NET_ADMIN
+    - SYS_ADMIN
+  sysctls:
+    - net.ipv4.ip_forward=1
+    - net.ipv4.conf.all.forwarding=1
+    - net.ipv6.conf.all.forwarding=1
+  tty: true
+
+services:
+  frr-r1:
+    <<: *frr-defaults
+    container_name: frr-r1
+    hostname: frr-r1
+    networks:
+      frr_mgmt:
+        ipv4_address: 172.20.0.110
+      r1r2_net:
+        aliases:
+          - frr-r1-eth1
+      r1r3_net:
+        aliases:
+          - frr-r1-eth2
+    volumes:
+      - ../../configs/lab01_frr-only-test/frr-r1.conf:/etc/frr/frr.conf
+      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
+      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+
+  frr-r2:
+    <<: *frr-defaults
+    container_name: frr-r2
+    hostname: frr-r2
+    networks:
+      frr_mgmt:
+        ipv4_address: 172.20.0.111
+      r1r2_net:
+        aliases:
+          - frr-r2-eth1
+      r2r3_net:
+        aliases:
+          - frr-r2-eth2
+    volumes:
+      - ../../configs/lab01_frr-only-test/frr-r2.conf:/etc/frr/frr.conf
+      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
+      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+
+  frr-r3:
+    <<: *frr-defaults
+    container_name: frr-r3
+    hostname: frr-r3
+    networks:
+      frr_mgmt:
+        ipv4_address: 172.20.0.112
+      r1r3_net:
+        aliases:
+          - frr-r3-eth1
+      r2r3_net:
+        aliases:
+          - frr-r3-eth2
+    volumes:
+      - ../../configs/lab01_frr-only-test/frr-r3.conf:/etc/frr/frr.conf
+      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
+      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
