@@ -144,15 +144,21 @@ make lab01_down
 ```
 Configuration files for devices in the topologies are located in relevant subfolders of`lab/configs` folder.
 
-### Lab01: FRR-only test
+### Lab 01: FRR-only test
 
 To connect to lab nodes, one can use `docker exec` or SSH:
+```bash
+docker exec -it frr-r1 bash # open shell
+# or
+docker exec -it frr-r1 vtysh # open FRR CLI
+# or
+ssh root@172.20.0.110 # password: frr
 ```
-docker exec -it frr-r1 bash (open shell)
-docker exec -it frr-r1 vtysh (open FRR CLI)
 
-ssh root@172.20.0.110 (password: frr)
-```
+Node list:
+- frr-r1: 172.20.0.110
+- frr-r2: 172.20.0.111
+- frr-r3: 172.20.0.112
 
 ## How to use
 

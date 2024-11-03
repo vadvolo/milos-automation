@@ -7,7 +7,7 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/24
-
+          gateway: 172.20.0.1
   r1r2_net:
     driver: bridge
   r1r3_net:
@@ -46,11 +46,7 @@ services:
       mgmt:
         ipv4_address: 172.20.0.110
       r1r2_net:
-        aliases:
-          - frr-r1-eth1
       r1r3_net:
-        aliases:
-          - frr-r1-eth2
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r1.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
@@ -64,11 +60,7 @@ services:
       mgmt:
         ipv4_address: 172.20.0.111
       r1r2_net:
-        aliases:
-          - frr-r2-eth1
       r2r3_net:
-        aliases:
-          - frr-r2-eth2
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r2.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
@@ -82,11 +74,7 @@ services:
       mgmt:
         ipv4_address: 172.20.0.112
       r1r3_net:
-        aliases:
-          - frr-r3-eth1
       r2r3_net:
-        aliases:
-          - frr-r3-eth2
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r3.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
