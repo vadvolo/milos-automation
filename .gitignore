@@ -26,3 +26,14 @@ lab/dynamips/ilt_2014092320_mips64e
 lab/dynamips/ilt_2014092320_mips64j
 lab/dynamips/ilt_2014092320_ppc32e
 lab/dynamips/ilt_2014092320_ppc32j
+lab/topologies/lab03_dc_cisco/src/ios-7200
+lab/topologies/lab03_dc_cisco/src/dynamips_log.txt
+lab/topologies/lab03_dc_cisco/src/ilt*
+lab/topologies/lab03_dc_cisco/src/next-hop-lab
+lab/topologies/lab03_dc_cisco/src/netbox_data
+
+lab/topologies/lab00_cisco_base/src/ios-7200
+lab/topologies/lab00_cisco_base/src/dynamips_log.txt
+lab/topologies/lab00_cisco_base/src/ilt*
+lab/topologies/lab00_cisco_base/src/next-hop-lab
+lab/topologies/lab00_cisco_base/src/netbox_data

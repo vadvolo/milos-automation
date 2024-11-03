@@ -19,7 +19,7 @@ services:
     tty: true
     volumes:
       - ../dynamips:/home/ubuntu/
-      - ../discovery:/home/ubuntu/discovery
+      - ../scripts:/home/ubuntu/scripts
     command: sh "/home/ubuntu/install.sh"
     cap_add:
           - net_admin
@@ -38,20 +38,3 @@ services:
     environment:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}
-
-  containerlab:
-    container_name: containerlab
-    image: ghcr.io/srl-labs/clab
-    command: bash
-    network_mode: host
-    privileged: true
-    tty: true
-    stdin_open: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/run/netns:/var/run/netns
-      - /etc/hosts:/etc/hosts
-      - /var/lib/docker/containers:/var/lib/docker/containers
-      - ${PWD}:${PWD}
-    working_dir: ${PWD}
-    pid: host

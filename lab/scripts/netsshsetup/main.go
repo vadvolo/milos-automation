@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -49,9 +48,8 @@ var (
 		},
 
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Println("pidor")
 			sshCheck, err := device.SSHEnabled()
-			if sshCheck {
+			if !sshCheck {
 				err = device.SetSSH()
 			}
 			return err
