@@ -33,7 +33,9 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r1 | lab-r2 | lab-r3 |
 |:------:|:------:|:------:|
 | `python3 -m annet.annet gen lab-r1.nh.com` | `python3 -m annet.annet gen lab-r3.nh.com` | `python3 -m annet.annet gen lab-r3.nh.com` |
-| ```
+
+example of the output:
+```
 # -------------------- lab-r1.nh.com.cfg --------------------
 interface FastEthernet0/0
   description disconnected
@@ -44,7 +46,6 @@ interface GigabitEthernet1/0
 interface GigabitEthernet2/0
   description disconnected
 ```
-| . | . |
 
 
 **Step 4.**  
