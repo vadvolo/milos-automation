@@ -1,4 +1,0 @@
-name,role,tenant,manufacturer,device_type,platform,serial,asset_tag,status,site,location,rack,position,face,latitude,longitude,parent,device_bay,airflow,virtual_chassis,vc_position,vc_priority,cluster,description,config_template,comments,tags,id,cf_dev_login,cf_dev_password
-lab-r1,Router,,Cisco,7200,,,,Active,lab,,,,,,,,,,,,,,,,,0,,milos,milos
-lab-r2,Router,,Cisco,7200,,,,Active,lab,,,,,,,,,,,,,,,,,0,,milos,milos
-lab-r3,Router,,Cisco,7200,,,,Active,lab,,,,,,,,,,,,,,,,,0,,milos,milos

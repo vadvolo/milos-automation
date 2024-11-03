@@ -47,6 +47,10 @@ lab00: stop_compose
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	source ./netbox_env.sh && \
+	cd ./netbox-docker && \
+	docker-compose up -d && \
+	cd .. && \
 	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
 
 lab03: stop_compose
