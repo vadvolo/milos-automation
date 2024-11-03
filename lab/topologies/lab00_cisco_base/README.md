@@ -30,9 +30,11 @@ docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 **Step 3.**  
 Generate configuration for lab-r1, lab-r2, lab-r3
 
-| lab-r1 | lab-r2 | lab-r3 |
-|:------:|:------:|:------:|
-| `python3 -m annet.annet gen lab-r1.nh.com` | `python3 -m annet.annet gen lab-r3.nh.com` | `python3 -m annet.annet gen lab-r3.nh.com` |
+| Router | Command |
+|:------:|:------:|
+| lab-r1 | `python3 -m annet.annet gen lab-r1.nh.com` | 
+| lab-r2 |`python3 -m annet.annet gen lab-r3.nh.com` | 
+| lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
 
 example of the output:
 ```
