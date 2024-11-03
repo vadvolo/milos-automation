@@ -26,13 +26,16 @@ start_compose:
 	docker-compose up -d && \
 	cd ..
 
+stop_compose:
+	cd ./netbox-docker && \
+	docker-compose down -v && \
+	cd ..
+
 create_netbox_superuser:
 	@docker compose exec netbox-docker-netbox-1 /opt/netbox/netbox/manage.py createsuperuser
 
 build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
-
-run: start_compose annet_restart
 
 netbox_export:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
@@ -40,3 +43,14 @@ netbox_export:
 netbox_import:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
+lab00_up: stop_compose
+	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd .. && \
+	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	echo "Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder"
+
+lab03_up: stop_compose
+	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd ..
+
+run: start_compose annet_restart

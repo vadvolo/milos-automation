@@ -1,0 +1,40 @@
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.20.0.0/24
+        gateway: 172.20.0.1
+
+services:
+  netbox:
+    ports:
+      - 8000:8080
+    volumes:
+      - ../topologies/lab00_cisco_base/src:/home/ubuntu/src
+
+  dynamips-lab:
+    image: ubuntu:bionic
+    tty: true
+    volumes:
+      - ../topologies/lab00_cisco_base/src:/home/ubuntu/
+      - ../scripts:/home/ubuntu/scripts
+    command: sh "/home/ubuntu/install.sh"
+    cap_add:
+          - net_admin
+          - net_raw
+          - sys_module
+    devices: [/dev/net/tun:/dev/net/tun]
+    networks:
+      - default
+
+  annet:
+    build: ../annet/
+    command: tail -f /dev/null
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab00_cisco_base/src/generators:/generators
+    environment:
+      - NETBOX_TOKEN=${NETBOX_TOKEN}
+      - NETBOX_URL=${NETBOX_URL}
