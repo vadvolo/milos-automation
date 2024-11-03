@@ -1,8 +1,8 @@
 networks:
-  default:
+  mgmt:
+    name: mgmt
     driver: bridge
     ipam:
-      driver: default
       config:
       - subnet: 172.20.0.0/24
         gateway: 172.20.0.1
@@ -27,7 +27,7 @@ services:
           - sys_module
     devices: [/dev/net/tun:/dev/net/tun]
     networks:
-      - default
+      - mgmt
 
   annet:
     build: ../annet/

@@ -1,11 +1,13 @@
 version: '3'
 
 networks:
-  frr_mgmt:
+  mgmt:
+    name: mgmt
     driver: bridge
     ipam:
       config:
         - subnet: 172.20.0.0/24
+
   r1r2_net:
     driver: bridge
   r1r3_net:
@@ -17,7 +19,7 @@ x-frr-defaults: &frr-defaults
   image: frrouting/frr:v8.4.1
   privileged: true
   networks:
-    frr_mgmt: {}
+    mgmt: {}
   cap_add:
     - NET_ADMIN
     - SYS_ADMIN
@@ -26,6 +28,14 @@ x-frr-defaults: &frr-defaults
     - net.ipv4.conf.all.forwarding=1
     - net.ipv6.conf.all.forwarding=1
   tty: true
+  command: >
+    sh -c "apk add --no-cache openssh &&
+           echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config &&
+           echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
+           echo 'root:frr' | chpasswd &&
+           ssh-keygen -A &&
+           /usr/sbin/sshd &&
+           /sbin/tini -- /usr/lib/frr/docker-start"
 
 services:
   frr-r1:
@@ -33,7 +43,7 @@ services:
     container_name: frr-r1
     hostname: frr-r1
     networks:
-      frr_mgmt:
+      mgmt:
         ipv4_address: 172.20.0.110
       r1r2_net:
         aliases:
@@ -51,7 +61,7 @@ services:
     container_name: frr-r2
     hostname: frr-r2
     networks:
-      frr_mgmt:
+      mgmt:
         ipv4_address: 172.20.0.111
       r1r2_net:
         aliases:
@@ -69,7 +79,7 @@ services:
     container_name: frr-r3
     hostname: frr-r3
     networks:
-      frr_mgmt:
+      mgmt:
         ipv4_address: 172.20.0.112
       r1r3_net:
         aliases:
