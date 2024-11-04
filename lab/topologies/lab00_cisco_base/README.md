@@ -21,14 +21,14 @@ Before you start please put into `./scr/ios-7200` IOL image `c7200-jk9s-mz.124-1
 
 ### Generators
 
-Generators for this lab are located in `./src/my_generators`. We use two generators:
-- description generator
-- mtu generator
+In this lab, generators are organized within the `./src/my_generators` directory. The lab utilizes two specific generators:
+- Description Generator
+- MTU Generator
 
 <details>
 <summary>Description Generator</summary>
 
-At this generator we want to use description pattern contains device neighbor: `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. Device connection map locates at Netbox and uses by Annet.
+In this generator, we employ a description pattern for device neighbors formatted as `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. The device connection map is located in Netbox and is utilized by Annet.
 
 ```python
 class IfaceDescriptions(PartialGenerator):
@@ -59,7 +59,7 @@ class IfaceDescriptions(PartialGenerator):
 <details>
 <summary>Mtu Generator</summary>
 
-At this generator we use information about interface's MTU from Netbox if MTU was configured. Otherwise we use default value of MTU - 1500.
+In this generator, we retrieve the MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use the default MTU value of 1500.
 
 ```python
 MTU = 1500
@@ -88,10 +88,6 @@ class IfaceMtu(PartialGenerator):
 </details>
 
 ### Lab Guide
-
-**Step 0.**
-
-Build the lab: `make lab00`
 
 **Step 1.**  
 To start lab please navigate to `annetutils/labs` and run `make lab00`.
@@ -126,10 +122,10 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 >     raise ClientError(response.status_code)
 > dataclass_rest.exceptions.ClientError: 403
 > ```
-
-```
-export NETBOX_TOKEN="a630dcefcb191982869e7576190e79bfd569d33c"
-```
+>
+> ```
+> export NETBOX_TOKEN="a630dcefcb191982869e7576190e79bfd569d33c"
+> ```
 
 <details>
 <summary>Output for lab-r1:</summary>
