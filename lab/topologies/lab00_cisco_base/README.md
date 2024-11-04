@@ -1,7 +1,7 @@
 ## Basic Scenario. Cisco
 
 ### Introduction:
-In the Lab00, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
+In this lab, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
 - mtu configuration
 - description configuration
 
@@ -19,9 +19,7 @@ Author:
 
 Before you start please put into `./scr/ios-7200` IOL image `c7200-jk9s-mz.124-13a`
 
-### Lab Guide
-
-#### Generators
+### Generators
 
 Generators for this lab are located in `./src/my_generators`. We use two generators:
 - description generator
@@ -89,6 +87,11 @@ class IfaceMtu(PartialGenerator):
 
 </details>
 
+### Lab Guide
+
+**Step 0.**
+
+Build the lab: `make lab00`
 
 **Step 1.**  
 To start lab please navigate to `annetutils/labs` and run `make lab00`.
@@ -98,6 +101,8 @@ Go to annet-container
 ```
 docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 ```
+
+**Step 3.** 
 
 Enable SSH on Cisco routers by script:
 ```
@@ -115,12 +120,12 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r2 |`python3 -m annet.annet gen lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
 
-If you see error below, you need to export NETBOX_TOKEN to the Annet container.
-```
-  File "/venv/lib/python3.12/site-packages/dataclass_rest/http/requests.py", line 19, in _on_error_default
-    raise ClientError(response.status_code)
-dataclass_rest.exceptions.ClientError: 403
-```
+> If you see error below, you need to export NETBOX_TOKEN to the Annet container.
+> ```
+>   File "/venv/lib/python3.12/site-packages/dataclass_rest/http/requests.py", line 19, in _on_error_default
+>     raise ClientError(response.status_code)
+> dataclass_rest.exceptions.ClientError: 403
+> ```
 
 ```
 export NETBOX_TOKEN="a630dcefcb191982869e7576190e79bfd569d33c"
@@ -196,7 +201,7 @@ Generate diff for lab-r1, lab-r2, lab-r3
 | lab-r3 |`python3 -m annet.annet diff lab-r3.nh.com` |
 
 <details>
-<summary>Output Diff for lab-r1:</summary>
+<summary>Diff for lab-r1:</summary>
 
 ```diff
   interface FastEthernet0/0
@@ -216,7 +221,7 @@ Generate diff for lab-r1, lab-r2, lab-r3
 </details>
 
 <details>
-<summary>Output Diff for lab-r2:</summary>
+<summary>Diff for lab-r2:</summary>
 
 ```diff
   interface FastEthernet0/0
@@ -236,9 +241,9 @@ Generate diff for lab-r1, lab-r2, lab-r3
 </details>
 
 <details>
-<summary>Output Diff for lab-r3:</summary>
+<summary>Diff for lab-r3:</summary>
 
-```
+```diff
   interface FastEthernet0/0
 +   description disconnected
 +   mtu 1500
