@@ -66,3 +66,11 @@ lab01_up:
 
 lab01_down:
 	@cd topologies/lab01_frr-only-test && docker-compose down
+
+lab02_up:
+	@cd topologies/lab02_ceos-test && \
+	cp default_configs/* operational_configs/ && \
+	docker-compose up -d --build
+
+lab02_down:
+	@cd topologies/lab02_ceos-test && docker-compose down
