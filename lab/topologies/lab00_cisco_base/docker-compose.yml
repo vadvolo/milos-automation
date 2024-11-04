@@ -34,7 +34,7 @@ services:
     command: tail -f /dev/null
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab00_cisco_base/src/generators:/generators
+      - ../topologies/lab00_cisco_base/src/my_generators:/my_generators
     environment:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}

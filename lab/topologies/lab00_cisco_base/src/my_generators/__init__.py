@@ -9,4 +9,5 @@ def get_generators(store: Storage) -> list[BaseGenerator]:
         interfaces.Ifaces(store),
         interfaces.Ntp(store),
         interfaces.IfaceDescriptions(store),
+        interfaces.IfaceMtu(store),
     ]
