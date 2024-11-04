@@ -39,7 +39,8 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r2 |`python3 -m annet.annet gen lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
 
-Output for `lab-r1`:
+<details>
+<summary>Output for `lab-r1`:</summary>
 ```
 interface FastEthernet0/0
   description disconnected
@@ -54,6 +55,43 @@ interface GigabitEthernet2/0
   description disconnected
   mtu 1500
 ```
+</details>
+
+<details>
+<summary>Output for `lab-r2`:</summary>
+```
+interface FastEthernet0/0
+  description disconnected
+  mtu 1500
+interface FastEthernet0/1
+  description disconnected
+  mtu 1500
+interface GigabitEthernet1/0
+  description to_lab-r2.nh.com_GigabitEthernet1/0
+  mtu 2000
+interface GigabitEthernet2/0
+  description disconnected
+  mtu 1500
+```
+</details>
+
+<details>
+<summary>Output for `lab-r3`:</summary>
+```
+interface FastEthernet0/0
+  description disconnected
+  mtu 1500
+interface FastEthernet0/1
+  description disconnected
+  mtu 1500
+interface GigabitEthernet1/0
+  description to_lab-r2.nh.com_GigabitEthernet1/0
+  mtu 2000
+interface GigabitEthernet2/0
+  description disconnected
+  mtu 1500
+```
+</details>
 
 **Step 4.**  
 Generate diff for lab-r1, lab-r2, lab-r3
