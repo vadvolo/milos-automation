@@ -8,12 +8,30 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
+
   r1r2_net:
+    name: r1r2_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+
   r1r3_net:
+    name: r1r3_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+
   r2r3_net:
+    name: r2r3_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
 
 x-ceos-defaults: &ceos-defaults
   image: arista-ceos:4.33.0F
@@ -71,7 +89,9 @@ services:
       mgmt:
         ipv4_address: 172.20.0.110
       r1r2_net:
+        ipv4_address: 10.0.1.12
       r1r3_net:
+        ipv4_address: 10.0.2.13
     volumes:
       - ./operational_configs/frr-r1.conf:/etc/frr/frr.conf
       - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
@@ -85,7 +105,9 @@ services:
       mgmt:
         ipv4_address: 172.20.0.113
       r1r2_net:
+        ipv4_address: 10.0.1.21
       r2r3_net:
+        ipv4_address: 10.0.3.23
     volumes:
       - ./operational_configs/ceos-r2.conf:/mnt/flash/startup-config
 
@@ -97,6 +119,8 @@ services:
       mgmt:
         ipv4_address: 172.20.0.114
       r1r3_net:
+        ipv4_address: 10.0.2.31
       r2r3_net:
+        ipv4_address: 10.0.3.32
     volumes:
       - ./operational_configs/ceos-r3.conf:/mnt/flash/startup-config
