@@ -21,6 +21,75 @@ Before you start please put into `./scr/ios-7200` IOL image `c7200-jk9s-mz.124-1
 
 ### Lab Guide
 
+#### Generators
+
+Generators for this lab are located in `./src/my_generators`. We use two generators:
+- description generator
+- mtu generator
+
+<details>
+<summary>Description Generator</summary>
+
+At this generator we want to use description pattern contains device neighbor: `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. Device connection map locates at Netbox and uses by Annet.
+
+```python
+class IfaceDescriptions(PartialGenerator):
+    
+    TAGS = ["description"]
+    
+    def acl_cisco(self, device):
+        return """
+        interface
+            description
+        """
+    
+    def run_cisco(self, device):
+        for interface in device.interfaces:
+            neighbor = ""
+            if interface.connected_endpoints:
+                for connection in interface.connected_endpoints:
+                    neighbor += f"to_{connection.device.name}_{connection.name}"
+                with self.block(f"interface {interface.name}"):
+                    yield f"description {neighbor}"
+            else:
+                with self.block(f"interface {interface.name}"):
+                    yield f"description disconnected"
+```
+
+</details>
+
+<details>
+<summary>Mtu Generator</summary>
+
+At this generator we use information about interface's MTU from Netbox if MTU was configured. Otherwise we use default value of MTU - 1500.
+
+```python
+MTU = 1500
+
+class IfaceMtu(PartialGenerator):
+    
+    TAGS = ["description"]
+    
+    def acl_cisco(self, device):
+        return """
+        interface
+            mtu
+        """
+    
+    def run_cisco(self, device):
+        for interface in device.interfaces:
+            if interface.mtu:
+                mtu = interface.mtu
+            else:
+                mtu = MTU
+            with self.block(f"interface {interface.name}"):
+                yield f"mtu {mtu}"
+
+```
+
+</details>
+
+
 **Step 1.**  
 To start lab please navigate to `annetutils/labs` and run `make lab00`.
 
@@ -30,7 +99,14 @@ Go to annet-container
 docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 ```
 
-**Step 3.**  
+Enable SSH on Cisco routers by script:
+```
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r1.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r2.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r3.nh.com
+```
+
+**Step 3.** 
 Generate configuration for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
@@ -39,8 +115,20 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r2 |`python3 -m annet.annet gen lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
 
+If you see error below, you need to export NETBOX_TOKEN to the Annet container.
+```
+  File "/venv/lib/python3.12/site-packages/dataclass_rest/http/requests.py", line 19, in _on_error_default
+    raise ClientError(response.status_code)
+dataclass_rest.exceptions.ClientError: 403
+```
+
+```
+export NETBOX_TOKEN="a630dcefcb191982869e7576190e79bfd569d33c"
+```
+
 <details>
-<summary>Output for `lab-r1`:</summary>
+<summary>Output for lab-r1:</summary>
+
 ```
 interface FastEthernet0/0
   description disconnected
@@ -50,15 +138,17 @@ interface FastEthernet0/1
   mtu 1500
 interface GigabitEthernet1/0
   description to_lab-r2.nh.com_GigabitEthernet1/0
-  mtu 2000
+  mtu 4000
 interface GigabitEthernet2/0
   description disconnected
   mtu 1500
 ```
+
 </details>
 
 <details>
-<summary>Output for `lab-r2`:</summary>
+<summary>Output for lab-r2:</summary>
+
 ```
 interface FastEthernet0/0
   description disconnected
@@ -67,16 +157,17 @@ interface FastEthernet0/1
   description disconnected
   mtu 1500
 interface GigabitEthernet1/0
-  description to_lab-r2.nh.com_GigabitEthernet1/0
-  mtu 2000
+  description to_lab-r1.nh.com_GigabitEthernet1/0
+  mtu 4000
 interface GigabitEthernet2/0
-  description disconnected
-  mtu 1500
+  description to_lab-r3.nh.com_GigabitEthernet1/0
+  mtu 4000
 ```
+
 </details>
 
 <details>
-<summary>Output for `lab-r3`:</summary>
+<summary>Output for lab-r3:</summary>
 
 ```
 interface FastEthernet0/0
@@ -86,8 +177,8 @@ interface FastEthernet0/1
   description disconnected
   mtu 1500
 interface GigabitEthernet1/0
-  description to_lab-r2.nh.com_GigabitEthernet1/0
-  mtu 2000
+  description to_lab-r2.nh.com_GigabitEthernet2/0
+  mtu 4000
 interface GigabitEthernet2/0
   description disconnected
   mtu 1500
@@ -104,41 +195,65 @@ Generate diff for lab-r1, lab-r2, lab-r3
 | lab-r2 |`python3 -m annet.annet diff lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet diff lab-r3.nh.com` |
 
-#### Output for `lab-r1` {.tabset}
-
-##### "lab-r1"
+<details>
+<summary>Output Diff for lab-r1:</summary>
 
 ```diff
-interface FastEthernet0/0
+  interface FastEthernet0/0
 +   description disconnected
 +   mtu 1500
-interface FastEthernet0/1
+  interface FastEthernet0/1
 +   description disconnected
 +   mtu 1500
-interface GigabitEthernet1/0
+  interface GigabitEthernet1/0
 +   description to_lab-r2.nh.com_GigabitEthernet1/0
-+   mtu 2000
-interface GigabitEthernet2/0
++   mtu 4000
+  interface GigabitEthernet2/0
 +   description disconnected
 +   mtu 1500
 ```
 
-##### "lab-r2"
+</details>
+
+<details>
+<summary>Output Diff for lab-r2:</summary>
 
 ```diff
-interface FastEthernet0/0
+  interface FastEthernet0/0
 +   description disconnected
 +   mtu 1500
-interface FastEthernet0/1
+  interface FastEthernet0/1
 +   description disconnected
 +   mtu 1500
-interface GigabitEthernet1/0
-+   description to_lab-r23.nh.com_GigabitEthernet1/0
-+   mtu 2000
-interface GigabitEthernet2/0
+  interface GigabitEthernet1/0
++   description to_lab-r1.nh.com_GigabitEthernet1/0
++   mtu 4000
+  interface GigabitEthernet2/0
++   description to_lab-r3.nh.com_GigabitEthernet1/0
++   mtu 4000
+```
+
+</details>
+
+<details>
+<summary>Output Diff for lab-r3:</summary>
+
+```
+  interface FastEthernet0/0
++   description disconnected
++   mtu 1500
+  interface FastEthernet0/1
++   description disconnected
++   mtu 1500
+  interface GigabitEthernet1/0
++   description to_lab-r2.nh.com_GigabitEthernet2/0
++   mtu 4000
+  interface GigabitEthernet2/0
 +   description disconnected
 +   mtu 1500
 ```
+
+</details>
 
 
 **Step 5.**  
@@ -146,12 +261,14 @@ Generate patch for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
 |:------:|:------:|
-| lab-r1 | `python3 -m annet.annet patch lab-r1.nh.com` | 
+| lab-r1 |`python3 -m annet.annet patch lab-r1.nh.com` | 
 | lab-r2 |`python3 -m annet.annet patch lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet patch lab-r3.nh.com` |
 
-Output for `lab-r1`:
-```diff
+<details>
+<summary>Patch for lab-r1:</summary>
+
+```
 interface FastEthernet0/0
   description disconnected
   mtu 1500
@@ -162,7 +279,7 @@ interface FastEthernet0/1
   exit
 interface GigabitEthernet1/0
   description to_lab-r2.nh.com_GigabitEthernet1/0
-  mtu 2000
+  mtu 4000
   exit
 interface GigabitEthernet2/0
   description disconnected
@@ -170,11 +287,60 @@ interface GigabitEthernet2/0
   exit
 ```
 
+</details>
+
+<details>
+<summary>Patch for lab-r2:</summary>
+
+```
+interface FastEthernet0/0
+  description disconnected
+  mtu 1500
+  exit
+interface FastEthernet0/1
+  description disconnected
+  mtu 1500
+  exit
+interface GigabitEthernet1/0
+  description to_lab-r1.nh.com_GigabitEthernet1/0
+  mtu 4000
+  exit
+interface GigabitEthernet2/0
+  description to_lab-r3.nh.com_GigabitEthernet1/0
+  mtu 4000
+```
+
+</details>
+
+<details>
+<summary>Patch for lab-r3:</summary>
+
+```
+interface FastEthernet0/0
+  description disconnected
+  mtu 1500
+  exit
+interface FastEthernet0/1
+  description disconnected
+  mtu 1500
+  exit
+interface GigabitEthernet1/0
+  description to_lab-r2.nh.com_GigabitEthernet2/0
+  mtu 4000
+  exit
+interface GigabitEthernet2/0
+  description disconnected
+  mtu 1500
+  exit
+```
+
+</details>
+
 **Step 6.** 
 Deploy configuration into for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
 |:------:|:------:|
-| lab-r1 | `python3 -m annet.annet deploy lab-r1.nh.com` | 
+| lab-r1 |`python3 -m annet.annet deploy lab-r1.nh.com` | 
 | lab-r2 |`python3 -m annet.annet deploy lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet deploy lab-r3.nh.com` |

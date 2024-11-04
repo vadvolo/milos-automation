@@ -22,3 +22,5 @@ Flags:
   -P, --protocol string   set up ip protocol from list: ssh, telnet
   -v, --vendor string     set up vendor from list: cisco
   ```
+
+How to build for linux: `env GOOS=linux GOARCH=arm go build`
