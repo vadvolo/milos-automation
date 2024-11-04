@@ -1,3 +1,7 @@
+# Check if sudo is installed and if the user is not root
+# Use "sudo" if both are true
+SUDO := $(shell if [ -x "$$(command -v sudo)" ] && [ "$$(id -u)" -ne 0 ]; then echo "sudo"; fi)
+
 build:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
 	@git clone https://github.com/EvilFreelancer/docker-routeros.git
@@ -61,7 +65,7 @@ run: start_compose annet_restart
 
 lab01_up:
 	@cd topologies/lab01_frr-only-test && \
-	find operational_configs -type f ! -name '.gitkeep' -delete && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	docker-compose up -d --build
 
@@ -70,7 +74,7 @@ lab01_down:
 
 lab02_up:
 	@cd topologies/lab02_ceos-test && \
-	find operational_configs -type f ! -name '.gitkeep' -delete && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	docker-compose up -d --build
 

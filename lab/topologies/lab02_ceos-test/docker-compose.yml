@@ -109,7 +109,7 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.23
     volumes:
-      - ./operational_configs/ceos-r2.conf:/mnt/flash/startup-config
+      - ./operational_configs/ceos-r2.flash:/mnt/flash/
 
   ceos-r3:
     <<: *ceos-defaults
@@ -123,4 +123,4 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.32
     volumes:
-      - ./operational_configs/ceos-r3.conf:/mnt/flash/startup-config
+      - ./operational_configs/ceos-r3.flash:/mnt/flash/
