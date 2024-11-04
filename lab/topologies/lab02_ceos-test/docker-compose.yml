@@ -93,7 +93,7 @@ services:
       r1r3_net:
         ipv4_address: 10.0.2.13
     volumes:
-      - ./operational_configs/frr-r1.conf:/etc/frr/frr.conf
+      - ./operational_configs/frr-r1.frr:/etc/frr/
       - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
