@@ -8,12 +8,30 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
+
   r1r2_net:
+    name: r1r2_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+
   r1r3_net:
+    name: r1r3_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+
   r2r3_net:
+    name: r2r3_net
     driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
 
 x-frr-defaults: &frr-defaults
   image: frrouting/frr:v8.4.1
@@ -46,7 +64,9 @@ services:
       mgmt:
         ipv4_address: 172.20.0.110
       r1r2_net:
+        ipv4_address: 10.0.1.12
       r1r3_net:
+        ipv4_address: 10.0.2.13
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r1.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
@@ -60,7 +80,9 @@ services:
       mgmt:
         ipv4_address: 172.20.0.111
       r1r2_net:
+        ipv4_address: 10.0.1.21
       r2r3_net:
+        ipv4_address: 10.0.3.23
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r2.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
@@ -74,7 +96,9 @@ services:
       mgmt:
         ipv4_address: 172.20.0.112
       r1r3_net:
+        ipv4_address: 10.0.2.31
       r2r3_net:
+        ipv4_address: 10.0.3.32
     volumes:
       - ../../configs/lab01_frr-only-test/frr-r3.conf:/etc/frr/frr.conf
       - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
