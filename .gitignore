@@ -1,5 +1,3 @@
-*.bak
-clab-*
 example_01/slices
 ./example_01/values
 ./example_01/format.go
@@ -20,7 +18,6 @@ dynamips/ilt*
 dynamips/dynamips_log.txt
 dynamips/ios-7200
 
-
 lab/annet/my_generators/__pycache__/__init__.cpython-312.pyc
 lab/dynamips/ilt_2014092320_mips64e
 lab/dynamips/ilt_2014092320_mips64j
@@ -37,3 +34,6 @@ lab/topologies/lab00_cisco_base/src/dynamips_log.txt
 lab/topologies/lab00_cisco_base/src/ilt*
 lab/topologies/lab00_cisco_base/src/next-hop-lab
 lab/topologies/lab00_cisco_base/src/netbox_data
+
+lab/topologies/*/operational_configs/*
+!lab/topologies/*/operational_configs/.gitkeep

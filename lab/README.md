@@ -137,26 +137,66 @@ You don't need to generate your own token if you've made `make netbox_import`.
 
 ## Lab management
 
-Lab topologies are managed by [Containerlab](https://containerlab.dev/), which is itself deployed in a container. Executable `lab/containerlab` is a simple wrapper for accessing Containerlab container. Available topologies can be found in `lab/topologies`. To spin up the topology:
+Lab topologies are described by `docker-compose.yml` files in `lab/topologies` folder. Topologies can be deployed by `make lab*_up` and destroyed by `make lab*_down`:
 ```bash
-./containerlab deploy --topo topologies/lab01_frr-only-test/frr-only-test.clab.yml
+make lab01_up
+make lab01_down
 ```
 
-Connect to an FRR node:
+Configuration files for nodes in the topology are separated into immutable default configurations `lab/topologies/lab*/default_configs`, used when initializing the lab, and operational configurations `lab/topologies/lab*/operational_configs`, that can be changed by the nodes. Operational configurations are created on lab startup from the defaults, and they are not tracked by Git.
+
+### Lab 01: FRR-only test
+
+To connect to lab nodes, one can use `docker exec` or SSH:
 ```bash
-docker exec -it clab-frr-only-test-frr-r2 bash
+docker exec -it frr-r1 bash # open shell
+# or
+docker exec -it frr-r1 vtysh # open FRR CLI
+# or
+ssh root@172.20.0.110 # password: frr
 ```
 
-Connect to an Arista cEOS node:
-```bash
-docker exec -it clab-ceos-test-ceos-r3 Cli
-  <OR>
-ssh admin@clab-ceos-test-ceos-r3
+Node list:
+- frr-r1: 172.20.0.110
+- frr-r2: 172.20.0.111
+- frr-r3: 172.20.0.112
+
+## How to use
+
+Go to annet:
+
+```
+docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 ```
 
-Destroy the topology:
-```bash
-./containerlab destroy --topo topologies/lab01_frr-only-test/frr-only-test.clab.yml
+Run:
+
+- diff
+
+```
+python3 -m annet.annet diff lab-r1.nh.com
 ```
 
-Full list of commands can be found [here](https://containerlab.dev/cmd/deploy/).
+- patch
+
+```
+python3 -m annet.annet patch lab-r1.nh.com
+```
+
+- deploy
+
+```
+python3 -m annet.annet deploy lab-r1.nh.com
+```
+
+## Annet description
+
+Annet is an solution for the network configuration management. It provides capabilities for storing templates of configuration, generating and implimentation network configuration. There are four main command for it:
+- `gen`
+- `diff`
+- `patch`
+- `deploy`
+
+Annet uses Netbox as Source of Truth about network topology, equipment and resources.
+
+To use annet at presented labs you should prepare generators located at `annet/my_generators`.
