@@ -1,4 +1,4 @@
-## Lab00 Cisco Base
+## Basic Scenario. Cisco
 
 ### Introduction:
 In the Lab00, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
