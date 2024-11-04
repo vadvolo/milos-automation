@@ -73,9 +73,9 @@ services:
       r1r2_net:
       r1r3_net:
     volumes:
-      - ../../configs/lab02_ceos-test/frr-r1.conf:/etc/frr/frr.conf
-      - ../../configs/lab02_ceos-test/frr_common_daemons:/etc/frr/daemons
-      - ../../configs/lab02_ceos-test/frr_common_vtysh:/etc/frr/vtysh.conf
+      - ./configs/frr-r1.conf:/etc/frr/frr.conf
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf
 
   ceos-r2:
     <<: *ceos-defaults
@@ -87,7 +87,7 @@ services:
       r1r2_net:
       r2r3_net:
     volumes:
-      - ../../configs/lab02_ceos-test/ceos-r2.conf:/mnt/flash/startup-config
+      - ./configs/ceos-r2.conf:/mnt/flash/startup-config
 
   ceos-r3:
     <<: *ceos-defaults
@@ -99,4 +99,4 @@ services:
       r1r3_net:
       r2r3_net:
     volumes:
-      - ../../configs/lab02_ceos-test/ceos-r3.conf:/mnt/flash/startup-config
+      - ./configs/ceos-r3.conf:/mnt/flash/startup-config

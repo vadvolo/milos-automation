@@ -68,9 +68,9 @@ services:
       r1r3_net:
         ipv4_address: 10.0.2.13
     volumes:
-      - ../../configs/lab01_frr-only-test/frr-r1.conf:/etc/frr/frr.conf
-      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
-      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+      - ./configs/frr-r1.conf:/etc/frr/frr.conf
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf
 
   frr-r2:
     <<: *frr-defaults
@@ -84,9 +84,9 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.23
     volumes:
-      - ../../configs/lab01_frr-only-test/frr-r2.conf:/etc/frr/frr.conf
-      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
-      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+      - ./configs/frr-r2.conf:/etc/frr/frr.conf
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf
 
   frr-r3:
     <<: *frr-defaults
@@ -100,6 +100,6 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.32
     volumes:
-      - ../../configs/lab01_frr-only-test/frr-r3.conf:/etc/frr/frr.conf
-      - ../../configs/lab01_frr-only-test/frr_common_daemons:/etc/frr/daemons
-      - ../../configs/lab01_frr-only-test/frr_common_vtysh:/etc/frr/vtysh.conf
+      - ./configs/frr-r3.conf:/etc/frr/frr.conf
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf
