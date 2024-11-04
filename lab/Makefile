@@ -56,7 +56,9 @@ lab03: stop_compose
 run: start_compose annet_restart
 
 lab01_up:
-	@cd topologies/lab01_frr-only-test && docker-compose up -d --build
+	@cd topologies/lab01_frr-only-test && \
+	cp default_configs/* operational_configs/ && \
+	docker-compose up -d --build
 
 lab01_down:
 	@cd topologies/lab01_frr-only-test && docker-compose down
