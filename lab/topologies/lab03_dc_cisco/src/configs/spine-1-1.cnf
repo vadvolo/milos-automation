@@ -40,6 +40,7 @@ ip domain name nh.com
 !
 !
 username cisco privilege 15 secret 5 $1$Ffvc$rlQfINnAGuBa./fTx0f5z.
+username milos privilege 15 secret 5 $1$zCwP$hCKzCFg/1aqX0LygJ/eIK.
 !
 !
 ip ssh version 2
