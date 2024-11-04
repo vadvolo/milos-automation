@@ -53,16 +53,22 @@ lab00: stop_compose
 	cd .. && \
 	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
 
+lab01: stop_compose
+	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd topologies/lab01_frr-only-test && \
+	cp default_configs/* operational_configs/ && \
+	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
+	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	source ./netbox_env.sh && \
+	cd ./netbox-docker && \
+	docker-compose up -d && \
+	cd .. \
+
+
 lab03: stop_compose
 	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd ..
 
 run: start_compose annet_restart
 
-lab01_up:
-	@cd topologies/lab01_frr-only-test && \
-	cp default_configs/* operational_configs/ && \
-	docker-compose up -d --build
 
-lab01_down:
-	@cd topologies/lab01_frr-only-test && docker-compose down

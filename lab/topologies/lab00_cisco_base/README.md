@@ -64,9 +64,9 @@ Generate diff for lab-r1, lab-r2, lab-r3
 | lab-r2 |`python3 -m annet.annet diff lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet diff lab-r3.nh.com` |
 
-Output for `lab-r1`:
-<hr />
-=== "lab-r1"
+#### Output for `lab-r1` {.tabset}
+
+##### "lab-r1"
 
 ```diff
 interface FastEthernet0/0
@@ -83,7 +83,7 @@ interface GigabitEthernet2/0
 +   mtu 1500
 ```
 
-=== "lab-r2"
+##### "lab-r2"
 
 ```diff
 interface FastEthernet0/0
