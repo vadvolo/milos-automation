@@ -61,7 +61,8 @@ run: start_compose annet_restart
 
 lab01_up:
 	@cd topologies/lab01_frr-only-test && \
-	cp default_configs/* operational_configs/ && \
+	find operational_configs -type f ! -name '.gitkeep' -delete && \
+	cp -r default_configs/* operational_configs/ && \
 	docker-compose up -d --build
 
 lab01_down:
@@ -69,7 +70,8 @@ lab01_down:
 
 lab02_up:
 	@cd topologies/lab02_ceos-test && \
-	cp default_configs/* operational_configs/ && \
+	find operational_configs -type f ! -name '.gitkeep' -delete && \
+	cp -r default_configs/* operational_configs/ && \
 	docker-compose up -d --build
 
 lab02_down:
