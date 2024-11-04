@@ -77,6 +77,7 @@ interface GigabitEthernet2/0
 
 <details>
 <summary>Output for `lab-r3`:</summary>
+
 ```
 interface FastEthernet0/0
   description disconnected
@@ -91,6 +92,7 @@ interface GigabitEthernet2/0
   description disconnected
   mtu 1500
 ```
+
 </details>
 
 **Step 4.**  
