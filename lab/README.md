@@ -142,7 +142,8 @@ Lab topologies are described by `docker-compose.yml` files in `lab/topologies` f
 make lab01_up
 make lab01_down
 ```
-Configuration files for devices in the topologies are located in relevant subfolders of`lab/configs` folder.
+
+Configuration files for nodes in the topology are separated into immutable default configurations `lab/topologies/lab*/default_configs`, used when initializing the lab, and operational configurations `lab/topologies/lab*/operational_configs`, that can be changed by the nodes. Operational configurations are created on lab startup from the defaults, and they are not tracked by Git.
 
 ### Lab 01: FRR-only test
 
