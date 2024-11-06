@@ -39,4 +39,5 @@ lab/topologies/*/operational_configs/*
 !lab/topologies/*/operational_configs/.gitkeep
 
 .idea/
-vm_images/
+c7200*
+cEOS*
