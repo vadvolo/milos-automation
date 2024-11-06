@@ -22,6 +22,7 @@ aaa session-id common
 !
 ip cef
 ip domain name nh.com
+no ip domain lookup
 !
 !
 !
@@ -38,7 +39,7 @@ ip domain name nh.com
 !
 !
 !
-username milos secret 5 $1$zCwP$hCKzCFg/1aqX0LygJ/eIK.
+username annet privilege 15 secret 5 $1$l/O8$I5Sf9..QOhhWDhq.HFsco.
 !
 !
 ip ssh version 2
@@ -92,8 +93,12 @@ line con 0
 line aux 0
  stopbits 1
 line vty 0 4
+ exec-timeout 0 0
+ logging synchronous
  transport input telnet ssh
 line vty 5 14
+ exec-timeout 0 0
+ logging synchronous
  transport input all
 !
 !
