@@ -47,10 +47,6 @@ netbox_export:
 netbox_import:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
-vm_download:
-	scp noc-sas.yndx.net:/tftpboot/c7200-jk9s-mz.124-13a.bin vm_images/
-	scp noc-sas.yndx.net:/tftpboot/cEOS-lab-4.33.0F.tar.xz vm_images/
-
 lab00: stop_compose
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
