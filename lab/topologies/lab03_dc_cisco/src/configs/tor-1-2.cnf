@@ -39,7 +39,7 @@ ip domain name nh.com
 !
 !
 !
-username cisco privilege 15 secret 5 $1$Ffvc$rlQfINnAGuBa./fTx0f5z.
+username annet privilege 15 secret 5 $1$l/O8$I5Sf9..QOhhWDhq.HFsco.
 !
 !
 ip ssh version 2
