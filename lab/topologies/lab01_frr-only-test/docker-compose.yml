@@ -119,6 +119,7 @@ services:
 
   netbox:
     container_name: netbox
+    hostname: netbox
     ports:
       - 8000:8080
     volumes:
