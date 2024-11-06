@@ -16,9 +16,8 @@ rebuild:
 clean:
 	rm -rf netbox-docker/
 	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
-	netbox-docker-netbox-1 netbox-docker-annet-1 netbox-docker-redis-cache-1 \
-	netbox-docker-dynamips-lab-1 netbox-docker-redis-1 netbox-docker-postgres-1
-	# docker volume prune -f -a
+	netbox annet netbox-docker-redis-cache-1 \
+	dynamips netbox-docker-redis-1 netbox-docker-postgres-1
 
 annet_restart:
 	source ./netbox_env.sh && \
@@ -36,21 +35,21 @@ stop_compose:
 	cd ..
 
 create_netbox_superuser:
-	@docker compose exec netbox-docker-netbox-1 /opt/netbox/netbox/manage.py createsuperuser
+	@docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
 
 build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
 
 netbox_export:
-	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
 
 netbox_import:
-	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
 lab00: stop_compose
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
-	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d && \
@@ -62,7 +61,7 @@ lab01: stop_compose
 	cd topologies/lab01_frr-only-test && \
 	cp default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
-	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d && \
@@ -72,7 +71,7 @@ lab01: stop_compose
 lab03: stop_compose
 	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
-	docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d && \
