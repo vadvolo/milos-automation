@@ -1,6 +1,9 @@
+# Check if sudo is installed and if the user is not root
+# Use "sudo" if both are true
+SUDO := $(shell if [ -x "$$(command -v sudo)" ] && [ "$$(id -u)" -ne 0 ]; then echo "sudo"; fi)
+
 build:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
-	@git clone https://github.com/EvilFreelancer/docker-routeros.git
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
 	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
 	@cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml
@@ -11,10 +14,11 @@ rebuild:
 	docker-compose build --no-cache
 
 clean:
-	rm -rf docker-routeros/ netbox-docker/
+	rm -rf netbox-docker/
 	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
 	netbox-docker-netbox-1 netbox-docker-annet-1 netbox-docker-redis-cache-1 \
 	netbox-docker-dynamips-lab-1 netbox-docker-redis-1 netbox-docker-postgres-1
+	# docker volume prune -f -a
 
 annet_restart:
 	source ./netbox_env.sh && \
@@ -51,7 +55,7 @@ lab00: stop_compose
 	cd ./netbox-docker && \
 	docker-compose up -d && \
 	cd .. && \
-	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
+	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
 
 lab01: stop_compose
 	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
@@ -77,4 +81,20 @@ lab03: stop_compose
 
 run: start_compose annet_restart
 
+lab01_up:
+	@cd topologies/lab01_frr-only-test && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+	cp -r default_configs/* operational_configs/ && \
+	docker-compose up -d --build
 
+lab01_down:
+	@cd topologies/lab01_frr-only-test && docker-compose down
+
+lab02_up:
+	@cd topologies/lab02_ceos-test && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+	cp -r default_configs/* operational_configs/ && \
+	docker-compose up -d --build
+
+lab02_down:
+	@cd topologies/lab02_ceos-test && docker-compose down
