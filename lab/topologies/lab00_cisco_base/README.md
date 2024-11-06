@@ -17,7 +17,7 @@ Author:
 
 ### Preparation:
 
-Before you start please put into `./scr/ios-7200` IOL image `c7200-jk9s-mz.124-13a`
+Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.124-13a.bin`
 
 ### Run
 
