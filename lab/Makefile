@@ -47,6 +47,8 @@ netbox_export:
 netbox_import:
 	@docker exec --user root netbox-docker-netbox-1 /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
+run: start_compose annet_restart
+
 lab00: stop_compose
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
@@ -56,12 +58,6 @@ lab00: stop_compose
 	docker-compose up -d && \
 	cd .. && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
-
-lab03: stop_compose
-	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
-	cd netbox-docker/ && docker-compose up -d && cd ..
-
-run: start_compose annet_restart
 
 lab01_up:
 	@cd topologies/lab01_frr-only-test && \
@@ -80,3 +76,7 @@ lab02_up:
 
 lab02_down:
 	@cd topologies/lab02_ceos-test && docker-compose down
+
+lab03: stop_compose
+	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd ..
