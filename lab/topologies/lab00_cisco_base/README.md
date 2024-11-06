@@ -1,6 +1,6 @@
 ## Basic Scenario. Cisco
 
-### Introduction:
+### Introduction
 In this lab, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
 - mtu configuration
 - description configuration
@@ -8,14 +8,14 @@ In this lab, you will gain hands-on experience in deploying simple network confi
 Author:
 - [Vadim Volovik](https://github.com/vadvolo)
 
-### Objectives:
+### Objectives
 - Understand the fundamental concepts of Annet
 
 ### Topology:
 
 ![Lab Topology](./images/topology.png)
 
-### Preparation:
+### Preparation
 
 Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.124-13a.bin`
 

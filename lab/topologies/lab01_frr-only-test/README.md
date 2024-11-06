@@ -1,10 +1,10 @@
 ## FRR Base Lab
 
-### Introduction:  
+### Introduction 
 This lab demostrates basic principles network automation using FRR devices.
 
 Authors:
-- [Grigorii Macheev]()
+- [Grigorii Macheev](https://github.com/gregory-mac),
 - [Vadim Volovik](https://github.com/vadvolo)
 
 ### Topology:
