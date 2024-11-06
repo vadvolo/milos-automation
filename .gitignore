@@ -18,7 +18,7 @@ dynamips/ilt*
 dynamips/dynamips_log.txt
 dynamips/ios-7200
 
-lab/annet/my_generators/__pycache__/__init__.cpython-312.pyc
+*.pyc
 lab/dynamips/ilt_2014092320_mips64e
 lab/dynamips/ilt_2014092320_mips64j
 lab/dynamips/ilt_2014092320_ppc32e
@@ -37,3 +37,6 @@ lab/topologies/lab00_cisco_base/src/netbox_data
 
 lab/topologies/*/operational_configs/*
 !lab/topologies/*/operational_configs/.gitkeep
+
+.idea/
+vm_images/
