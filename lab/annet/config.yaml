@@ -9,8 +9,8 @@ fetcher:
   default:
     adapter: gnetcli
     params: &gnetcli_patams
-      dev_login: milos
-      dev_password: milos
+      dev_login: annet
+      dev_password: annet
 
 deployer:
   default:
