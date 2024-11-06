@@ -106,6 +106,7 @@ services:
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
   annet:
+    container_name: annet
     build: ../annet/
     command: tail -f /dev/null
     volumes:
@@ -117,6 +118,7 @@ services:
       - NETBOX_URL=${NETBOX_URL}
 
   netbox:
+    container_name: netbox
     ports:
       - 8000:8080
     volumes:

@@ -8,6 +8,7 @@ networks:
         gateway: 172.20.0.1
 
 services:
+  container_name: netbox
   netbox:
     ports:
       - 8000:8080
@@ -15,6 +16,7 @@ services:
       - ../topologies/lab00_cisco_base/src:/home/ubuntu/src
 
   dynamips-lab:
+    container_name: dynamips
     image: ubuntu:bionic
     tty: true
     volumes:
@@ -31,6 +33,7 @@ services:
       - default
 
   annet:
+    container_name: annet
     build: ../annet/
     command: tail -f /dev/null
     volumes:
