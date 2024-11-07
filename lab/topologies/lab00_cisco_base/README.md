@@ -94,6 +94,15 @@ class IfaceMtu(PartialGenerator):
 
 ### Lab Guide
 
+**Step 0.**
+
+First of all, you need to install Docker and Docker Compose softaware on yours device:
+
+- [Docker](https://docs.docker.com/engine/install/)
+  - [Linux](https://docs.docker.com/desktop/install/linux/)
+  - [Mac](https://docs.docker.com/desktop/install/mac-install/)
+  - [Windows](https://docs.docker.com/desktop/install/windows-install/)
+
 **Step 1.**  
 To start lab please navigate to `annetutils/labs` and run `make lab00`.
 

@@ -53,10 +53,6 @@ lab00: stop_compose
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	source ./netbox_env.sh && \
-	cd ./netbox-docker && \
-	docker-compose up -d && \
-	cd .. && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
 
 lab01: stop_compose

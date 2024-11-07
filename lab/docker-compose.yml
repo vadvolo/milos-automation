@@ -16,23 +16,6 @@ services:
     volumes:
       - ../src/:/home/ubuntu/src
 
-  dynamips-lab:
-    container_name: dynamips
-    hostname: dynamips
-    image: ubuntu:bionic
-    tty: true
-    volumes:
-      - ../dynamips:/home/ubuntu/
-      - ../scripts:/home/ubuntu/scripts
-    command: sh "/home/ubuntu/install.sh"
-    cap_add:
-          - net_admin
-          - net_raw
-          - sys_module
-    devices: [/dev/net/tun:/dev/net/tun]
-    networks:
-      - mgmt
-
   annet:
     container_name: annet
     hostname: annet
