@@ -2,7 +2,7 @@
 
 echo "netstat -tlpn" >> /root/.bashrc
 apt update
-apt install -y sudo ssh dynamips dynagen telnet telnetd net-tools bridge-utils iproute2 uml-utilities openvpn inetutils-ping wget
+apt install -y sudo ssh dynamips dynagen telnet telnetd net-tools bridge-utils iproute2 uml-utilities openvpn inetutils-ping wget ncat
 
 mkdir /home/ubuntu/next-hop-lab
 

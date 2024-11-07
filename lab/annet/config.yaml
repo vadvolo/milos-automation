@@ -20,7 +20,7 @@ deployer:
 
 generators:
   default:
-    - my_generators
+    - lab_generators
 
 storage:
   default:

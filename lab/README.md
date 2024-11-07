@@ -62,7 +62,7 @@ Annet is an solution for the network configuration management. It provides capab
 
 Annet uses Netbox as Source of Truth about network topology, equipment and resources.
 
-To use annet at presented labs you should prepare generators located at `annet/my_generators`.
+To use annet at presented labs you should prepare generators located at `annet/lab_generators`.
 
 ### How to use Annet
 
@@ -199,4 +199,4 @@ Annet is an solution for the network configuration management. It provides capab
 
 Annet uses Netbox as Source of Truth about network topology, equipment and resources.
 
-To use annet at presented labs you should prepare generators located at `annet/my_generators`.
+To use annet at presented labs you should prepare generators located at `annet/lab_generators`.

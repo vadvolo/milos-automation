@@ -21,7 +21,7 @@ Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.1
 
 ### Generators
 
-In this lab, generators are organized within the `./src/my_generators` directory. The lab utilizes two specific generators:
+In this lab, generators are organized within the `./src/lab_generators` directory. The lab utilizes two specific generators:
 - Description Generator
 - MTU Generator
 
@@ -99,7 +99,7 @@ Check that all devices were imported into Netbox: http://localhost:8000/dcim/dev
 **Step 3.**  
 Go to annet-container  
 ```
-docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
+docker exec -u root -t -i annet /bin/bash
 ```
 
 **Step 4.** 
