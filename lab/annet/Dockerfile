@@ -1,8 +1,9 @@
 FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-venv python3 git golang-go vim net-tools iproute2 ssh
+    python3-venv python3 git golang-go vim net-tools iproute2
 RUN python3 -m venv /venv
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/annet/#egg=annet
+# RUN /venv/bin/pip install -e git+https://github.com/gescheit/annet@fix_annet#egg=annet
 
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli_adapter/#egg=gnetcli_adapter
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli#egg=gnetclisdk\&subdirectory=grpc_sdk/python
