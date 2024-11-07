@@ -92,28 +92,32 @@ class IfaceMtu(PartialGenerator):
 **Step 1.**  
 To start lab please navigate to `annetutils/labs` and run `make lab00`.
 
-**Step 2.**  
+**Step 2.**
+
+Check that all devices were imported into Netbox: http://localhost:8000/dcim/devices/ (annet/annet)
+
+**Step 3.**  
 Go to annet-container  
 ```
 docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
 ```
 
-**Step 3.** 
+**Step 4.** 
 
 Enable SSH on Cisco routers by script:
 ```
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r1.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r2.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r3.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r1.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r2.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r3.nh.com
 ```
 
-**Step 3.** 
+**Step 5.** 
 Generate configuration for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
 |:------:|:------:|
 | lab-r1 |`python3 -m annet.annet gen lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet gen lab-r3.nh.com` | 
+| lab-r2 |`python3 -m annet.annet gen lab-r2.nh.com` | 
 | lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
 
 > If you see error below, you need to export NETBOX_TOKEN to the Annet container.
@@ -187,13 +191,13 @@ interface GigabitEthernet2/0
 
 </details>
 
-**Step 4.**  
+**Step 6.**  
 Generate diff for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
 |:------:|:------:|
 | lab-r1 | `python3 -m annet.annet diff lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet diff lab-r3.nh.com` | 
+| lab-r2 |`python3 -m annet.annet diff lab-r2.nh.com` | 
 | lab-r3 |`python3 -m annet.annet diff lab-r3.nh.com` |
 
 <details>
@@ -257,7 +261,7 @@ Generate diff for lab-r1, lab-r2, lab-r3
 </details>
 
 
-**Step 5.**  
+**Step 7.**  
 Generate patch for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
@@ -337,7 +341,7 @@ interface GigabitEthernet2/0
 
 </details>
 
-**Step 6.** 
+**Step 8.** 
 Deploy configuration into for lab-r1, lab-r2, lab-r3
 
 | Router | Command |
@@ -345,3 +349,20 @@ Deploy configuration into for lab-r1, lab-r2, lab-r3
 | lab-r1 |`python3 -m annet.annet deploy lab-r1.nh.com` | 
 | lab-r2 |`python3 -m annet.annet deploy lab-r3.nh.com` | 
 | lab-r3 |`python3 -m annet.annet deploy lab-r3.nh.com` |
+
+**Step 9.**
+Change the MTU value on [link](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
+
+Repeat process `gen` -> `diff` -> `patch` -> `deploy` for lab-r2.
+
+**Step 10.**
+Change the logic generation description
+
+```diff
+class IfaceDescriptions(PartialGenerator):
+
+- neighbor += f"to_{connection.device.name}_{connection.name}"
++ neighbor += f"to_{connection.device.name}"
+```
+
+Repeat process `gen` -> `diff` -> `patch` -> `deploy` for some router.
