@@ -1,14 +1,18 @@
 ## Basic Scenario. Cisco
 
 ### Introduction
+
 In this lab, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
+
 - mtu configuration
 - description configuration
 
 Author:
+
 - [Vadim Volovik](https://github.com/vadvolo)
 
 ### Objectives
+
 - Understand the fundamental concepts of Annet
 
 ### Topology:
@@ -22,6 +26,7 @@ Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.1
 ### Generators
 
 In this lab, generators are organized within the `./src/lab_generators` directory. The lab utilizes two specific generators:
+
 - Description Generator
 - MTU Generator
 
@@ -32,15 +37,15 @@ In this generator, we employ a description pattern for device neighbors formatte
 
 ```python
 class IfaceDescriptions(PartialGenerator):
-    
+
     TAGS = ["description"]
-    
+
     def acl_cisco(self, device):
         return """
         interface
             description
         """
-    
+
     def run_cisco(self, device):
         for interface in device.interfaces:
             neighbor = ""
@@ -65,15 +70,15 @@ In this generator, we retrieve the MTU information for interfaces from Netbox if
 MTU = 1500
 
 class IfaceMtu(PartialGenerator):
-    
+
     TAGS = ["description"]
-    
+
     def acl_cisco(self, device):
         return """
         interface
             mtu
         """
-    
+
     def run_cisco(self, device):
         for interface in device.interfaces:
             if interface.mtu:
@@ -97,30 +102,31 @@ To start lab please navigate to `annetutils/labs` and run `make lab00`.
 Check that all devices were imported into Netbox: http://localhost:8000/dcim/devices/ (annet/annet)
 
 **Step 3.**  
-Go to annet-container  
+Go to annet-container
+
 ```
 docker exec -u root -t -i annet /bin/bash
 ```
 
-**Step 4.** 
+**Step 4.**
 
 Enable SSH on Cisco routers by script:
+
 ```
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r1.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r2.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r3.nh.com
+for ip in 0 1 2; do /home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet; done --ipdomain nh.com
 ```
 
-**Step 5.** 
+**Step 5.**
 Generate configuration for lab-r1, lab-r2, lab-r3
 
-| Router | Command |
-|:------:|:------:|
-| lab-r1 |`python3 -m annet.annet gen lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet gen lab-r2.nh.com` | 
-| lab-r3 |`python3 -m annet.annet gen lab-r3.nh.com` |
+| Router |                  Command                   |
+| :----: | :----------------------------------------: |
+| lab-r1 | `python3 -m annet.annet gen lab-r1.nh.com` |
+| lab-r2 | `python3 -m annet.annet gen lab-r2.nh.com` |
+| lab-r3 | `python3 -m annet.annet gen lab-r3.nh.com` |
 
 > If you see error below, you need to export NETBOX_TOKEN to the Annet container.
+>
 > ```
 >   File "/venv/lib/python3.12/site-packages/dataclass_rest/http/requests.py", line 19, in _on_error_default
 >     raise ClientError(response.status_code)
@@ -194,11 +200,11 @@ interface GigabitEthernet2/0
 **Step 6.**  
 Generate diff for lab-r1, lab-r2, lab-r3
 
-| Router | Command |
-|:------:|:------:|
-| lab-r1 | `python3 -m annet.annet diff lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet diff lab-r2.nh.com` | 
-| lab-r3 |`python3 -m annet.annet diff lab-r3.nh.com` |
+| Router |                   Command                   |
+| :----: | :-----------------------------------------: |
+| lab-r1 | `python3 -m annet.annet diff lab-r1.nh.com` |
+| lab-r2 | `python3 -m annet.annet diff lab-r2.nh.com` |
+| lab-r3 | `python3 -m annet.annet diff lab-r3.nh.com` |
 
 <details>
 <summary>Diff for lab-r1:</summary>
@@ -260,15 +266,14 @@ Generate diff for lab-r1, lab-r2, lab-r3
 
 </details>
 
-
 **Step 7.**  
 Generate patch for lab-r1, lab-r2, lab-r3
 
-| Router | Command |
-|:------:|:------:|
-| lab-r1 |`python3 -m annet.annet patch lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet patch lab-r3.nh.com` | 
-| lab-r3 |`python3 -m annet.annet patch lab-r3.nh.com` |
+| Router |                   Command                    |
+| :----: | :------------------------------------------: |
+| lab-r1 | `python3 -m annet.annet patch lab-r1.nh.com` |
+| lab-r2 | `python3 -m annet.annet patch lab-r3.nh.com` |
+| lab-r3 | `python3 -m annet.annet patch lab-r3.nh.com` |
 
 <details>
 <summary>Patch for lab-r1:</summary>
@@ -341,14 +346,14 @@ interface GigabitEthernet2/0
 
 </details>
 
-**Step 8.** 
+**Step 8.**
 Deploy configuration into for lab-r1, lab-r2, lab-r3
 
-| Router | Command |
-|:------:|:------:|
-| lab-r1 |`python3 -m annet.annet deploy lab-r1.nh.com` | 
-| lab-r2 |`python3 -m annet.annet deploy lab-r3.nh.com` | 
-| lab-r3 |`python3 -m annet.annet deploy lab-r3.nh.com` |
+| Router |                    Command                    |
+| :----: | :-------------------------------------------: |
+| lab-r1 | `python3 -m annet.annet deploy lab-r1.nh.com` |
+| lab-r2 | `python3 -m annet.annet deploy lab-r3.nh.com` |
+| lab-r3 | `python3 -m annet.annet deploy lab-r3.nh.com` |
 
 **Step 9.**
 Change the MTU value on [link](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.

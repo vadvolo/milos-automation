@@ -42,9 +42,8 @@ func (d *CiscoDevice) SetSSH() (error) {
 	fmt.Println("Check is ssh enabled")
 	cmds := cmd.NewCmdList(
 		[]string{
-			// "enable",
 			"conf t",
-			fmt.Sprintf("ip domain-name %s", hostname),
+			fmt.Sprintf("ip domain-name %s", d.Domain),
 		},
 	)
 	cmds = append(cmds, cmd.NewCmd("crypto key generate rsa", cmd.WithAnswers(

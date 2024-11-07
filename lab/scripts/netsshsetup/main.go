@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -15,6 +16,7 @@ func Execute() {
 
 var (
 	hostname string
+	ipdomain string
 	login    string
 	password string
 	vendor   string
@@ -30,6 +32,7 @@ var (
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			dev := NewDeivce(
 				hostname,
+				ipdomain,
 				login,
 				password,
 				address,
@@ -37,8 +40,6 @@ var (
 				breed,
 				protocol,
 			)
-			cmd.Println(dev)
-
 			switch vendor {
 			case "cisco":
 				device = &CiscoDevice{
@@ -48,6 +49,10 @@ var (
 		},
 
 		RunE: func(cmd *cobra.Command, args []string) error {
+			err := device.Ping()
+			if err != nil {
+				return fmt.Errorf("device is not available")
+			}
 			sshCheck, err := device.SSHEnabled()
 			if !sshCheck {
 				err = device.SetSSH()
@@ -59,6 +64,7 @@ var (
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&hostname, "hostname", "", "", "set up hostname")
+	rootCmd.PersistentFlags().StringVarP(&ipdomain, "ipdomain", "", "", "set up ipdomain")
 	rootCmd.PersistentFlags().StringVarP(&login, "login", "l", "", "set up login")
 	rootCmd.PersistentFlags().StringVarP(&password, "password", "p", "", "set up password")
 	rootCmd.PersistentFlags().StringVarP(&vendor, "vendor", "v", "", "set up vendor from list: cisco")

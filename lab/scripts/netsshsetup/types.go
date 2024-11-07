@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os/exec"
+	"runtime"
+	"strings"
 	"time"
 
 	"github.com/annetutil/gnetcli/pkg/cmd"
@@ -17,12 +20,14 @@ import (
 
 type NetworkDevice interface {
 	ShowRun() error
+	Ping() error
 	SSHEnabled() (bool, error)
 	SetSSH() error
 }
 
 type Device struct {
 	Hostname  string `json:"hostname"`
+	Domain    string `json:"domain"`
 	Login     string `json:"login"`
 	Password  string `json:"password"`
 	Address   string `json:"address"`
@@ -32,15 +37,39 @@ type Device struct {
 	Connector *ssh.Streamer
 }
 
-func NewDeivce(hostname, login, password, address, vendor, breed, protocol string) *Device {
+func NewDeivce(hostname, ipdomain, login, password, address, vendor, breed, protocol string) *Device {
 	return &Device{
 		Hostname: hostname,
+		Domain:   ipdomain,
 		Login:    login,
 		Password: password,
 		Address:  address,
 		Vendor:   vendor,
 		Breed:    breed,
 		Protocol: protocol,
+	}
+}
+
+func (d *Device) Ping() error {
+	var cmd *exec.Cmd
+
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("ping", "-n", "1", d.Address)
+	} else {
+		cmd = exec.Command("ping", "-c", "1", d.Address)
+	}
+
+	out, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("there was an error pinging the host: %e", err)
+	}
+
+	outStr := string(out)
+	if strings.Contains(outStr, "Request timeout") || strings.Contains(outStr, "Destination Host Unreachable") || strings.Contains(outStr, "100% packet loss") {
+		return fmt.Errorf("the host is not reachable")
+	} else {
+		return nil
 	}
 }
 
