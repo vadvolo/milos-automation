@@ -49,7 +49,7 @@ func (d *CiscoDevice) SetSSH() (error) {
 	)
 	cmds = append(cmds, cmd.NewCmd("crypto key generate rsa", cmd.WithAnswers(
 		cmd.NewAnswer("How many bits in the modulus [512]:", "2048"),
-	), cmd.WithReadTimeout(time.Duration(240*time.Second)), cmd.WithCmdTimeout(time.Duration(240*time.Second))))
+	), cmd.WithReadTimeout(time.Duration(240*time.Second)), cmd.WithCmdTimeout(time.Duration(600*time.Second))))
 	_, err := d.Device.SendCommands(cmds...)
 	if err != nil {
 		return err
