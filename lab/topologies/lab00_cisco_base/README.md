@@ -21,7 +21,7 @@ Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.1
 
 ### Generators
 
-In this lab, generators are organized within the `./src/my_generators` directory. The lab utilizes two specific generators:
+In this lab, generators are organized within the `./src/lab_generators` directory. The lab utilizes two specific generators:
 - Description Generator
 - MTU Generator
 
@@ -95,16 +95,16 @@ To start lab please navigate to `annetutils/labs` and run `make lab00`.
 **Step 2.**  
 Go to annet-container  
 ```
-docker exec -u root -t -i netbox-docker-annet-1 /bin/bash
+docker exec -u root -t -i annet /bin/bash
 ```
 
 **Step 3.** 
 
 Enable SSH on Cisco routers by script:
 ```
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r1.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r2.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l milos -p milos -P telnet --hostname lab-r3.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r1.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r2.nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r3.nh.com
 ```
 
 **Step 3.** 
