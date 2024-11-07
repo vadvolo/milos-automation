@@ -1,0 +1,74 @@
+[
+    {
+        "hostname": "csr1000v-main",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.1",
+        "login": "vdm",
+        "password": "12345qwert",
+        "interfaces": []
+    },
+    {
+        "hostname": "sw-3750",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.2",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    },
+    {
+        "hostname": "sart-big-room",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.3",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    },
+    {
+        "hostname": "server-switch",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.4",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    },
+    {
+        "hostname": "csr1000v-1c",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.5",
+        "login": "vdm",
+        "password": "12345qwert",
+        "interfaces": []
+    },
+    {
+        "hostname": "sw-buh-room",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.6",
+        "login": "vdm",
+        "password": "12345qwert",
+        "interfaces": []
+    },
+    {
+        "hostname": "csr1000v-disk",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.8",
+        "login": "vdm",
+        "password": "12345qwert",
+        "interfaces": []
+    },
+    {
+        "hostname": "voip-switch",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.9",
+        "login": "vdm",
+        "password": "1Qazxsw2",
+        "interfaces": []
+    }
+]
