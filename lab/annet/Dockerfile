@@ -13,7 +13,7 @@ RUN /venv/bin/pip install --upgrade protobuf grpcio
 # RUN /venv/bin/pip install protobuf==5.27.3 grpcio>=1.66.1
 ENV PATH=/venv/bin:$PATH
 ENV ANN_CONTEXT_CONFIG_PATH=/config.yaml
-# ENV ANN_GENERATORS_PATH=/my_generators
+# ENV ANN_GENERATORS_PATH=/lab_generators
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH

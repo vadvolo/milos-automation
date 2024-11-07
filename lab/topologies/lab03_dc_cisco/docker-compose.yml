@@ -13,7 +13,7 @@ services:
       - 8000:8080
     volumes:
       - ../topologies/lab03_dc_cisco/src:/home/ubuntu/src
-  
+
   dynamips-lab:
     image: ubuntu:bionic
     tty: true
@@ -35,14 +35,8 @@ services:
     command: tail -f /dev/null
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab03_dc_cisco/src/my_generators:/my_generators
+      - ../topologies/lab03_dc_cisco/src/lab_generators:/lab_generators
       - ../scripts:/home/ubuntu/scripts
     environment:
       - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
       - NETBOX_URL=${NETBOX_URL}
-
-  # for postgres restore netbox db
-  postgres:
-    volumes:
-      - netbox-postgres-data:/var/lib/postgresql/data
-      - ../topologies/lab03_dc_cisco/netbox_data:/netbox_data
