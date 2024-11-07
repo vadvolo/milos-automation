@@ -45,3 +45,5 @@ cEOS*
 __pycache__/
 *.py[cod]
 *$py.class
+
+lab/docker-routeros
