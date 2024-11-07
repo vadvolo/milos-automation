@@ -95,11 +95,7 @@ docker exec -u root -t -i annet /bin/bash
 
 Enable SSH on Cisco routers by script:
 ```
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r1.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r2.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r3.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.103 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r2.nh.com
-/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.104 -v cisco -b ios -l annet -p annet -P telnet --hostname lab-r3.nh.com
+for ip in 0 1 2 3 4; do /home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco; done
 ```
 
 **Step 3.** 

@@ -9,12 +9,16 @@ networks:
 
 services:
   netbox:
+    container_name: netbox
+    hostname: netbox
     ports:
       - 8000:8080
     volumes:
       - ../src/:/home/ubuntu/src
 
   dynamips-lab:
+    container_name: dynamips
+    hostname: dynamips
     image: ubuntu:bionic
     tty: true
     volumes:
@@ -30,6 +34,8 @@ services:
       - mgmt
 
   annet:
+    container_name: annet
+    hostname: annet
     build: ../annet/
     command: tail -f /dev/null
     volumes:

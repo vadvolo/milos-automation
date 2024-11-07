@@ -100,13 +100,3 @@ lab02_up:
 
 lab02_down:
 	@cd topologies/lab02_ceos-test && docker-compose down
-
-lab03: stop_compose
-	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
-	cd netbox-docker/ && docker-compose up -d && cd .. && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	source ./netbox_env.sh && \
-	cd ./netbox-docker && \
-	docker-compose up -d && \
-	cd .. && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
