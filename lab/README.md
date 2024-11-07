@@ -109,10 +109,10 @@ You don't need to generate your own token if you've made `make netbox_import`.
 3. Input username, email and password:
 
 ```
-Username (leave blank to use 'root'): milos
-Email address: milos@nh.com
-Password: milos
-Password (again): milos
+Username (leave blank to use 'root'): annet
+Email address: annet@nh.com
+Password: annet
+Password (again): annet
 Superuser created successfully.
 ```
 

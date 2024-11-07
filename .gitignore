@@ -18,7 +18,6 @@ dynamips/ilt*
 dynamips/dynamips_log.txt
 dynamips/ios-7200
 
-*.pyc
 lab/dynamips/ilt_2014092320_mips64e
 lab/dynamips/ilt_2014092320_mips64j
 lab/dynamips/ilt_2014092320_ppc32e
@@ -41,3 +40,8 @@ lab/topologies/*/operational_configs/*
 .idea/
 c7200*
 cEOS*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
