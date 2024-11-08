@@ -1,0 +1,60 @@
+version: '3'
+
+networks:
+  mgmt:
+    name: mgmt
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+
+  r1r2_net:
+    name: r1r2_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+
+x-iol-defaults: &iol-defaults
+  image: vrnetlab/cisco_iol:17.12.01
+  privileged: true
+  networks:
+    mgmt: {}
+  tty: true
+
+services:
+  iol-r1:
+    <<: *iol-defaults
+    hostname: iol-r1
+    container_name: iol-r1
+    environment:
+      - IOL_PID=1
+    networks:
+      mgmt:
+        ipv4_address: 172.20.0.120
+      r1r2_net:
+        ipv4_address: 10.0.1.12
+    volumes:
+      - ./operational_configs/iol-r1.iol/nvram:/iol/nvram_00001
+      - ./operational_configs/iol-r1.iol/startup.cfg:/iol/config.txt
+      - ./operational_configs/iol-r1.iol/iouyap.ini:/iol/iouyap.ini
+      - ./operational_configs/iol-r1.iol/NETMAP:/iol/NETMAP
+
+  iol-r2:
+    <<: *iol-defaults
+    hostname: iol-r2
+    container_name: iol-r2
+    environment:
+      - IOL_PID=2
+    networks:
+      mgmt:
+        ipv4_address: 172.20.0.121
+      r1r2_net:
+        ipv4_address: 10.0.1.21
+    volumes:
+      - ./operational_configs/iol-r2.iol/nvram:/iol/nvram_00002
+      - ./operational_configs/iol-r2.iol/startup.cfg:/iol/config.txt
+      - ./operational_configs/iol-r2.iol/iouyap.ini:/iol/iouyap.ini
+      - ./operational_configs/iol-r2.iol/NETMAP:/iol/NETMAP

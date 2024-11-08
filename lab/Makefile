@@ -96,3 +96,12 @@ lab02_up:
 
 lab02_down:
 	@cd topologies/lab02_ceos-test && docker-compose down
+
+lab04_up:
+	@cd topologies/lab04_iol-test && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+	cp -r default_configs/* operational_configs/ && \
+	docker-compose up -d --build
+
+lab04_down:
+	@cd topologies/lab04_iol-test && docker-compose down
