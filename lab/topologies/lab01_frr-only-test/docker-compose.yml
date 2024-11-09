@@ -69,9 +69,9 @@ services:
       r1r3_net:
         ipv4_address: 10.0.2.13
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r1.conf:/etc/frr/frr.conf
-      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
-      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
+      - ./operational_configs/frr-r1.frr:/etc/frr/
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
   frr-r2:
     <<: *frr-defaults
@@ -85,9 +85,9 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.23
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r2.conf:/etc/frr/frr.conf
-      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
-      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
+      - ./operational_configs/frr-r2.frr:/etc/frr/
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
   frr-r3:
     <<: *frr-defaults
@@ -101,26 +101,6 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.32
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r3.conf:/etc/frr/frr.conf
-      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
-      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
-
-  annet:
-    container_name: annet
-    build: ../annet/
-    command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../annet/my_generators:/my_generators
-      - ../scripts:/home/ubuntu/scripts
-    environment:
-      - NETBOX_TOKEN=${NETBOX_TOKEN}
-      - NETBOX_URL=${NETBOX_URL}
-
-  netbox:
-    container_name: netbox
-    hostname: netbox
-    ports:
-      - 8000:8080
-    volumes:
-      - ../topologies/lab01_frr-only-test/src/:/home/ubuntu/src
+      - ./operational_configs/frr-r3.frr:/etc/frr/
+      - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
