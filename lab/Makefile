@@ -57,6 +57,19 @@ lab01_stop:
 	@cd ./topologies/lab01_frr-only-test && \
 	docker-compose down
 
+lab02_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+	@cd ./topologies/lab02_ceos-test && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+	cp -r default_configs/* operational_configs/ && \
+	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
+	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
+	docker-compose up -d --build
+
+lab02_stop:
+	@cd ./topologies/lab02_ceos-test && \
+	docker-compose down
+
 clean:
 	rm -rf netbox-docker/
 	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
@@ -98,12 +111,3 @@ lab03: stop_compose
 	docker-compose up -d && \
 	cd .. && \
 	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
-
-lab02_up:
-	@cd topologies/lab02_ceos-test && \
-	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
-	cp -r default_configs/* operational_configs/ && \
-	docker-compose up -d --build
-
-lab02_down:
-	@cd topologies/lab02_ceos-test && docker-compose down
