@@ -10,19 +10,27 @@ build:
 	@cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml
 	@cd ./netbox-docker && docker-compose build --no-cache
 
+rebuild:
+	$(SUDO) rm -rf netbox-docker || true && \
+	$(MAKE) build
+
+start_services:
+	cd ./netbox-docker && \
+	docker-compose up -d --build
+
+stop_services:
+	cd ./netbox-docker && \
+	docker-compose down -v
+
 lab00_up: flush_netbox_db create_netbox_superuser
 	@cd ./topologies/lab00_cisco_base && \
-	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/src/netbox-dump.json && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
 lab00_down:
 	@cd ./topologies/lab00_cisco_base && \
 	docker-compose down
-
-rebuild:
-	cd ./netbox-docker && \
-	docker-compose build --no-cache
 
 clean:
 	rm -rf netbox-docker/
@@ -35,16 +43,6 @@ annet_restart:
 	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d
-
-start_compose:
-	cd ./netbox-docker && \
-	docker-compose up -d && \
-	cd ..
-
-stop_compose:
-	cd ./netbox-docker && \
-	docker-compose down -v && \
-	cd ..
 
 create_netbox_superuser:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py createsuperuser --noinput
