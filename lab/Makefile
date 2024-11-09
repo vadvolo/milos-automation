@@ -11,7 +11,7 @@ build:
 	@cd ./netbox-docker && docker-compose build --no-cache
 
 rebuild:
-	$(SUDO) rm -rf netbox-docker || true && \
+	$(SUDO) rm -r netbox-docker || true && \
 	$(MAKE) build
 
 # Create `netbox` and `annet` containers
@@ -33,8 +33,9 @@ services_check:
 		exit 1; \
 	fi
 
-lab00_start: services_check flush_netbox_db create_netbox_superuser
+lab00_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
 	@cd ./topologies/lab00_cisco_base && \
+	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
@@ -58,8 +59,11 @@ annet_restart:
 create_netbox_superuser:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py createsuperuser --noinput
 
-flush_netbox_db:
+netbox_flush_db:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py flush --noinput
+
+annet_flush_generators:
+	@docker exec annet bash -c "find lab_generators -mindepth 1 -delete || true"
 
 build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..

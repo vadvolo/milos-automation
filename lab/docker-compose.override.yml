@@ -23,9 +23,6 @@ services:
     hostname: annet
     build: ../annet/
     command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../annet/lab_generators:/lab_generators
     environment:
       - NETBOX_TOKEN=${NETBOX_TOKEN}
       - NETBOX_URL=${NETBOX_URL}

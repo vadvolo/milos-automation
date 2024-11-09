@@ -15,8 +15,8 @@ services:
     tty: true
     volumes:
       - ./src:/home/ubuntu/
-      - ../../scripts:/home/ubuntu/scripts
-      - ../../vm_images:/home/ubuntu/vm_images
+      - ../../scripts:/home/ubuntu/scripts:ro
+      - ../../vm_images:/home/ubuntu/vm_images:ro
     command: sh "/home/ubuntu/install.sh"
     cap_add:
           - net_admin
