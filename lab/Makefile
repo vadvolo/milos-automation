@@ -2,12 +2,23 @@
 # Use "sudo" if both are true
 SUDO := $(shell if [ -x "$$(command -v sudo)" ] && [ "$$(id -u)" -ne 0 ]; then echo "sudo"; fi)
 
+# Build `netbox` and `annet` docker images
 build:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
 	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
 	@cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml
 	@cd ./netbox-docker && docker-compose build --no-cache
+
+lab00_up: flush_netbox_db create_netbox_superuser
+	@cd ./topologies/lab00_cisco_base && \
+	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/src/netbox-dump.json && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker-compose up -d --build
+
+lab00_down:
+	@cd ./topologies/lab00_cisco_base && \
+	docker-compose down
 
 rebuild:
 	cd ./netbox-docker && \
@@ -36,7 +47,10 @@ stop_compose:
 	cd ..
 
 create_netbox_superuser:
-	@docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py createsuperuser --noinput
+
+flush_netbox_db:
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py flush --noinput
 
 build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
@@ -49,11 +63,11 @@ netbox_import:
 
 run: start_compose annet_restart
 
-lab00: stop_compose
-	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
-	cd netbox-docker/ && docker-compose up -d && cd .. && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
+# lab00: stop_compose
+# 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+# 	cd netbox-docker/ && docker-compose up -d && cd .. && \
+# 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+# 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
 
 lab01: stop_compose
 	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \

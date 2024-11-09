@@ -11,6 +11,10 @@ services:
   netbox:
     container_name: netbox
     hostname: netbox
+    environment:
+      - DJANGO_SUPERUSER_USERNAME=annet
+      - DJANGO_SUPERUSER_PASSWORD=annet
+      - DJANGO_SUPERUSER_EMAIL=an@n.et
     ports:
       - 8000:8080
     volumes:
