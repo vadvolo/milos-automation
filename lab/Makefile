@@ -2,7 +2,8 @@
 # Use "sudo" if both are true
 SUDO := $(shell if [ -x "$$(command -v sudo)" ] && [ "$$(id -u)" -ne 0 ]; then echo "sudo"; fi)
 
-# Build `netbox` and `annet` docker images
+### Services (annet and netbox) control
+
 build:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
@@ -14,7 +15,6 @@ rebuild:
 	$(SUDO) rm -r netbox-docker || true && \
 	$(MAKE) build
 
-# Create `netbox` and `annet` containers
 services_start:
 	cd ./netbox-docker && \
 	docker-compose up -d --build
@@ -22,6 +22,8 @@ services_start:
 services_stop:
 	cd ./netbox-docker && \
 	docker-compose down -v
+
+### Services utilities
 
 services_check:
 	@if ! docker ps --format '{{.Names}}' | grep -q '^netbox$$' ; then \
@@ -33,7 +35,20 @@ services_check:
 		exit 1; \
 	fi
 
-lab00_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+create_netbox_superuser:
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py createsuperuser --noinput
+
+netbox_flush_db:
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py flush --noinput
+
+annet_flush_generators:
+	@docker exec annet bash -c "find lab_generators -mindepth 1 -delete || true"
+
+lab_pre_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+
+### Lab topologies control
+
+lab00_start: lab_pre_start
 	@cd ./topologies/lab00_cisco_base && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
@@ -44,7 +59,7 @@ lab00_stop:
 	@cd ./topologies/lab00_cisco_base && \
 	docker-compose down
 
-lab01_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+lab01_start: lab_pre_start
 	@cd ./topologies/lab01_frr-only-test && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
@@ -57,7 +72,7 @@ lab01_stop:
 	@cd ./topologies/lab01_frr-only-test && \
 	docker-compose down
 
-lab02_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+lab02_start: lab_pre_start
 	@cd ./topologies/lab02_ceos-test && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
@@ -70,7 +85,7 @@ lab02_stop:
 	@cd ./topologies/lab02_ceos-test && \
 	docker-compose down
 
-lab03_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+lab03_start: lab_pre_start
 	@cd ./topologies/lab03_dc_cisco && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
@@ -80,6 +95,8 @@ lab03_start: services_check annet_flush_generators netbox_flush_db create_netbox
 lab03_stop:
 	@cd ./topologies/lab03_dc_cisco && \
 	docker-compose down
+
+### Miscellaneous utilities
 
 clean:
 	rm -rf netbox-docker/
@@ -92,15 +109,6 @@ annet_restart:
 	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d
-
-create_netbox_superuser:
-	@docker exec --user root netbox /opt/netbox/netbox/manage.py createsuperuser --noinput
-
-netbox_flush_db:
-	@docker exec --user root netbox /opt/netbox/netbox/manage.py flush --noinput
-
-annet_flush_generators:
-	@docker exec annet bash -c "find lab_generators -mindepth 1 -delete || true"
 
 build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
