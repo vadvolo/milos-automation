@@ -20,4 +20,8 @@ ENV PATH $GOPATH/bin:$PATH
 
 RUN go install github.com/annetutil/gnetcli/cmd/gnetcli_server@latest
 
+RUN mkdir /lab_generators
+
+COPY config.yaml /config.yaml
+
 WORKDIR "/"
