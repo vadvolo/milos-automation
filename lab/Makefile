@@ -7,7 +7,7 @@ build:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
 	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
-	@cp ./docker-compose.yml ./netbox-docker/docker-compose.override.yml
+	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
 	@cd ./netbox-docker && docker-compose build --no-cache
 
 rebuild:
