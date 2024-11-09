@@ -14,21 +14,32 @@ rebuild:
 	$(SUDO) rm -rf netbox-docker || true && \
 	$(MAKE) build
 
-start_services:
+# Create `netbox` and `annet` containers
+services_start:
 	cd ./netbox-docker && \
 	docker-compose up -d --build
 
-stop_services:
+services_stop:
 	cd ./netbox-docker && \
 	docker-compose down -v
 
-lab00_up: flush_netbox_db create_netbox_superuser
+services_check:
+	@if ! docker ps --format '{{.Names}}' | grep -q '^netbox$$' ; then \
+		echo "Error: netbox container is not running" >&2; \
+		exit 1; \
+	fi
+	@if ! docker ps --format '{{.Names}}' | grep -q '^annet$$' ; then \
+		echo "Error: annet container is not running" >&2; \
+		exit 1; \
+	fi
+
+lab00_start: services_check flush_netbox_db create_netbox_superuser
 	@cd ./topologies/lab00_cisco_base && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
-lab00_down:
+lab00_stop:
 	@cd ./topologies/lab00_cisco_base && \
 	docker-compose down
 
