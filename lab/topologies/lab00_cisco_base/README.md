@@ -118,6 +118,9 @@ make services_start
 ```
 
 **Step 2.**
+
+NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm_images` directory.
+
 Start the lab:
 
 ```bash

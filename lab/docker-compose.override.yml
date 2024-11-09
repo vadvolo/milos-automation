@@ -22,8 +22,10 @@ services:
     container_name: annet
     hostname: annet
     build: ../annet/
-    command: tail -f /dev/null
     environment:
       # Reminder: for lab/testing purposes only, never store production tokens in repository
       - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
       - NETBOX_URL=http://netbox:8080
+    volumes:
+      - ../scripts:/home/ubuntu/scripts:ro
+    command: tail -f /dev/null
