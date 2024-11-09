@@ -1,8 +1,8 @@
 networks:
-  default:
+  mgmt:
+    name: mgmt
     driver: bridge
     ipam:
-      driver: default
       config:
       - subnet: 172.20.0.0/24
         gateway: 172.20.0.1
@@ -13,15 +13,15 @@ services:
     hostname: dynamips
     image: ubuntu:bionic
     tty: true
+    networks:
+      - mgmt
     volumes:
       - ./src:/home/ubuntu/
       - ../../scripts:/home/ubuntu/scripts:ro
       - ../../vm_images:/home/ubuntu/vm_images:ro
-    command: sh "/home/ubuntu/install.sh"
     cap_add:
-          - net_admin
-          - net_raw
-          - sys_module
+      - net_admin
+      - net_raw
+      - sys_module
     devices: [/dev/net/tun:/dev/net/tun]
-    networks:
-      - default
+    command: sh "/home/ubuntu/install.sh"

@@ -1,4 +1,8 @@
 networks:
+  netbox-docker_default:
+    name: netbox-docker_default
+    driver: bridge
+
   mgmt:
     name: mgmt
     driver: bridge
@@ -15,6 +19,9 @@ services:
       - DJANGO_SUPERUSER_USERNAME=annet
       - DJANGO_SUPERUSER_PASSWORD=annet
       - DJANGO_SUPERUSER_EMAIL=an@n.et
+    networks:
+      - netbox-docker_default
+      - mgmt
     ports:
       - 8000:8080
 
@@ -26,6 +33,8 @@ services:
       # Reminder: for lab/testing purposes only, never store production tokens in repository
       - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
       - NETBOX_URL=http://netbox:8080
+    networks:
+      - mgmt
     volumes:
       - ../scripts:/home/ubuntu/scripts:ro
     command: tail -f /dev/null

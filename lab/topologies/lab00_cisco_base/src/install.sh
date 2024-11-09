@@ -24,7 +24,7 @@ ifconfig tap1 up
 ifconfig tap2 up
 ifconfig tap3 up
 
-ifconfig br0 172.20.0.20/16
+ifconfig br0 172.20.0.20/24
 
 cd /home/ubuntu/
 dynamips -H 7200 &
