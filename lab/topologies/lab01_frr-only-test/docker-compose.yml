@@ -51,7 +51,7 @@ x-frr-defaults: &frr-defaults
            echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
            echo 'root:frr' | chpasswd &&
            adduser -h /home/milos -s /bin/sh -D milos &&
-           echo -n 'milos:milos' | chpasswd &&
+           echo -n 'annet:annet' | chpasswd &&
            ssh-keygen -A &&
            /usr/sbin/sshd &&
            /sbin/tini -- /usr/lib/frr/docker-start"
