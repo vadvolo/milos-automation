@@ -4978,18 +4978,18 @@
   },
   {
     "model": "auth.user",
-    "pk": 1,
+    "pk": 3,
     "fields": {
-      "password": "pbkdf2_sha256$600000$ZMrsVrD0F5xTFEsLdSsQRn$tuqFzp7G0n5Rd4/nD1rRiO4MJGMwGQYzVWXGfoZhPgU=",
-      "last_login": "2024-11-04T14:55:11.838Z",
+      "password": "pbkdf2_sha256$600000$QMW9MpUZAjjEScX8ZyU8B5$JreaaV3zIVf0lY6BugdAZfY9yCkogepnayNk3U1Mnp0=",
+      "last_login": "2024-11-06T13:18:22.680Z",
       "is_superuser": true,
-      "username": "milos",
+      "username": "annet",
       "first_name": "",
       "last_name": "",
-      "email": "milos@yandex.ru",
+      "email": "an@n.et",
       "is_staff": true,
       "is_active": true,
-      "date_joined": "2024-09-30T21:25:56.311Z",
+      "date_joined": "2024-11-06T13:15:31.044Z",
       "groups": [],
       "user_permissions": []
     }
