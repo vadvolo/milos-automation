@@ -64,8 +64,8 @@ lab01: services_stop
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
 
-lab03: services_stop
-	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+lab02: services_stop
+	cp ./topologies/lab02_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	source ./netbox_env.sh && \
@@ -102,8 +102,8 @@ lab01_stop:
 	@cd ./topologies/lab01_frr-only-test && \
 	docker-compose down
 
-lab02_start: lab_pre_start
-	@cd ./topologies/lab02_ceos-test && \
+lab03_start: lab_pre_start
+	@cd ./topologies/lab03_multivendor && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
@@ -111,19 +111,19 @@ lab02_start: lab_pre_start
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
-lab02_stop:
-	@cd ./topologies/lab02_ceos-test && \
+lab03_stop:
+	@cd ./topologies/lab03_multivendor && \
 	docker-compose down
 
 lab03_start: lab_pre_start
-	@cd ./topologies/lab03_dc_cisco && \
+	@cd ./topologies/lab02_dc_cisco && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
 lab03_stop:
-	@cd ./topologies/lab03_dc_cisco && \
+	@cd ./topologies/lab02_dc_cisco && \
 	docker-compose down
 
 ### Miscellaneous utilities

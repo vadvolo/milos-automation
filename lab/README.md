@@ -11,8 +11,8 @@ Table of the content:
 - [Labs](#labs)
   - [lab00. Cisco Base Scenario](./topologies/lab00_cisco_base)
   - [lab01. FRR Base Scenario](./topologies/lab01_frr-only-test)
-  - [lab02. Arista Base Scenario](./topologies/lab02_ceos-test)
-  - [lab03. Cisco DC Scenario](./topologies/lab03_dc_cisco)
+  - [lab02. Cisco DC Scenario](./topologies/lab02_dc_cisco)
+  - [lab03. Multivendor Lab](./topologies/lab03_multivendor)
 
 ## Installation
 
