@@ -115,14 +115,14 @@ lab03_stop:
 	@cd ./topologies/lab03_multivendor && \
 	docker-compose down
 
-lab03_start: lab_pre_start
+lab02_start: lab_pre_start
 	@cd ./topologies/lab02_dc_cisco && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
-lab03_stop:
+lab02_stop:
 	@cd ./topologies/lab02_dc_cisco && \
 	docker-compose down
 
