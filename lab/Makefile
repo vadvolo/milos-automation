@@ -49,7 +49,7 @@ lab_pre_start: services_check annet_flush_generators netbox_flush_db create_netb
 
 lab00: services_stop
 	@echo "Lab00 Cisco Basic Scenario is launching..." && \
-	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cp ./topologies/lab00_cisco_basic_scenario/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
@@ -72,21 +72,26 @@ lab02: services_stop
 	cd ./netbox-docker && \
 	docker-compose up -d && \
 	cd .. && \
-	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
+	echo "!!! Don't forget add iol image into ./lab00_cisco_basic_scenario/src/ios-7200 folder !!!"
+
+lab03: services_stop
+	cp ./topologies/lab03_multivendor/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd .. && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
 # lab_pre_start: services_check annet_flush_generators
 
 ### Lab topologies control
 
 lab00_start: lab_pre_start
-	@cd ./topologies/lab00_cisco_base && \
+	@cd ./topologies/lab00_cisco_basic_scenario && \
 	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
 	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
 	docker-compose up -d --build
 
 lab00_stop:
-	@cd ./topologies/lab00_cisco_base && \
+	@cd ./topologies/lab00_cisco_basic_scenario && \
 	docker-compose down
 
 lab01_start: lab_pre_start
