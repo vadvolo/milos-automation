@@ -4,35 +4,14 @@ example_01/slices
 experiments/
 lab/ios-7200
 lab/netbox-docker
-lab/routeros
-lab/inventory.json
-lab/dynamips/ios-7200
-lab/dynamips/next-hop-lab/c7200_r1_disk0
-lab/dynamips/next-hop-lab/c7200_r2_disk0
-lab/dynamips/next-hop-lab/c7200_r3_disk0
-lab/dynamips/next-hop-lab/c7200_r1_ram
-lab/dynamips/next-hop-lab/c7200_r2_ram
-lab/dynamips/next-hop-lab/c7200_r3_ram
-lab/dynamips/dynamips_log.txt
-dynamips/ilt*
-dynamips/dynamips_log.txt
-dynamips/ios-7200
+lab/docker-routeros
+vendor
 
-lab/dynamips/ilt_2014092320_mips64e
-lab/dynamips/ilt_2014092320_mips64j
-lab/dynamips/ilt_2014092320_ppc32e
-lab/dynamips/ilt_2014092320_ppc32j
-lab/topologies/lab03_dc_cisco/src/ios-7200
-lab/topologies/lab03_dc_cisco/src/dynamips_log.txt
-lab/topologies/lab03_dc_cisco/src/ilt*
-lab/topologies/lab03_dc_cisco/src/next-hop-lab
-lab/topologies/lab03_dc_cisco/src/netbox_data
-
-lab/topologies/lab00_cisco_base/src/ios-7200
-lab/topologies/lab00_cisco_base/src/dynamips_log.txt
-lab/topologies/lab00_cisco_base/src/ilt*
-lab/topologies/lab00_cisco_base/src/next-hop-lab
-lab/topologies/lab00_cisco_base/src/netbox_data
+lab/topologies/*/src/ios-7200
+lab/topologies/*/src/dynamips_log.txt
+lab/topologies/*/src/ilt*
+lab/topologies/*/src/next-hop-lab
+lab/topologies/*/src/netbox_data
 
 lab/topologies/*/operational_configs/*
 !lab/topologies/*/operational_configs/.gitkeep
@@ -41,10 +20,8 @@ lab/topologies/*/operational_configs/*
 c7200*
 cEOS*
 
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-lab/docker-routeros
 
