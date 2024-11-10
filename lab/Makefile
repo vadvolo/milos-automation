@@ -11,10 +11,6 @@ build:
 	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
 	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
 
-ololo:
-	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
-	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
-
 rebuild:
 	rm -rf netbox-docker || true && \
 	$(MAKE) build
