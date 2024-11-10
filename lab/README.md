@@ -77,19 +77,19 @@ Run:
 - diff
 
 ```
-python3 -m annet.annet diff lab-r1.nh.com
+annet diff lab-r1.nh.com
 ```
 
 - patch
 
 ```
-python3 -m annet.annet patch lab-r1.nh.com
+annet patch lab-r1.nh.com
 ```
 
 - deploy
 
 ```
-python3 -m annet.annet deploy lab-r1.nh.com
+annet deploy lab-r1.nh.com
 ```
 
 ## Useful commands
@@ -174,19 +174,19 @@ Run:
 - diff
 
 ```
-python3 -m annet.annet diff lab-r1.nh.com
+annet diff lab-r1.nh.com
 ```
 
 - patch
 
 ```
-python3 -m annet.annet patch lab-r1.nh.com
+annet patch lab-r1.nh.com
 ```
 
 - deploy
 
 ```
-python3 -m annet.annet deploy lab-r1.nh.com
+annet deploy lab-r1.nh.com
 ```
 
 ## Annet description

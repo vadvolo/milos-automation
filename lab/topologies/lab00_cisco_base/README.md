@@ -107,7 +107,7 @@ First of all, you need to install Docker and Docker Compose softaware on yours d
 Build Netbox and Annet docker images:
 
 ```bash
-cd annetutils/labs
+cd annetutils/contribs/labs
 make build
 ```
 
@@ -151,9 +151,9 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 
 | Router |                  Command                   |
 | :----: | :----------------------------------------: |
-| lab-r1 | `python3 -m annet.annet gen lab-r1.nh.com` |
-| lab-r2 | `python3 -m annet.annet gen lab-r2.nh.com` |
-| lab-r3 | `python3 -m annet.annet gen lab-r3.nh.com` |
+| lab-r1 | `annet gen lab-r1.nh.com` |
+| lab-r2 | `annet gen lab-r2.nh.com` |
+| lab-r3 | `annet gen lab-r3.nh.com` |
 
 > If you see error below, you need to export NETBOX_TOKEN to the Annet container.
 >
@@ -232,9 +232,9 @@ Generate diff for lab-r1, lab-r2, lab-r3
 
 | Router |                   Command                   |
 | :----: | :-----------------------------------------: |
-| lab-r1 | `python3 -m annet.annet diff lab-r1.nh.com` |
-| lab-r2 | `python3 -m annet.annet diff lab-r2.nh.com` |
-| lab-r3 | `python3 -m annet.annet diff lab-r3.nh.com` |
+| lab-r1 | `annet diff lab-r1.nh.com` |
+| lab-r2 | `annet diff lab-r2.nh.com` |
+| lab-r3 | `annet diff lab-r3.nh.com` |
 
 <details>
 <summary>Diff for lab-r1:</summary>
@@ -301,9 +301,9 @@ Generate patch for lab-r1, lab-r2, lab-r3
 
 | Router |                   Command                    |
 | :----: | :------------------------------------------: |
-| lab-r1 | `python3 -m annet.annet patch lab-r1.nh.com` |
-| lab-r2 | `python3 -m annet.annet patch lab-r3.nh.com` |
-| lab-r3 | `python3 -m annet.annet patch lab-r3.nh.com` |
+| lab-r1 | `annet patch lab-r1.nh.com` |
+| lab-r2 | `annet patch lab-r3.nh.com` |
+| lab-r3 | `annet patch lab-r3.nh.com` |
 
 <details>
 <summary>Patch for lab-r1:</summary>
@@ -381,9 +381,9 @@ Deploy configuration into for lab-r1, lab-r2, lab-r3
 
 | Router |                    Command                    |
 | :----: | :-------------------------------------------: |
-| lab-r1 | `python3 -m annet.annet deploy lab-r1.nh.com` |
-| lab-r2 | `python3 -m annet.annet deploy lab-r3.nh.com` |
-| lab-r3 | `python3 -m annet.annet deploy lab-r3.nh.com` |
+| lab-r1 | `annet deploy lab-r1.nh.com` |
+| lab-r2 | `annet deploy lab-r3.nh.com` |
+| lab-r3 | `annet deploy lab-r3.nh.com` |
 
 **Step 10.**
 Change the MTU value on [link](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.

@@ -2,9 +2,12 @@ version: '3'
 
 networks:
   mgmt:
-    # This network is managed by docker-compose.override.yml
     name: mgmt
-    external: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
 
   r1r2_net:
     name: r1r2_net
