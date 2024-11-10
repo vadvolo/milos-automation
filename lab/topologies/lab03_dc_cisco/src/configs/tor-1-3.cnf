@@ -1,0 +1,108 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname tor
+!
+boot-start-marker
+boot-end-marker
+!
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication enable default none
+aaa authorization exec default local
+!
+aaa session-id common
+!
+!
+ip cef
+no ip domain lookup
+ip domain name nh.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username annet privilege 15 secret 5 $1$l/O8$I5Sf9..QOhhWDhq.HFsco.
+!
+!
+ip ssh version 2
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 172.20.0.104 255.255.255.0
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet1/0
+ no ip address
+ negotiation auto
+ shutdown
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ transport input telnet ssh
+ logging synchronous
+ exec-timeout 0 0
+line vty 5 14
+ transport input all
+ logging synchronous
+ exec-timeout 0 0
+!
+!
+end
