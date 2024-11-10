@@ -55,8 +55,9 @@ lab00: services_stop
 
 lab01: services_stop
 	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cd topologies/lab01_frr-only-test && \
-	cp default_configs/* operational_configs/ && \
+	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
