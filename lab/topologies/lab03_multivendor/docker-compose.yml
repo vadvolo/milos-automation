@@ -1,37 +1,96 @@
+# Lab03. Multivendor
+
 version: '3'
 
 networks:
-  mgmt:
-    name: mgmt
+  default:
     driver: bridge
     ipam:
+      driver: default
       config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+      - subnet: 172.20.0.0/24
+        gateway: 172.20.0.1
 
-  r1r2_net:
-    name: r1r2_net
+  t1s1_net:
+    name: t1s1_net
     driver: bridge
     internal: true
     ipam:
       config:
         - subnet: 10.0.1.0/24
 
-  r1r3_net:
-    name: r1r3_net
+  t1s2_net:
+    name: t1s2_net
     driver: bridge
     internal: true
     ipam:
       config:
         - subnet: 10.0.2.0/24
 
-  r2r3_net:
-    name: r2r3_net
+  t2s1_net:
+    name: t2s1_net
     driver: bridge
     internal: true
     ipam:
       config:
         - subnet: 10.0.3.0/24
+
+  t2s2_net:
+    name: t2s2_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.4.0/24
+
+
+  t3s1_net:
+    name: t3s1_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.5.0/24
+
+  t3s2_net:
+    name: t3s2_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.6.0/24
+  
+  b1s1_net:
+    name: b1s1_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.1.1.0/24
+  
+  b1s2_net:
+    name: b1s2_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.1.2.0/24
+
+  b2s1_net:
+    name: b2s1_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.1.3.0/24
+  
+  b2s2_net:
+    name: b2s2_net
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.1.4.0/24
 
 x-ceos-defaults: &ceos-defaults
   image: arista-ceos:4.33.0F
@@ -45,8 +104,6 @@ x-ceos-defaults: &ceos-defaults
     - EOS_PLATFORM=ceoslab
     - container=docker
   privileged: true
-  networks:
-    mgmt: {}
   command: >
     /sbin/init
     systemd.setenv=INTFTYPE=eth
@@ -76,6 +133,8 @@ x-frr-defaults: &frr-defaults
            echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config &&
            echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
            echo 'root:frr' | chpasswd &&
+           adduser -h /home/annet -s /bin/sh -D annet &&
+           echo -n 'annet:annet' | chpasswd &&
            ssh-keygen -A &&
            /usr/sbin/sshd &&
            /sbin/tini -- /usr/lib/frr/docker-start"
@@ -83,44 +142,133 @@ x-frr-defaults: &frr-defaults
 services:
   frr-r1:
     <<: *frr-defaults
-    container_name: frr-r1
-    hostname: frr-r1
+    container_name: tor-1-1
+    hostname: tor-1-1
     networks:
-      mgmt:
+      default:
         ipv4_address: 172.20.0.110
-      r1r2_net:
-        ipv4_address: 10.0.1.12
-      r1r3_net:
-        ipv4_address: 10.0.2.13
+      t1s1_net:
+        ipv4_address: 10.0.1.110
+      t1s2_net:
+        ipv4_address: 10.0.2.110
     volumes:
-      - ./operational_configs/frr-r1.frr:/etc/frr/
-      - ../common_configs/frr_common_daemons:/etc/frr/daemons:ro
-      - ../common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
+      - ../topologies/lab01_frr-only-test/operational_configs/frr-r1.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
-  ceos-r2:
-    <<: *ceos-defaults
-    hostname: ceos-r2
-    container_name: ceos-r2
+  frr-r2:
+    <<: *frr-defaults
+    container_name: tor-1-2
+    hostname: tor-1-2
     networks:
-      mgmt:
+      default:
+        ipv4_address: 172.20.0.111
+      t2s1_net:
+        ipv4_address: 10.0.3.111
+      t2s2_net:
+        ipv4_address: 10.0.4.111
+    volumes:
+      - ../topologies/lab01_frr-only-test/operational_configs/frr-r2.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
+
+  frr-r3:
+    <<: *frr-defaults
+    container_name: tor-1-3
+    hostname: tor-1-3
+    networks:
+      default:
+        ipv4_address: 172.20.0.112
+      t3s1_net:
+        ipv4_address: 10.0.5.112
+      t3s2_net:
+        ipv4_address: 10.0.6.112
+    volumes:
+      - ../topologies/lab01_frr-only-test/operational_configs/frr-r3.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
+      - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
+
+  ceos-spine-1:
+    <<: *ceos-defaults
+    hostname: spine-1-1
+    container_name: spine-1-1
+    networks:
+      default:
         ipv4_address: 172.20.0.113
-      r1r2_net:
-        ipv4_address: 10.0.1.21
-      r2r3_net:
-        ipv4_address: 10.0.3.23
+      t1s1_net:
+        ipv4_address: 10.0.1.113
+      t2s1_net:
+        ipv4_address: 10.0.3.113
+      t3s1_net:
+        ipv4_address: 10.0.5.113
+      b1s1_net:
+        ipv4_address: 10.1.1.114
+      b2s1_net:
+        ipv4_address: 10.1.3.114
     volumes:
       - ./operational_configs/ceos-r2.flash:/mnt/flash/
 
-  ceos-r3:
+  ceos-spine-2:
     <<: *ceos-defaults
-    hostname: ceos-r3
-    container_name: ceos-r3
+    hostname: spine-1-2
+    container_name: spine-1-2
     networks:
-      mgmt:
+      default:
         ipv4_address: 172.20.0.114
-      r1r3_net:
-        ipv4_address: 10.0.2.31
-      r2r3_net:
-        ipv4_address: 10.0.3.32
+      t1s2_net:
+        ipv4_address: 10.0.2.114
+      t2s2_net:
+        ipv4_address: 10.0.4.114
+      t3s2_net:
+        ipv4_address: 10.0.6.114
+      b1s2_net:
+        ipv4_address: 10.1.2.114
+      b2s2_net:
+        ipv4_address: 10.1.4.114
     volumes:
       - ./operational_configs/ceos-r3.flash:/mnt/flash/
+  
+  netbox:
+    container_name: netbox
+    hostname: netbox
+    ports:
+      - 8000:8080
+    volumes:
+      - ../topologies/lab03_multivendor/src:/home/ubuntu/src
+
+  annet:
+    container_name: annet
+    hostname: annet
+    build: ../annet/
+    command: tail -f /dev/null
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab03_multivendor/src/lab_generators:/lab_generators
+      - ../scripts:/home/ubuntu/scripts
+    environment:
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
+      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
+      - NETBOX_URL=http://netbox:8080
+  
+  dynamips-lab:
+    container_name: dynamips
+    hostname: dynamips
+    image: ubuntu:bionic
+    tty: true
+    volumes:
+      - ../topologies/lab03_multivendor/src:/home/ubuntu/
+      - ../scripts:/home/ubuntu/scripts
+      - ../vm_images:/home/ubuntu/vm_images
+    command: sh "/home/ubuntu/install.sh"
+    cap_add:
+          - net_admin
+          - net_raw
+          - sys_module
+    devices: [/dev/net/tun:/dev/net/tun]
+    networks:
+      - default
+      - b1s1_net
+      - b1s2_net
+      - b2s1_net
+      - b2s2_net
+

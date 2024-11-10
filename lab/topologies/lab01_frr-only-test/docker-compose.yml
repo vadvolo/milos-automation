@@ -50,7 +50,7 @@ x-frr-defaults: &frr-defaults
            echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config &&
            echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
            echo 'root:frr' | chpasswd &&
-           adduser -h /home/milos -s /bin/sh -D milos &&
+           adduser -h /home/annet -s /bin/sh -D annet &&
            echo -n 'annet:annet' | chpasswd &&
            ssh-keygen -A &&
            /usr/sbin/sshd &&

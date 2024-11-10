@@ -1,0 +1,30 @@
+model = 7200
+
+[localhost:7200]
+    workingdir = /home/ubuntu/next-hop-lab
+    udp = 10100
+
+    [[7200]]
+        image = /home/ubuntu/vm_images/c7200-jk9s-mz.124-13a.bin
+        ram = 176
+        npe = npe-400
+        slot1 = PA-GE
+        slot2 = PA-GE
+
+    [[router border-1]]
+        model   = 7200
+        console = 2001
+        aux     = 3001
+        fa0/0   = NIO_tap:tap0
+        gi1/0   = NIO_tap:tap2
+        gi2/0   = NIO_tap:tap3
+        cnfg    = /home/ubuntu/border-1.cnf
+
+    [[router border-2]]
+        model   = 7200
+        console = 2002
+        aux     = 3002
+        fa0/0   = NIO_tap:tap1
+        gi1/0 = NIO_tap:tap4
+        gi2/0 = NIO_tap:tap5
+        cnfg    = /home/ubuntu/border-2.cnf

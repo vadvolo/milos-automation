@@ -3,6 +3,7 @@
 In this lab we will see how Annet manages with several manufacturers:
 - Arista
 - FRR
+- Cisco
 
 ## How to get Arista image
 
@@ -13,6 +14,10 @@ In this lab we will see how Annet manages with several manufacturers:
 5. Prepare docker image: `docker image import cEOS64-lab-4.33.0F.tar.xz arista-ceos:4.33.0F`
 
 Now you're able to run Lab03.
+
+## Topology
+
+![Lab Topology](./images/topology.png)
 
 ## Lab Guide
 
