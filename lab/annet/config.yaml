@@ -30,6 +30,7 @@ storage:
   netbox:
     adapter: netbox
     params:
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
       url: http://netbox:8080
       token: a630dcefcb191982869e7576190e79bfd569d33c
 context:

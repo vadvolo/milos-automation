@@ -48,10 +48,12 @@ lab_pre_start: services_check annet_flush_generators netbox_flush_db create_netb
 # Build and destroy architecture
 
 lab00: services_stop
+	@echo "Lab00 Cisco Basic Scenario is launching..." && \
 	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
+	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab01: services_stop
 	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \

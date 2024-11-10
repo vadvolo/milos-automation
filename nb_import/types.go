@@ -244,10 +244,11 @@ func (d *CiscoDevice) CutIfaceName(name string) string {
 }
 
 func (d *CiscoDevice) GetVersion() error {
-	data, err := d.Device.SendCommand("show ver")
+	_, err := d.Device.SendCommand("show ver")
 	if err != nil {
 		return err
 	}
+	return nil
 }
 
 func (d *CiscoDevice) GetInterfaces() error {
