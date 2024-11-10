@@ -44,5 +44,6 @@ services:
       - ../topologies/lab03_dc_cisco/src/lab_generators:/lab_generators
       - ../scripts:/home/ubuntu/scripts
     environment:
-      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c  # Please, do not change it
-      - NETBOX_URL=http://netbox:8080  # Please, do not change it
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
+      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
+      - NETBOX_URL=http://netbox:8080
