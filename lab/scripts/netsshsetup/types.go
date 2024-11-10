@@ -15,7 +15,6 @@ import (
 	"github.com/annetutil/gnetcli/pkg/device/genericcli"
 	"github.com/annetutil/gnetcli/pkg/streamer/ssh"
 	"github.com/annetutil/gnetcli/pkg/streamer/telnet"
-	"go.uber.org/zap"
 )
 
 type NetworkDevice interface {
@@ -74,23 +73,19 @@ func (d *Device) Ping() error {
 }
 
 func (d *Device) SSHConnector() *ssh.Streamer {
-	logger := zap.Must(zap.NewDevelopmentConfig().Build())
 	creds := dcreds.NewSimpleCredentials(
 		dcreds.WithUsername(d.Login),
 		dcreds.WithPassword(dcreds.Secret(d.Password)),
-		dcreds.WithLogger(logger),
 	)
-	return ssh.NewStreamer(d.Address, creds, ssh.WithLogger(logger))
+	return ssh.NewStreamer(d.Address, creds)
 }
 
 func (d *Device) TelnetConnector() *telnet.Streamer {
-	logger := zap.Must(zap.NewDevelopmentConfig().Build())
 	creds := dcreds.NewSimpleCredentials(
 		dcreds.WithUsername(d.Login),
 		dcreds.WithPassword(dcreds.Secret(d.Password)),
-		dcreds.WithLogger(logger),
 	)
-	return telnet.NewStreamer(d.Address, creds, telnet.WithLogger(logger))
+	return telnet.NewStreamer(d.Address, creds)
 }
 
 func (d *Device) SendCommand(command cmd.Cmd) (cmd.CmdRes, error) {

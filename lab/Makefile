@@ -9,10 +9,14 @@ build:
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
 	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
 	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
-	@cd ./netbox-docker && docker-compose build --no-cache
+	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
+
+ololo:
+	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
+	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
 
 rebuild:
-	$(SUDO) rm -r netbox-docker || true && \
+	rm -rf netbox-docker || true && \
 	$(MAKE) build
 
 services_start:
@@ -20,8 +24,7 @@ services_start:
 	docker-compose up -d --build
 
 services_stop:
-	cd ./netbox-docker && \
-	docker-compose down -v
+	cd ./netbox-docker && docker-compose down -v && cd ..
 
 ### Services utilities
 
@@ -45,6 +48,34 @@ annet_flush_generators:
 	@docker exec annet bash -c "find lab_generators -mindepth 1 -delete || true"
 
 lab_pre_start: services_check annet_flush_generators netbox_flush_db create_netbox_superuser
+
+# Build and destroy architecture
+
+lab00: services_stop
+	cp ./topologies/lab00_cisco_base/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd .. && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
+
+lab01: services_stop
+	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd topologies/lab01_frr-only-test && \
+	cp default_configs/* operational_configs/ && \
+	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+
+
+lab03: services_stop
+	cp ./topologies/lab03_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	cd netbox-docker/ && docker-compose up -d && cd .. && \
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	source ./netbox_env.sh && \
+	cd ./netbox-docker && \
+	docker-compose up -d && \
+	cd .. && \
+	echo "!!! Don't forget add iol image into ./lab00_cisco_base/src/ios-7200 folder !!!"
+
+# lab_pre_start: services_check annet_flush_generators
 
 ### Lab topologies control
 
@@ -114,7 +145,7 @@ build_discovery:
 	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
 
 netbox_export:
-	@docker exec --user root netbox /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue
+	@docker exec --user root netbox /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue --exclude auth.permission --exclude contenttypes.contenttype
 
 netbox_import:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json

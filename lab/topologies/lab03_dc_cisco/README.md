@@ -134,15 +134,15 @@ docker exec -u root -t -i annet /bin/bash
 
 Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3
 
-`python3 -m annet.annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Look at diff
 
-`python3 -m annet.annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Deploy it
 
-`python3 -m annet.annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 **Step 5.**
 
@@ -152,11 +152,11 @@ Go to the [Netbox](http://localhost:8000/), use annet:annet as login:password. A
 
 Look at diff
 
-`python3 -m annet.annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Deploy it
 
-`python3 -m annet.annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Restore the role and repeat the actions.
 
@@ -168,11 +168,11 @@ Go to the [Netbox](http://localhost:8000/), use annet:annet as login:password. D
 
 Look at diff
 
-`python3 -m annet.annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Deploy it
 
-`python3 -m annet.annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Restore the connection and repeat the actions.
 
@@ -184,11 +184,11 @@ Go to the [Netbox](http://localhost:8000/), use annet:annet as login:password. A
 
 Look at diff
 
-`python3 -m annet.annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Deploy it
 
-`python3 -m annet.annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+`annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Remove the tag and repeat the actions.
 
