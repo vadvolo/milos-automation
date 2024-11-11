@@ -28,17 +28,13 @@ type AbstractDevice interface {
 	_Hostname() string
 	_Vendor() string
 	_Address() string
-	ShowInterfaces() []string
-	_Hostname() string
-	_Vendor() string
-	_Address() string
+
 	GetHostname() string
 	ShowDeviceInfo()
 	GetInterfaces() error
 	GetLLDPNeigbours() error
 	SetInterfaceDescription() error
 	Ping() error
-	GetStatus() bool
 	SetStatus(s bool)
 	GetStatus() bool
 	ShowInterfaces() []string
@@ -52,7 +48,6 @@ type Device struct {
 	Vendor     string       `json:"vendor"`
 	Breed      string       `json:"breed"`
 	Interfaces []*Interface `json:"interfaces"`
-	Active     bool         `json:"active"`
 	Active     bool         `json:"active"`
 	Connector  *ssh.Streamer
 }
@@ -187,27 +182,6 @@ func (d *Device) GetStatus() bool {
 	return d.Active
 }
 
-func (d *Device) _Hostname() string {
-	return d.Hostname
-}
-
-func (d *Device) _Vendor() string {
-	return d.Vendor
-}
-
-func (d *Device) _Address() string {
-	return d.Address
-}
-
-func (d *Device) ShowInterfaces() []string {
-	var ret []string
-	for _, iface := range d.Interfaces {
-		ret = append(ret, iface.Name)
-	}
-	return ret
-}
-
-
 func (d *Device) GetInterfaceByName(name string) *Interface {
 	for _, iface := range d.Interfaces {
 		if iface.Name == name {
@@ -242,10 +216,6 @@ func (d *Device) Ping() error {
 	} else {
 		return nil
 	}
-}
-
-func (d *Device) GetStatus() bool {
-	return d.Active
 }
 
 func (d *Device) SetStatus(s bool) {
