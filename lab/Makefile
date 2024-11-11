@@ -5,7 +5,10 @@ SUDO := $(shell if [ -x "$$(command -v sudo)" ] && [ "$$(id -u)" -ne 0 ]; then e
 ### Services (annet and netbox) control
 
 build_annet:
-	cd ./annet && docker build --no-cache -t annet .
+	@cd ./annet && \
+	cp -r ../scripts/netsshsetup ./netsshsetup && \
+	docker build --no-cache -t annet . && \
+	rm -rf ./netsshsetup
 
 build_netbox:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
