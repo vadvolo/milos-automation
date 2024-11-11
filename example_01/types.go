@@ -28,14 +28,16 @@ type AbstractDevice interface {
 	_Hostname() string
 	_Vendor() string
 	_Address() string
-	ShowInterfaces() []string
+
+	GetHostname() string
 	ShowDeviceInfo()
 	GetInterfaces() error
 	GetLLDPNeigbours() error
 	SetInterfaceDescription() error
 	Ping() error
-	GetStatus() bool
 	SetStatus(s bool)
+	GetStatus() bool
+	ShowInterfaces() []string
 }
 
 type Device struct {
@@ -172,6 +174,14 @@ func ImportDevices() ([]AbstractDevice, error) {
 	return ret, nil
 }
 
+func (d *Device) GetHostname() string {
+	return d.Hostname
+}
+
+func (d *Device) GetStatus() bool {
+	return d.Active
+}
+
 func (d *Device) GetInterfaceByName(name string) *Interface {
 	for _, iface := range d.Interfaces {
 		if iface.Name == name {
@@ -206,10 +216,6 @@ func (d *Device) Ping() error {
 	} else {
 		return nil
 	}
-}
-
-func (d *Device) GetStatus() bool {
-	return d.Active
 }
 
 func (d *Device) SetStatus(s bool) {

@@ -1,0 +1,50 @@
+# Lab00 Cisco Basic Scenario
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.20.0.0/24
+        gateway: 172.20.0.1
+
+services:
+  netbox:
+    container_name: netbox
+    hostname: netbox
+    ports:
+      - 8000:8080
+    volumes:
+      - ../topologies/lab00_cisco_basic_scenario/src:/home/ubuntu/src
+
+  dynamips-lab:
+    container_name: dynamips
+    hostname: dynamips
+    image: ubuntu:bionic
+    tty: true
+    volumes:
+      - ../topologies/lab00_cisco_basic_scenario/src:/home/ubuntu/
+      - ../scripts:/home/ubuntu/scripts
+      - ../vm_images:/home/ubuntu/vm_images
+    command: sh "/home/ubuntu/install.sh"
+    cap_add:
+          - net_admin
+          - net_raw
+          - sys_module
+    devices: [/dev/net/tun:/dev/net/tun]
+    networks:
+      - default
+
+  annet:
+    container_name: annet
+    hostname: annet
+    build: ../annet/
+    command: tail -f /dev/null
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab00_cisco_basic_scenario/src/lab_generators:/lab_generators
+      - ../scripts:/home/ubuntu/scripts
+    environment:
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
+      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
+      - NETBOX_URL=http://netbox:8080

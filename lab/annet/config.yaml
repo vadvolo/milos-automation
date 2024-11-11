@@ -1,0 +1,44 @@
+connection:
+  default:
+    adapter: gnetcli
+    params:
+      login: log
+      passwords: pass
+
+fetcher:
+  default:
+    adapter: gnetcli
+    params: &gnetcli_patams
+      dev_login: annet
+      dev_password: annet
+
+deployer:
+  default:
+    adapter: gnetcli
+    params:
+      <<: *gnetcli_patams
+
+generators:
+  default:
+    - /lab_generators/__init__.py
+
+storage:
+  default:
+    adapter: file
+    params:
+      path: /file_inventory.yaml
+  netbox:
+    adapter: netbox
+    params:
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
+      url: http://netbox:8080
+      token: a630dcefcb191982869e7576190e79bfd569d33c
+context:
+  default:
+    fetcher: default
+    deployer: default
+    connection: default
+    generators: default
+    storage: netbox
+
+selected_context: default

@@ -1,0 +1,20 @@
+[
+    {
+        "hostname": "sw-3750",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.2",
+        "login": "vdm",
+        "password": "123qwe",
+        "interfaces": []
+    },
+    {
+        "hostname": "voip-switch",
+        "vendor": "Cisco",
+        "breed": "ios",
+        "address": "10.0.10.9",
+        "login": "vdm",
+        "password": "1Qazxsw2",
+        "interfaces": []
+    }
+]

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
 	"log"
 	"os"
 	"reflect"
@@ -71,7 +70,6 @@ func NewInventoryDevice(name string, opts ...InventoryDeviceOption) *InventoryDe
 func ImportInventoryDevices(devices []AbstractDevice) []*InventoryDevice {
 	var inventoryDevices []*InventoryDevice
 	for _, device := range devices {
-		fmt.Println(device._Hostname())
 		if device.GetStatus() {
 			inventoryDevice := NewInventoryDevice(
 				device._Hostname(),

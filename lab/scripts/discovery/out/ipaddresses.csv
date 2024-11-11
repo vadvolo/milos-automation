@@ -1,0 +1,13 @@
+device,interface,address,status
+lab-r1.nh.com,FastEthernet0/0,172.20.0.100,active
+lab-r1.nh.com,FastEthernet0/1,unassigned,active
+lab-r1.nh.com,GigabitEthernet1/0,10.0.0.2,active
+lab-r1.nh.com,GigabitEthernet2/0,unassigned,active
+lab-r2.nh.com,FastEthernet0/0,172.20.0.101,active
+lab-r2.nh.com,FastEthernet0/1,unassigned,active
+lab-r2.nh.com,GigabitEthernet1/0,10.0.0.1,active
+lab-r2.nh.com,GigabitEthernet2/0,10.0.0.5,active
+lab-r3.nh.com,FastEthernet0/0,172.20.0.102,active
+lab-r3.nh.com,FastEthernet0/1,unassigned,active
+lab-r3.nh.com,GigabitEthernet1/0,10.0.0.6,active
+lab-r3.nh.com,GigabitEthernet2/0,unassigned,active
