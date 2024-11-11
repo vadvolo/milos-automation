@@ -12,8 +12,8 @@ build:
 	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
 	@cd scripts/netsshsetup && env GOOS=linux GOARCH=arm go build && cd ../..
 
-rebuild:
-	rm -rf netbox-docker || true && \
+rebuild: services_stop
+	$(SUDO) rm -r netbox-docker || true && \
 	$(MAKE) build
 
 services_start:
