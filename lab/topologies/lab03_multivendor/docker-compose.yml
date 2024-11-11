@@ -1,7 +1,4 @@
 # Lab03. Multivendor
-
-version: '3'
-
 networks:
   default:
     driver: bridge
