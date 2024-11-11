@@ -4,7 +4,7 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname lab-r3
+hostname lab-r1
 !
 boot-start-marker
 boot-end-marker
@@ -22,6 +22,7 @@ aaa session-id common
 !
 ip cef
 ip domain name nh.com
+no ip domain lookup
 !
 !
 !
@@ -38,7 +39,7 @@ ip domain name nh.com
 !
 !
 !
-username milos secret 5 $1$zCwP$hCKzCFg/1aqX0LygJ/eIK.
+username annet privilege 15 secret 5 $1$l/O8$I5Sf9..QOhhWDhq.HFsco.
 !
 !
 ip ssh version 2
@@ -48,7 +49,7 @@ ip ssh version 2
 !
 !
 interface FastEthernet0/0
- ip address 172.20.0.102 255.255.255.0
+ ip address 172.20.0.100 255.255.255.0
 !
 interface FastEthernet0/1
  no ip address
@@ -57,15 +58,12 @@ interface FastEthernet0/1
  speed auto
 !
 interface GigabitEthernet1/0
- ip address 10.0.0.6 255.255.255.252
+ ip address 10.1.1.100 255.255.255.0
  negotiation auto
- duplex auto
- speed auto
 !
 interface GigabitEthernet2/0
+ ip address 10.1.2.100 255.255.255.0
  negotiation auto
- duplex auto
- speed auto
 !
 !
 no ip http server
@@ -92,8 +90,12 @@ line con 0
 line aux 0
  stopbits 1
 line vty 0 4
+ exec-timeout 0 0
+ logging synchronous
  transport input telnet ssh
 line vty 5 14
+ exec-timeout 0 0
+ logging synchronous
  transport input all
 !
 !

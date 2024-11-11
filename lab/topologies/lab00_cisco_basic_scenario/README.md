@@ -111,12 +111,6 @@ cd annetutils/contribs/labs
 make build
 ```
 
-and start them:
-
-```bash
-make services_start
-```
-
 **Step 2.**
 
 NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm_images` directory.
@@ -124,7 +118,7 @@ NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm
 Start the lab:
 
 ```bash
-make lab00_start
+make lab00
 ```
 
 **Step 3.**
@@ -143,7 +137,9 @@ docker exec -u root -t -i annet /bin/bash
 Enable SSH on Cisco routers by script:
 
 ```
-for ip in 0 1 2; do /home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.10$ip -v cisco -b ios -l annet -p annet -P telnet --ipdomain nh.com; done
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.100 -v cisco -b ios -l annet -p annet -P telnet --ipdomain nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.101 -v cisco -b ios -l annet -p annet -P telnet --ipdomain nh.com
+/home/ubuntu/scripts/netsshsetup/netsshsetup -a 172.20.0.102 -v cisco -b ios -l annet -p annet -P telnet --ipdomain nh.com
 ```
 
 **Step 6.**
@@ -155,17 +151,11 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r2 | `annet gen lab-r2.nh.com` |
 | lab-r3 | `annet gen lab-r3.nh.com` |
 
-> If you see error below, you need to export NETBOX_TOKEN to the Annet container.
->
-> ```
->   File "/venv/lib/python3.12/site-packages/dataclass_rest/http/requests.py", line 19, in _on_error_default
->     raise ClientError(response.status_code)
-> dataclass_rest.exceptions.ClientError: 403
-> ```
->
-> ```
-> export NETBOX_TOKEN="a630dcefcb191982869e7576190e79bfd569d33c"
-> ```
+or
+
+```bash
+annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
+```
 
 <details>
 <summary>Output for lab-r1:</summary>
@@ -236,6 +226,11 @@ Generate diff for lab-r1, lab-r2, lab-r3
 | lab-r2 | `annet diff lab-r2.nh.com` |
 | lab-r3 | `annet diff lab-r3.nh.com` |
 
+```bash
+annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
+```
+
+
 <details>
 <summary>Diff for lab-r1:</summary>
 
@@ -304,6 +299,10 @@ Generate patch for lab-r1, lab-r2, lab-r3
 | lab-r1 | `annet patch lab-r1.nh.com` |
 | lab-r2 | `annet patch lab-r3.nh.com` |
 | lab-r3 | `annet patch lab-r3.nh.com` |
+
+```bash
+annet patch lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
+```
 
 <details>
 <summary>Patch for lab-r1:</summary>
@@ -384,6 +383,12 @@ Deploy configuration into for lab-r1, lab-r2, lab-r3
 | lab-r1 | `annet deploy lab-r1.nh.com` |
 | lab-r2 | `annet deploy lab-r3.nh.com` |
 | lab-r3 | `annet deploy lab-r3.nh.com` |
+
+or
+
+```bash
+annet patch --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
+```
 
 **Step 10.**
 Change the MTU value on [link](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.

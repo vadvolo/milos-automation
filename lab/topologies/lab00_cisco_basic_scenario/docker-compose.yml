@@ -12,14 +12,10 @@ services:
   netbox:
     container_name: netbox
     hostname: netbox
-    # environment:
-    #   - DJANGO_SUPERUSER_USERNAME=annet
-    #   - DJANGO_SUPERUSER_PASSWORD=annet
-    #   - DJANGO_SUPERUSER_EMAIL=an@n.et
     ports:
       - 8000:8080
     volumes:
-      - ../topologies/lab00_cisco_base/src:/home/ubuntu/src
+      - ../topologies/lab00_cisco_basic_scenario/src:/home/ubuntu/src
 
   dynamips-lab:
     container_name: dynamips
@@ -27,7 +23,7 @@ services:
     image: ubuntu:bionic
     tty: true
     volumes:
-      - ../topologies/lab00_cisco_base/src:/home/ubuntu/
+      - ../topologies/lab00_cisco_basic_scenario/src:/home/ubuntu/
       - ../scripts:/home/ubuntu/scripts
       - ../vm_images:/home/ubuntu/vm_images
     command: sh "/home/ubuntu/install.sh"
@@ -46,8 +42,9 @@ services:
     command: tail -f /dev/null
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab00_cisco_base/src/lab_generators:/lab_generators
+      - ../topologies/lab00_cisco_basic_scenario/src/lab_generators:/lab_generators
       - ../scripts:/home/ubuntu/scripts
     environment:
-      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c  # Please, do not change it
-      - NETBOX_URL=http://netbox:8080  # Please, do not change it
+      # Reminder: for lab/testing purposes only, never store production tokens in repository
+      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
+      - NETBOX_URL=http://netbox:8080
