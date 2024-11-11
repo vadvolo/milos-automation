@@ -56,7 +56,7 @@ networks:
     ipam:
       config:
         - subnet: 10.0.6.0/24
-  
+
   b1s1_net:
     name: b1s1_net
     driver: bridge
@@ -64,7 +64,7 @@ networks:
     ipam:
       config:
         - subnet: 10.1.1.0/24
-  
+
   b1s2_net:
     name: b1s2_net
     driver: bridge
@@ -80,7 +80,7 @@ networks:
     ipam:
       config:
         - subnet: 10.1.3.0/24
-  
+
   b2s2_net:
     name: b2s2_net
     driver: bridge
@@ -224,7 +224,7 @@ services:
         ipv4_address: 10.1.4.114
     volumes:
       - ./operational_configs/ceos-r3.flash:/mnt/flash/
-  
+
   netbox:
     container_name: netbox
     hostname: netbox
@@ -246,7 +246,7 @@ services:
       # Reminder: for lab/testing purposes only, never store production tokens in repository
       - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
       - NETBOX_URL=http://netbox:8080
-  
+
   dynamips-lab:
     container_name: dynamips
     hostname: dynamips
