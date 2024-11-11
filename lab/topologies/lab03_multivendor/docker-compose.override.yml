@@ -137,6 +137,22 @@ x-frr-defaults: &frr-defaults
            /sbin/tini -- /usr/lib/frr/docker-start"
 
 services:
+  netbox:
+    container_name: netbox
+    hostname: netbox
+    ports:
+      - 8000:8080
+    volumes:
+      - ../topologies/lab03_multivendor/src:/home/ubuntu/src
+
+  annet:
+    container_name: annet
+    hostname: annet
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab03_multivendor/src/lab_generators:/lab_generators
+      - ../scripts:/home/ubuntu/scripts
+
   frr-r1:
     <<: *frr-defaults
     container_name: tor-1-1
@@ -225,28 +241,6 @@ services:
     volumes:
       - ./operational_configs/ceos-r3.flash:/mnt/flash/
 
-  netbox:
-    container_name: netbox
-    hostname: netbox
-    ports:
-      - 8000:8080
-    volumes:
-      - ../topologies/lab03_multivendor/src:/home/ubuntu/src
-
-  annet:
-    container_name: annet
-    hostname: annet
-    build: ../annet/
-    command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab03_multivendor/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
-    environment:
-      # Reminder: for lab/testing purposes only, never store production tokens in repository
-      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
-      - NETBOX_URL=http://netbox:8080
-
   dynamips-lab:
     container_name: dynamips
     hostname: dynamips
@@ -268,4 +262,3 @@ services:
       - b1s2_net
       - b2s1_net
       - b2s2_net
-

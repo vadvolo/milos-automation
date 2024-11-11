@@ -56,6 +56,21 @@ x-frr-defaults: &frr-defaults
            /sbin/tini -- /usr/lib/frr/docker-start"
 
 services:
+  netbox:
+    container_name: netbox
+    hostname: netbox
+    ports:
+      - 8000:8080
+    volumes:
+      - ../topologies/lab01_frr-only-test/src/:/home/ubuntu/src
+
+  annet:
+    container_name: annet
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab01_frr-only-test/src/lab_generators:/lab_generators
+      - ../scripts:/home/ubuntu/scripts
+
   frr-r1:
     <<: *frr-defaults
     container_name: frr-r1
@@ -103,24 +118,3 @@ services:
       - ../topologies/lab01_frr-only-test/operational_configs/frr-r3.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
-
-  annet:
-    container_name: annet
-    build: ../annet/
-    command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab01_frr-only-test/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
-    environment:
-      # Reminder: for lab/testing purposes only, never store production tokens in repository
-      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
-      - NETBOX_URL=http://netbox:8080
-
-  netbox:
-    container_name: netbox
-    hostname: netbox
-    ports:
-      - 8000:8080
-    volumes:
-      - ../topologies/lab01_frr-only-test/src/:/home/ubuntu/src

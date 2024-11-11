@@ -16,6 +16,14 @@ services:
     volumes:
       - ../topologies/lab02_dc_cisco/src:/home/ubuntu/src
 
+  annet:
+    container_name: annet
+    hostname: annet
+    volumes:
+      - ../annet/config.yaml:/config.yaml
+      - ../topologies/lab02_dc_cisco/src/lab_generators:/lab_generators
+      - ../scripts:/home/ubuntu/scripts
+
   dynamips-lab:
     container_name: dynamips
     hostname: dynamips
@@ -33,17 +41,3 @@ services:
     devices: [/dev/net/tun:/dev/net/tun]
     networks:
       - default
-
-  annet:
-    container_name: annet
-    hostname: annet
-    build: ../annet/
-    command: tail -f /dev/null
-    volumes:
-      - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab02_dc_cisco/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
-    environment:
-      # Reminder: for lab/testing purposes only, never store production tokens in repository
-      - NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
-      - NETBOX_URL=http://netbox:8080
