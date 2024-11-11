@@ -148,10 +148,10 @@ services:
   annet:
     container_name: annet
     hostname: annet
+    image: annet
     volumes:
       - ../annet/config.yaml:/config.yaml
       - ../topologies/lab03_multivendor/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
 
   frr-r1:
     <<: *frr-defaults
@@ -248,7 +248,6 @@ services:
     tty: true
     volumes:
       - ../topologies/lab03_multivendor/src:/home/ubuntu/
-      - ../scripts:/home/ubuntu/scripts
       - ../vm_images:/home/ubuntu/vm_images
     command: sh "/home/ubuntu/install.sh"
     cap_add:

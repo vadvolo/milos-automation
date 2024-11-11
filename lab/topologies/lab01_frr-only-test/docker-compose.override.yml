@@ -66,10 +66,11 @@ services:
 
   annet:
     container_name: annet
+    hostname: annet
+    image: annet
     volumes:
       - ../annet/config.yaml:/config.yaml
       - ../topologies/lab01_frr-only-test/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
 
   frr-r1:
     <<: *frr-defaults

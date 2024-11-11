@@ -19,10 +19,10 @@ services:
   annet:
     container_name: annet
     hostname: annet
+    image: annet
     volumes:
       - ../annet/config.yaml:/config.yaml
       - ../topologies/lab02_dc_cisco/src/lab_generators:/lab_generators
-      - ../scripts:/home/ubuntu/scripts
 
   dynamips-lab:
     container_name: dynamips
@@ -31,7 +31,6 @@ services:
     tty: true
     volumes:
       - ../topologies/lab02_dc_cisco/src:/home/ubuntu/
-      - ../scripts:/home/ubuntu/scripts
       - ../vm_images:/home/ubuntu/vm_images
     command: sh "/home/ubuntu/install.sh"
     cap_add:
