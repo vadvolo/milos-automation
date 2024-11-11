@@ -10,6 +10,7 @@ build:
 	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
 	@cp ./docker-compose.override.yml ./netbox-docker/docker-compose.override.yml
 	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
+	@cd scripts/netsshsetup && env GOOS=linux GOARCH=arm go build && cd ../..
 
 rebuild:
 	rm -rf netbox-docker || true && \
@@ -63,7 +64,6 @@ lab01: services_stop
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
-
 lab02: services_stop
 	cp ./topologies/lab02_dc_cisco/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
@@ -79,79 +79,8 @@ lab03: services_stop
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
-# lab_pre_start: services_check annet_flush_generators
-
-### Lab topologies control
-
-lab00_start: lab_pre_start
-	@cd ./topologies/lab00_cisco_basic_scenario && \
-	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
-	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
-	docker-compose up -d --build
-
-lab00_stop:
-	@cd ./topologies/lab00_cisco_basic_scenario && \
-	docker-compose down
-
-lab01_start: lab_pre_start
-	@cd ./topologies/lab01_frr-only-test && \
-	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
-	cp -r default_configs/* operational_configs/ && \
-	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
-	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
-	docker-compose up -d --build
-
-lab01_stop:
-	@cd ./topologies/lab01_frr-only-test && \
-	docker-compose down
-
-lab03_start: lab_pre_start
-	@cd ./topologies/lab03_multivendor && \
-	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
-	cp -r default_configs/* operational_configs/ && \
-	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
-	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
-	docker-compose up -d --build
-
-lab03_stop:
-	@cd ./topologies/lab03_multivendor && \
-	docker-compose down
-
-lab02_start: lab_pre_start
-	@cd ./topologies/lab02_dc_cisco && \
-	docker cp ./src/lab_generators/. annet:/lab_generators/ && \
-	docker cp ./src/netbox-dump.json netbox:/home/ubuntu/netbox-dump.json && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/netbox-dump.json && \
-	docker-compose up -d --build
-
-lab02_stop:
-	@cd ./topologies/lab02_dc_cisco && \
-	docker-compose down
-
-### Miscellaneous utilities
-
-clean:
-	rm -rf netbox-docker/
-	docker rm -f netbox-docker-netbox-worker-1 netbox-docker-netbox-housekeeping-1 \
-	netbox annet netbox-docker-redis-cache-1 \
-	dynamips netbox-docker-redis-1 netbox-docker-postgres-1
-	# docker volume prune -f -a
-
-annet_restart:
-	source ./netbox_env.sh && \
-	cd ./netbox-docker && \
-	docker-compose up -d
-
-build_discovery:
-	@cd ./discovery && go mod init discovery && go mod tidy &&  env GOOS=linux GOARCH=arm go build && cd ..
-
 netbox_export:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py dumpdata -a -o /home/ubuntu/src/netbox-dump.json --exclude extras.cachedvalue --exclude extras.objectchange --exclude extras.report --exclude extras.script --exclude django_rq.queue --exclude auth.permission --exclude contenttypes.contenttype
 
 netbox_import:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
-
-run: start_compose annet_restart
