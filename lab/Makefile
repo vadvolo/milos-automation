@@ -36,7 +36,7 @@ lab00: services_stop
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab01: services_stop
-	@cp ./topologies/lab01_frr-only-test/docker-compose.yml ./netbox-docker/docker-compose.override.yml && \
+	@cp ./topologies/lab01_frr-only-test/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd topologies/lab01_frr-only-test && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
