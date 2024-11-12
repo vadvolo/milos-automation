@@ -14,6 +14,7 @@ def bgp_mesh(device: Device) -> MeshExecutionResult:
     mesh_data: MeshExecutionResult = executor.execute_for(device)
     return mesh_data
 
+
 def bgp_asnum(mesh_data: MeshExecutionResult) -> Optional[ASN]:
     """Return AS number parse mesh bgp peers"""
     if not mesh_data:
@@ -41,14 +42,6 @@ def router_id(mesh_data: MeshExecutionResult) ->Optional[str]:
     if mesh_data.global_options.router_id:
         return mesh_data.global_options.router_id
     return None
-
-
-def deduplicate_ip_addr(ip_addresses: list[IpAddress]) -> list[IpAddress]:
-    """Return deduplicated ip addresses"""
-    data_set: set[IpAddress] = set()
-    for ip_addr in ip_addresses:
-        data_set.add(ip_addr)
-    return list(data_set)
 
 
 class AutonomusSystemIsNotDefined(Exception):
