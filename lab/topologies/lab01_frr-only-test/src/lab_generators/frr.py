@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from annet.generators import Entire
 from annet.storage import Device
 
+
 MTU = 1500
 
 @dataclass

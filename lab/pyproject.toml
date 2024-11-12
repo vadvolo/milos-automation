@@ -1,0 +1,102 @@
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:Flags not at the start of the expression.*:DeprecationWarning"
+]
+
+[tool.ruff]
+line-length = 140
+exclude = [".tox", ".venv", "venv"]
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    # "UP",
+    # flake8-simplify
+    # "SIM",
+    # isort
+    "I",
+    # PyLint
+    "PL",
+]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+
+[tool.pylint.'MASTER']
+ignore = ".git"
+
+[tool.pylint.'DESIGN']
+min-public-methods = 0
+max-public-methods = 50
+max-args = 15
+max-parents = 10
+max-locals = 35
+max-statements = 100
+max-returns = 30
+max-nested-blocks = 15
+max-bool-expr = 15
+
+[tool.pylint.'TYPECHECK']
+ignored-classes = ["pytest", "pygments.lexers", "pygments.formatters", "AnsiCodes"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+    "locally-disabled",
+    "fixme",
+    "superfluous-parens",
+    "broad-except",
+    "broad-exception-raised",
+    "raise-missing-from",
+    "len-as-condition",
+    "no-else-return",
+    "no-else-raise",
+    "inconsistent-return-statements",
+    "import-outside-toplevel",
+    "consider-using-f-string",
+    "invalid-name",
+    "consider-using-dict-items",
+    "consider-iterating-dictionary",
+    "use-maxsplit-arg",
+    "unspecified-encoding",
+    "global-variable-not-assigned",
+]
+
+[tool.pylint.'REPORTS']
+msg-template = "{symbol} -- {path}:{line}({obj}): {msg}"
+reports = "n"
+
+[tool.pylint.'FORMAT']
+max-line-length = 140
+
+[tool.pylint.BASIC]
+# Regular expression matching correct method names
+method-rgx = "[a-z_][a-z0-9_]{2,50}$"
+# Regular expression matching correct function names
+function-rgx = "[a-z_][a-z0-9_]{2,50}$"
+# Regular expression which should only match correct module level names
+const-rgx = "([a-zA-Z_][a-zA-Z0-9_]*)$"
+# Regular expression which should only match correct argument names
+argument-rgx = "[a-z_][a-z0-9_]{1,30}$"
+# Regular expression which should only match correct variable names
+variable-rgx = "([a-z_][a-z0-9_]{1,30}|[ijn])$"
+# Regular expression which should only match correct instance attribute names
+attr-rgx = "[a-z_][a-z0-9_]{1,30}$"
+# Max number of object attributes
+max-attributes = 25
+# We have some pretty lengthy flat generators now
+max-branches = 35
+good-names = ["x", "y", "i", "_", "bar"]
+
+[tool.isort]
+force_grid_wrap = 0
+include_trailing_comma = true
+line_length = 88
+lines_after_imports = 2
+multi_line_output = 3
+skip = [".tox", ".venv", "venv"]
+use_parentheses = true

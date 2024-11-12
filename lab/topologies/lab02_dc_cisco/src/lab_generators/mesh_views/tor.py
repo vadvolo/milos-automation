@@ -1,6 +1,5 @@
-from annet.mesh import (
-    MeshRulesRegistry, GlobalOptions, MeshSession, DirectPeer,
-)
+from annet.mesh import DirectPeer, GlobalOptions, MeshRulesRegistry, MeshSession
+
 
 registry = MeshRulesRegistry(match_short_name=True)
 
