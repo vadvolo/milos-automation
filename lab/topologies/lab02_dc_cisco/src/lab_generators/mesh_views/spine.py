@@ -5,4 +5,4 @@ registry = MeshRulesRegistry(match_short_name=True)
 
 @registry.device("spine-{pod}-{plane}")
 def global_options(global_opts: GlobalOptions):
-    global_opts.router_id = f"1.1.{global_opts.match.pod}.{global_opts.match.plane}"
+    global_opts.router_id = f"1.2.{global_opts.match.pod}.{global_opts.match.plane}"

@@ -34,6 +34,10 @@ class Bgp(PartialGenerator):
             yield "bgp router-id", rid
             yield "bgp log-neighbor-changes"
 
+            if device.device_role.name == "ToR":
+                yield "redistribute connected route-map CONNECTED"
+                yield "maximum-paths 16"
+
             for peer in mesh_data.peers:
                 # define peer group attrs
                 yield "neighbor", peer.group_name, "peer-group"
