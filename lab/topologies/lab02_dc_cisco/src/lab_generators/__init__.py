@@ -1,7 +1,7 @@
 from annet.generators import BaseGenerator
 from annet.storage import Storage
 
-from . import description, hostname, shutdown, ip_address, rpl, bgp
+from . import description, hostname, shutdown, ip_addresses, rpl, bgp
 
 
 def get_generators(store: Storage) -> list[BaseGenerator]:
@@ -9,7 +9,7 @@ def get_generators(store: Storage) -> list[BaseGenerator]:
         bgp.Bgp(store),
         description.Description(store),
         hostname.Hostname(store),
-        ip_address.IpAddress(store),
+        ip_addresses.IpAddresses(store),
         rpl.RoutePolicy(store),
         shutdown.Shutdown(store),
     ]
