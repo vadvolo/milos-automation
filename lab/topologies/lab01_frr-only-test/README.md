@@ -1,8 +1,8 @@
 ## FRR Base Lab
 
-### Introduction 
+### Introduction
 
-This lab demonstrates basic principles network automation using FRR devices. The main goal is demonstrating Entire generator of Annet.
+This lab demonstrates basic principles of network automation using FRR devices. The main goal is demonstrating Annet's `Entire` generator type.
 
 Authors:
 - [Grigorii Macheev](https://github.com/gregory-mac),
@@ -11,27 +11,28 @@ Authors:
 
 ### Objectives
 
-- Understand main principals of writing annet generators 
+- Understand main principles of writing Annet `Entire` generators
 
-### Topology:
+### Topology
 
 ![Lab Topology](./images/topology.png)
 
 ### Generators
 
-There is only one generator for FRR which is Entire generators. It means that Annet control whole configuration file of the service frr.
-We should write that kind like one generator per one configuration file. 
+Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the device.
+FRR can be managed by `vtysh`, a Cisco-like CLI shell, but it also stores its configuration in a `/etc/frr/frr.conf` file.
+We can leverage this fact to manage the routing configuration in a server-like manner, and `Partial` generator will help us to prepare the configuration file.
 
-The generator configure ip addresses and descriptions of the interfaces between routers. It configures BGP sessions too.
-All the staff depends on connection map in Netbox.
+The generator in this example configures interface descriptions, IP addresses and BGP sessions between FRR routers.
+All the parameters are defined by connections in Netbox.
 
 ### Lab Guide
 
 | Router | CLI |
 |:------:|:----|
 | frr-r1 | `docker exec -u root -t -i frr-r1 vtysh` |
-| frr-r2 | `docker exec -u root -t -i frr-r1 vtysh` |
-| frr-r3 | `docker exec -u root -t -i frr-r1 vtysh` |
+| frr-r2 | `docker exec -u root -t -i frr-r2 vtysh` |
+| frr-r3 | `docker exec -u root -t -i frr-r3 vtysh` |
 
 
 **Step 1.**
@@ -52,9 +53,9 @@ make lab01
 
 **Step 3.**
 
-Go to annet-container
+Go to the Annet container:
 
-```
+```bash
 docker exec -u root -t -i annet /bin/bash
 ```
 
