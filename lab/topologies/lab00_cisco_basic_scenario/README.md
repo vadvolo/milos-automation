@@ -114,7 +114,7 @@ make build
 
 **Step 2.**
 
-NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
+NOTE: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
 
 Start the lab:
 
@@ -142,7 +142,7 @@ for ip in 0 1 2; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P te
 ```
 
 **Step 6.**
-Generate configuration for lab-r1, lab-r2, lab-r3
+Generate configuration for lab-r1, lab-r2, lab-r3:
 
 | Router |                  Command                   |
 | :----: | :----------------------------------------: |
@@ -150,7 +150,7 @@ Generate configuration for lab-r1, lab-r2, lab-r3
 | lab-r2 | `annet gen lab-r2.nh.com` |
 | lab-r3 | `annet gen lab-r3.nh.com` |
 
-or
+or:
 
 ```bash
 annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
@@ -217,13 +217,15 @@ interface GigabitEthernet2/0
 </details>
 
 **Step 7.**
-Generate diff for lab-r1, lab-r2, lab-r3
+Generate diff for lab-r1, lab-r2, lab-r3:
 
 | Router |                   Command                   |
 | :----: | :-----------------------------------------: |
 | lab-r1 | `annet diff lab-r1.nh.com` |
 | lab-r2 | `annet diff lab-r2.nh.com` |
 | lab-r3 | `annet diff lab-r3.nh.com` |
+
+or:
 
 ```bash
 annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
@@ -291,13 +293,15 @@ annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 </details>
 
 **Step 8.**
-Generate patch for lab-r1, lab-r2, lab-r3
+Generate patch for lab-r1, lab-r2, lab-r3:
 
 | Router |                   Command                    |
 | :----: | :------------------------------------------: |
 | lab-r1 | `annet patch lab-r1.nh.com` |
-| lab-r2 | `annet patch lab-r3.nh.com` |
+| lab-r2 | `annet patch lab-r2.nh.com` |
 | lab-r3 | `annet patch lab-r3.nh.com` |
+
+or:
 
 ```bash
 annet patch lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
@@ -375,15 +379,15 @@ interface GigabitEthernet2/0
 </details>
 
 **Step 9.**
-Deploy configuration to lab-r1, lab-r2, lab-r3
+Deploy configuration to lab-r1, lab-r2, lab-r3:
 
 | Router |                    Command                    |
 | :----: | :-------------------------------------------: |
 | lab-r1 | `annet deploy lab-r1.nh.com` |
-| lab-r2 | `annet deploy lab-r3.nh.com` |
+| lab-r2 | `annet deploy lab-r2.nh.com` |
 | lab-r3 | `annet deploy lab-r3.nh.com` |
 
-or
+or:
 
 ```bash
 annet patch --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com

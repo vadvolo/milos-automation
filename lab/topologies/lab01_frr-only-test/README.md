@@ -6,7 +6,7 @@ This lab demonstrates basic principles of network automation using FRR devices. 
 
 Authors:
 - [Grigorii Macheev](https://github.com/gregory-mac),
-- [Vadim Volovik](https://github.com/vadvolo)
+- [Vadim Volovik](https://github.com/vadvolo),
 - [Grigorii Solovev](https://github.com/gs1571)
 
 ### Objectives
@@ -63,11 +63,11 @@ Generate configuration for `frr-r1`, `frr-r2`, `frr-r3`:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
-Look at diff
+Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
-Deploy it
+Deploy it:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
@@ -75,11 +75,11 @@ Deploy it
 
 Remove connection between `frr-r1` and `frr-r2` in Netbox.
 
-Look at diff
+Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
-Deploy it
+Deploy it:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
@@ -87,10 +87,10 @@ Deploy it
 
 Restore connection between `frr-r1` and `frr-r2` in Netbox.
 
-Look at diff
+Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
-Deploy it
+Deploy it:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`

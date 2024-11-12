@@ -61,7 +61,7 @@ To use annet in the lab topologies presented in this repository, you should prep
 
 ### How to use Annet
 
-Go to Annet container:
+Go to the Annet container:
 
 ```bash
 docker exec -u root -t -i annet /bin/bash

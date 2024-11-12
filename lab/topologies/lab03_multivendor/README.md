@@ -32,4 +32,8 @@ Now you're able to run Lab03.
 
 ### Lab Guide
 
-**Step 1.** `make lab03`
+**Step 1.** Run the lab:
+
+```bash
+make lab03
+```
