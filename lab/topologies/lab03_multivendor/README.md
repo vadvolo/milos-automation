@@ -1,11 +1,22 @@
-# Lab03. Multivendor lab
+## Lab03. Multivendor lab
 
-In this lab we will see how Annet manages with several manufacturers:
+### Introduction
+
+In this lab we will see how Annet manages software from several different vendors:
+
 - Arista
 - FRR
 - Cisco
 
-## How to get Arista image
+Author:
+
+### Objectives
+
+- To try out Annet in a multivendor environment
+
+### Preparation
+
+#### How to get Arista image
 
 1. Go to https://www.arista.com/en/login
 2. Log in or register at Arista.com
@@ -15,13 +26,14 @@ In this lab we will see how Annet manages with several manufacturers:
 
 Now you're able to run Lab03.
 
-## Topology
+### Topology
 
 ![Lab Topology](./images/topology.jpg)
 
-## Lab Guide
+### Lab Guide
 
-**Step 0.** [Prepare docker image](#how-to-get-arista-image)
+**Step 1.** Run the lab:
 
-**Step 1.** `make lab03`
-
+```bash
+make lab03
+```
