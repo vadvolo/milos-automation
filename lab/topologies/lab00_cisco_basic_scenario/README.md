@@ -2,10 +2,10 @@
 
 ### Introduction
 
-In this lab, you will gain hands-on experience in deploying simple network configuration across an network infrastructure. This lab is designed to simulate a real-world scenario:
+In this lab, you will gain hands-on experience in deploying simple network configuration across a network infrastructure. This lab is designed to simulate a real-world scenario:
 
-- mtu configuration
-- description configuration
+- MTU configuration
+- Description configuration
 
 Author:
 
@@ -13,15 +13,16 @@ Author:
 
 ### Objectives
 
-- Understand the fundamental concepts of Annet
+- Understand fundamental concepts of Annet
 
-### Topology:
+### Topology
 
 ![Lab Topology](./images/topology.png)
 
 ### Preparation
 
-Before you start please put into `../vm_images` Cisco IOS image `c7200-jk9s-mz.124-13a.bin`
+Before you start, please put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
+The image is subject to a license agreement, so it cannot be distributed in the repository.
 
 ### Generators
 
@@ -64,7 +65,7 @@ class IfaceDescriptions(PartialGenerator):
 <details>
 <summary>Mtu Generator</summary>
 
-In this generator, we retrieve the MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use the default MTU value of 1500.
+In this generator, we retrieve MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use a default MTU value of 1500.
 
 ```python
 MTU = 1500
@@ -96,7 +97,7 @@ class IfaceMtu(PartialGenerator):
 
 **Step 0.**
 
-First of all, you need to install Docker and Docker Compose softaware on yours device:
+First of all, you need to install Docker and Docker Compose on your device:
 
 - [Docker](https://docs.docker.com/engine/install/)
   - [Linux](https://docs.docker.com/desktop/install/linux/)
@@ -104,7 +105,7 @@ First of all, you need to install Docker and Docker Compose softaware on yours d
   - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 **Step 1.**
-Build Netbox and Annet docker images:
+Build Annet and Netbox Docker images:
 
 ```bash
 cd annetutils/contribs/labs
@@ -113,7 +114,7 @@ make build
 
 **Step 2.**
 
-NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm_images` directory.
+NB: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
 
 Start the lab:
 
@@ -126,17 +127,17 @@ make lab00
 Check that all devices were imported into Netbox: http://localhost:8000/dcim/devices/ (annet/annet)
 
 **Step 4.**
-Go to annet-container
+Go to theAnnet container:
 
-```
+```bash
 docker exec -u root -t -i annet /bin/bash
 ```
 
 **Step 5.**
 
-Enable SSH on Cisco routers by script:
+Enable SSH on Cisco routers by executing the script:
 
-```
+```bash
 for ip in 0 1 2; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
 ```
 
@@ -374,7 +375,7 @@ interface GigabitEthernet2/0
 </details>
 
 **Step 9.**
-Deploy configuration into for lab-r1, lab-r2, lab-r3
+Deploy configuration to lab-r1, lab-r2, lab-r3
 
 | Router |                    Command                    |
 | :----: | :-------------------------------------------: |
@@ -391,10 +392,10 @@ annet patch --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 **Step 10.**
 Change the MTU value on [link](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
 
-Repeat process `gen` -> `diff` -> `patch` -> `deploy` for lab-r2.
+Repeat the process `gen` -> `diff` -> `patch` -> `deploy` for lab-r2.
 
 **Step 11.**
-Change the logic generation description
+Change the generation description logic:
 
 ```diff
 class IfaceDescriptions(PartialGenerator):
@@ -403,13 +404,11 @@ class IfaceDescriptions(PartialGenerator):
 + neighbor += f"to_{connection.device.name}"
 ```
 
-Repeat process `gen` -> `diff` -> `patch` -> `deploy` for some router.
+Repeat the process `gen` -> `diff` -> `patch` -> `deploy` for any router.
 
 **Step 12.**
 After finishing the lab, stop it:
 
 ```bash
-make lab00_stop
+make services_stop
 ```
-
-It is not necessary to stop Netbox and Annet containers, if you plan to continue with other labs.
