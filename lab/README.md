@@ -28,19 +28,19 @@ First of all, you need to install Docker and Docker Compose on your device:
 
 Clone this repository:
 
-```
+```bash
 git clone https://github.com/vadvolo/milos-automation.git
 ```
 
 Navigate to the lab folder:
 
-```
+```bash
 cd milos-automation/lab
 ```
 
 Build Annet and Netbox Docker images:
 
-```
+```bash
 make build
 ```
 
@@ -63,7 +63,7 @@ To use annet in the lab topologies presented in this repository, you should prep
 
 Go to Annet container:
 
-```
+```bash
 docker exec -u root -t -i annet /bin/bash
 ```
 
@@ -71,18 +71,18 @@ Run:
 
 - diff
 
-```
+```bash
 annet diff lab-r1.nh.com
 ```
 
 - patch
 
-```
+```bash
 annet patch lab-r1.nh.com
 ```
 
 - deploy
 
-```
+```bash
 annet deploy lab-r1.nh.com
 ```
