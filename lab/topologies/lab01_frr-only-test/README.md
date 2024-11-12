@@ -39,7 +39,7 @@ All the parameters are defined by connections in Netbox.
 If it was not done in one of the previous labs, build Netbox and Annet docker images:
 
 ```bash
-cd annetutils/labs
+cd annetutils/contribs/labs
 make build
 ```
 

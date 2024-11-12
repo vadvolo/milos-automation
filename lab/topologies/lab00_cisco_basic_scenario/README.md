@@ -127,7 +127,7 @@ make lab00
 Check that all devices were imported into Netbox: http://localhost:8000/dcim/devices/ (annet/annet)
 
 **Step 4.**
-Go to theAnnet container:
+Go to the Annet container:
 
 ```bash
 docker exec -u root -t -i annet /bin/bash
