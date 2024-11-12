@@ -15,9 +15,6 @@ RUN /venv/bin/pip install --upgrade protobuf grpcio
 # Set environment variables
 ENV PATH=/venv/bin:$PATH
 ENV ANN_CONTEXT_CONFIG_PATH=/config.yaml
-# TODO: move token to annet config
-ENV NETBOX_TOKEN=a630dcefcb191982869e7576190e79bfd569d33c
-ENV NETBOX_URL=http://netbox:8080
 
 # Setup Go environment
 ENV GOPATH=/go
