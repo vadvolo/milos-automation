@@ -1,6 +1,7 @@
+from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
+
 from annet.generators import PartialGenerator
 from annet.storage import Device
-from ipaddress import IPv4Address, IPv6Address, IPv4Network, IPv6Network
 
 from .helpers.router import bgp_mesh
 

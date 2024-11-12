@@ -1,6 +1,7 @@
 from annet.generators import PartialGenerator
 from annet.storage import Device
 
+
 class Hostname(PartialGenerator):
     
     TAGS = ["hostname"]

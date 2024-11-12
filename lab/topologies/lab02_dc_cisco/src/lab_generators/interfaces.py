@@ -1,6 +1,7 @@
 from annet.generators import PartialGenerator
 from annet.storage import Device
 
+
 MTU = 1500
 
 class IfaceDescriptions(PartialGenerator):

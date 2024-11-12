@@ -1,5 +1,6 @@
 from annet.mesh import MeshRulesRegistry
-from . import tor, spine
+
+from . import spine, tor
 
 
 registry = MeshRulesRegistry(match_short_name=True)

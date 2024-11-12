@@ -4,7 +4,8 @@ from annet.bgp_models import ASN
 from annet.generators import PartialGenerator
 from annet.mesh.executor import MeshExecutionResult
 from annet.storage import Device
-from .helpers.router import bgp_mesh, bgp_asnum, router_id, AutonomusSystemIsNotDefined
+
+from .helpers.router import AutonomusSystemIsNotDefined, bgp_asnum, bgp_mesh, router_id
 
 
 class Bgp(PartialGenerator):
