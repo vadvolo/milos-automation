@@ -68,3 +68,10 @@ netbox_export:
 
 netbox_import:
 	@docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+
+cc:
+	isort topologies
+
+style:
+	pylint -j8 --score n --reports=no topologies && \
+    flake8 topologies
