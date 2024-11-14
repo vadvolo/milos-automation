@@ -47,9 +47,6 @@ lab02: services_stop
 	cp ./topologies/lab02_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	cd ./netbox-docker && \
-	docker-compose up -d && \
-	cd .. && \
 	echo "!!! Don't forget add iol image into ./lab00_cisco_basic_scenario/src/ios-7200 folder !!!"
 
 lab03: services_stop
