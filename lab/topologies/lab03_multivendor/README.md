@@ -28,7 +28,7 @@ Now you're able to run Lab03.
 
 ### Topology
 
-![Lab Topology](./images/topology.jpg)
+![Lab Topology](./images/topology.png)
 
 ### Lab Guide
 
@@ -36,4 +36,8 @@ Now you're able to run Lab03.
 
 ```bash
 make lab03
+```
+
+```
+for ip in 0 1; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
 ```
