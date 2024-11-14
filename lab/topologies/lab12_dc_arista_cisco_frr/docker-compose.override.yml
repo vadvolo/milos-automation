@@ -118,6 +118,8 @@ services:
     container_name: annet
     hostname: annet
     image: annet
+    # since netbox required a lot of resources, but the lab emulators required them too,
+    # to avoid issues that order was applied here and later
     depends_on:
       netbox:
         condition: service_healthy
