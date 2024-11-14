@@ -36,8 +36,11 @@ class Bgp(PartialGenerator):
             yield "bgp log-neighbor-changes"
 
             if device.device_role.name == "ToR":
-                yield "redistribute connected route-map CONNECTED"
                 yield "maximum-paths 16"
+
+            if mesh_data.global_options.ipv4_unicast.redistributes:
+                for redistribute in mesh_data.global_options.ipv4_unicast.redistributes:
+                    yield "redistribute", redistribute.protocol, "" if not redistribute.policy else f"route-map {redistribute.policy}"
 
             for peer in mesh_data.peers:
                 # define peer group attrs
@@ -55,4 +58,3 @@ class Bgp(PartialGenerator):
                 # define peers specific attrs
                 yield "neighbor", peer.addr, "peer-group", peer.group_name
                 yield "neighbor", peer.addr, "remote-as", peer.remote_as
-
