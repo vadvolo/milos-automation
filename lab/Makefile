@@ -47,7 +47,6 @@ lab02: services_stop
 	cp ./topologies/lab02_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	source ./netbox_env.sh && \
 	cd ./netbox-docker && \
 	docker-compose up -d && \
 	cd .. && \

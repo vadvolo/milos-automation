@@ -36,7 +36,7 @@ brctl addif br3 tap4
 
 brctl addbr br4
 ip addr flush dev eth4
-brctl addif br4 eth3
+brctl addif br4 eth4
 brctl addif br4 tap5
 
 ifconfig tap0 up

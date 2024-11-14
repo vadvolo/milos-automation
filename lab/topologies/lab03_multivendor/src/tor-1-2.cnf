@@ -4,7 +4,7 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname lab-r1
+hostname lab-r2
 !
 boot-start-marker
 boot-end-marker
@@ -49,7 +49,9 @@ ip ssh version 2
 !
 !
 interface FastEthernet0/0
- ip address 172.20.0.100 255.255.255.0
+ ip address 172.20.0.101 255.255.255.0
+ duplex auto
+ speed auto
 !
 interface FastEthernet0/1
  no ip address
@@ -58,11 +60,13 @@ interface FastEthernet0/1
  speed auto
 !
 interface GigabitEthernet1/0
- ip address 10.1.1.100 255.255.255.0
+ no ip address
+ shutdown
  negotiation auto
 !
 interface GigabitEthernet2/0
- ip address 10.1.2.100 255.255.255.0
+ no ip address
+ shutdown
  negotiation auto
 !
 !
