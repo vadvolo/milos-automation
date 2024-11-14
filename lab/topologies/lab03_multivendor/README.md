@@ -28,7 +28,7 @@ Now you're able to run Lab03.
 
 ### Topology
 
-![Lab Topology](./images/topology.jpg)
+![Lab Topology](./images/topology.png)
 
 ### Lab Guide
 
