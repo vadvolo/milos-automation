@@ -6,7 +6,13 @@ from annet.mesh.executor import MeshExecutionResult
 from annet.storage import Device
 from icecream import ic
 
-from .helpers.router import AutonomusSystemIsNotDefined, bgp_asnum, bgp_mesh, router_id, bgp_groups
+from .helpers.router import (
+    AutonomusSystemIsNotDefined,
+    bgp_asnum,
+    bgp_groups,
+    bgp_mesh,
+    router_id,
+)
 
 
 class Frr(Entire):
