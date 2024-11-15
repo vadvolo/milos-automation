@@ -25,7 +25,7 @@ Author:
 - Netbox url: http://localhost:8000/
 - Netbox login/password: `annet/annet`
 - Device telnet and ssh login/password: `annet/annet`  
-- Device mgmt addresses: 172.20.0.100, 172.20.0.101, 172.20.0.102
+- Device mgmt addresses: 172.20.0.101, 172.20.0.102, 172.20.0.103
 
 ### Preparation
 
@@ -139,7 +139,7 @@ docker exec -u root -t -i annet /bin/bash
 **Step 5. Enable SSH on Cisco routers by executing the script**
 
 ```bash
-for ip in 0 1 2; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
+for ip in 1 2 3; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
 ```
 
 **Step 6. Generate configuration for devices**

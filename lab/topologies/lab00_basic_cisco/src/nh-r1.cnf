@@ -49,7 +49,7 @@ ip ssh version 2
 !
 !
 interface FastEthernet0/0
- ip address 172.20.0.100 255.255.255.0
+ ip address 172.20.0.101 255.255.255.0
 !
 interface FastEthernet0/1
  no ip address
