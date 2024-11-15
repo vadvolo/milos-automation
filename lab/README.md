@@ -10,10 +10,10 @@ Table of contents:
 - [Annet description](#annet-description)
 - [Useful commands](#useful-commands)
 - [Labs](#labs)
-  - [lab00. Cisco Base Scenario](./topologies/lab00_cisco_basic_scenario)
-  - [lab01. FRR Base Scenario](./topologies/lab01_frr-only-test)
-  - [lab02. Cisco DC Scenario](./topologies/lab02_dc_cisco)
-  - [lab03. Multivendor Lab](./topologies/lab03_multivendor)
+  - [lab00. Cisco Base Scenario](./topologies/lab00_basic_cisco)
+  - [lab01. FRR Base Scenario](./topologies/lab00_basic_frr)
+  - [lab02. Cisco DC Scenario](./topologies/lab10_dc_cisco)
+  - [lab03. Multivendor Lab](./topologies/lab12_dc_arista_cisco_frr)
 
 ## Installation
 

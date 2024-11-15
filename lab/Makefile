@@ -29,29 +29,29 @@ services_stop:
 
 lab00: services_stop
 	@echo "Lab00 Cisco Basic Scenario is launching..." && \
-	cp ./topologies/lab00_cisco_basic_scenario/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
+	cp ./topologies/lab00_basic_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab01: services_stop
-	@cp ./topologies/lab01_frr-only-test/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
-	cd topologies/lab01_frr-only-test && \
+	@cp ./topologies/lab00_basic_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
+	cd topologies/lab00_basic_frr && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
 lab02: services_stop
-	cp ./topologies/lab02_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
+	cp ./topologies/lab10_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add iol image into ./lab00_cisco_basic_scenario/src/ios-7200 folder !!!"
+	echo "!!! Don't forget add iol image into ./lab00_basic_cisco/src/ios-7200 folder !!!"
 
 lab03: services_stop
-	cp ./topologies/lab03_multivendor/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
-	cd topologies/lab03_multivendor && \
+	cp ./topologies/lab12_dc_arista_cisco_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
+	cd topologies/lab12_dc_arista_cisco_frr && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \

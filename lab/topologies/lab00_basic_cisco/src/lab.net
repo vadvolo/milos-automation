@@ -3,6 +3,7 @@ model = 7200
 [localhost:7200]
     workingdir = /home/ubuntu/next-hop-lab
     udp = 10100
+    idle-pc = 0x60741e9c
 
     [[7200]]
         image = /home/ubuntu/vm_images/c7200-jk9s-mz.124-13a.bin
