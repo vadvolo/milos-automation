@@ -30,9 +30,9 @@ All the parameters are defined by connections in Netbox.
 
 | Router | MGMT |
 |:------:|:----|
-| frr-r1 | `172.20.0.110` |
-| frr-r2 | `172.20.0.111` |
-| frr-r3 | `172.20.0.112` |
+| frr-r1 | `172.20.0.111` |
+| frr-r2 | `172.20.0.112` |
+| frr-r3 | `172.20.0.113` |
 
 ![devices](./images/devices.png)
 
@@ -70,7 +70,7 @@ hostname frr-r1
 log file /var/log/frr/frr.log
 
 interface eth0
- ip address 172.20.0.110/24
+ ip address 172.20.0.111/24
 exit
 
 interface eth1
@@ -83,7 +83,7 @@ interface eth2
 exit
 
 router bgp 65001
- bgp router-id 172.20.0.110
+ bgp router-id 172.20.0.111
  neighbor 10.0.2.31 remote-as 65001
  neighbor 10.0.2.31 interface eth2
 
@@ -96,7 +96,7 @@ hostname frr-r2
 log file /var/log/frr/frr.log
 
 interface eth0
- ip address 172.20.0.111/24
+ ip address 172.20.0.112/24
 exit
 
 interface eth1
@@ -109,7 +109,7 @@ interface eth2
 exit
 
 router bgp 65001
- bgp router-id 172.20.0.111
+ bgp router-id 172.20.0.112
  neighbor 10.0.3.32 remote-as 65001
  neighbor 10.0.3.32 interface eth2
 
@@ -122,7 +122,7 @@ hostname frr-r3
 log file /var/log/frr/frr.log
 
 interface eth0
- ip address 172.20.0.112/24
+ ip address 172.20.0.113/24
 exit
 
 interface eth1
@@ -136,7 +136,7 @@ interface eth2
 exit
 
 router bgp 65001
- bgp router-id 172.20.0.112
+ bgp router-id 172.20.0.113
  neighbor 10.0.2.13 remote-as 65001
  neighbor 10.0.2.13 interface eth1
  neighbor 10.0.3.23 remote-as 65001
@@ -159,7 +159,7 @@ Look at diff:
 --- 
 +++ 
 @@ -8,4 +8,21 @@
-  ip address 172.20.0.110/24
+  ip address 172.20.0.111/24
  exit
  
 +interface eth1
@@ -173,7 +173,7 @@ Look at diff:
 +exit
 +
 +router bgp 65001
-+ bgp router-id 172.20.0.110
++ bgp router-id 172.20.0.111
 + neighbor 10.0.1.21 remote-as 65001
 + neighbor 10.0.1.21 interface eth1
 + neighbor 10.0.2.31 remote-as 65001
@@ -184,7 +184,7 @@ Look at diff:
 --- 
 +++ 
 @@ -8,4 +8,21 @@
-  ip address 172.20.0.111/24
+  ip address 172.20.0.112/24
  exit
  
 +interface eth1
@@ -198,7 +198,7 @@ Look at diff:
 +exit
 +
 +router bgp 65001
-+ bgp router-id 172.20.0.111
++ bgp router-id 172.20.0.112
 + neighbor 10.0.1.12 remote-as 65001
 + neighbor 10.0.1.12 interface eth1
 + neighbor 10.0.3.32 remote-as 65001
@@ -209,7 +209,7 @@ Look at diff:
 --- 
 +++ 
 @@ -8,4 +8,21 @@
-  ip address 172.20.0.112/24
+  ip address 172.20.0.113/24
  exit
  
 +interface eth1
@@ -223,7 +223,7 @@ Look at diff:
 +exit
 +
 +router bgp 65001
-+ bgp router-id 172.20.0.112
++ bgp router-id 172.20.0.113
 + neighbor 10.0.2.13 remote-as 65001
 + neighbor 10.0.2.13 interface eth1
 + neighbor 10.0.3.23 remote-as 65001
@@ -239,9 +239,9 @@ Deploy it:
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
 You can check the BGP Peers:
-- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.113 "echo "show ip bgp summary" | sudo vtysh"`
 
 _password is annet_
 
@@ -273,7 +273,7 @@ Look at diff:
 @@ -20,8 +19,6 @@
  
  router bgp 65001
-  bgp router-id 172.20.0.110
+  bgp router-id 172.20.0.111
 - neighbor 10.0.1.21 remote-as 65001
 - neighbor 10.0.1.21 interface eth1
   neighbor 10.0.2.31 remote-as 65001
@@ -293,7 +293,7 @@ Look at diff:
 @@ -20,8 +19,6 @@
  
  router bgp 65001
-  bgp router-id 172.20.0.111
+  bgp router-id 172.20.0.112
 - neighbor 10.0.1.12 remote-as 65001
 - neighbor 10.0.1.12 interface eth1
   neighbor 10.0.3.32 remote-as 65001
@@ -307,8 +307,8 @@ Deploy it:
 `annet deploy frr-r1.nh.com frr-r2.nh.com`
 
 You can check the BGP Peers:
-- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
 
 _password is annet_
 
@@ -340,7 +340,7 @@ Look at diff:
 @@ -19,6 +20,8 @@
  
  router bgp 65001
-  bgp router-id 172.20.0.110
+  bgp router-id 172.20.0.111
 + neighbor 10.0.1.21 remote-as 65001
 + neighbor 10.0.1.21 interface eth1
   neighbor 10.0.2.31 remote-as 65001
@@ -360,7 +360,7 @@ Look at diff:
 @@ -19,6 +20,8 @@
  
  router bgp 65001
-  bgp router-id 172.20.0.111
+  bgp router-id 172.20.0.112
 + neighbor 10.0.1.12 remote-as 65001
 + neighbor 10.0.1.12 interface eth1
   neighbor 10.0.3.32 remote-as 65001
@@ -375,8 +375,8 @@ Deploy it:
 `annet deploy frr-r1.nh.com frr-r2.nh.com`
 
 You can check the BGP Peers:
-- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
 
 **Step 6.**
 

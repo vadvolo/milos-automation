@@ -78,7 +78,7 @@ services:
     hostname: frr-r1
     networks:
       default:
-        ipv4_address: 172.20.0.110
+        ipv4_address: 172.20.0.111
       r1r2_net:
         ipv4_address: 10.0.1.12
       r1r3_net:
@@ -94,7 +94,7 @@ services:
     hostname: frr-r2
     networks:
       default:
-        ipv4_address: 172.20.0.111
+        ipv4_address: 172.20.0.112
       r1r2_net:
         ipv4_address: 10.0.1.21
       r2r3_net:
@@ -110,7 +110,7 @@ services:
     hostname: frr-r3
     networks:
       default:
-        ipv4_address: 172.20.0.112
+        ipv4_address: 172.20.0.113
       r1r3_net:
         ipv4_address: 10.0.2.31
       r2r3_net:
