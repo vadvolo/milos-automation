@@ -13,7 +13,7 @@ build_annet:
 build_netbox:
 	@git clone -b release https://github.com/netbox-community/netbox-docker.git
 	@cp ./netbox-docker/docker-compose.yml ./netbox-docker/docker-compose.yml.bak
-	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.
+	@sed -i.bak 's/VERSION-v4.1-3.0.2/VERSION-v3.7/g' ./netbox-docker/docker-compose.yml
 	@sed -i.bak 's/0s/00s/g' ./netbox-docker/docker-compose.yml
 	@cd ./netbox-docker && docker-compose build --no-cache && cd ..
 
@@ -44,13 +44,13 @@ lab01: services_stop
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
 
-lab02: services_stop
+lab10: services_stop
 	cp ./topologies/lab10_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	echo "!!! Don't forget add iol image into ./lab00_basic_cisco/src/ios-7200 folder !!!"
 
-lab03: services_stop
+lab12: services_stop
 	cp ./topologies/lab12_dc_arista_cisco_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd topologies/lab12_dc_arista_cisco_frr && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \

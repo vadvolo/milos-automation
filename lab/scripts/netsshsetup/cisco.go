@@ -31,7 +31,7 @@ func (d *CiscoDevice) SSHEnabled() (bool, error) {
 		txtlines = append(txtlines, scanner.Text())
 	}
 	for _, line := range txtlines {
-		if strings.Contains(line, "SSH Enabled") {
+		if strings.Contains(line, "SSH was enabled successfully") {
 			return true, nil
 		}
 	}
@@ -39,7 +39,7 @@ func (d *CiscoDevice) SSHEnabled() (bool, error) {
 }
 
 func (d *CiscoDevice) SetSSH() (error) {
-	fmt.Println("Check is ssh enabled")
+	fmt.Println("SSH enabling process has been started for device... It can be up to 240 seconds")
 	cmds := cmd.NewCmdList(
 		[]string{
 			"conf t",

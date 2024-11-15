@@ -18,10 +18,12 @@ import (
 )
 
 type NetworkDevice interface {
+	_Address() string
 	ShowRun() error
-	Ping() error
+	Ping() (bool, error)
 	SSHEnabled() (bool, error)
 	SetSSH() error
+	WaitExec() error
 }
 
 type Device struct {
@@ -49,7 +51,27 @@ func NewDeivce(hostname, ipdomain, login, password, address, vendor, breed, prot
 	}
 }
 
-func (d *Device) Ping() error {
+func (d *Device) _Address() string {
+	return d.Address
+}
+
+func (d *Device) WaitExec() error {
+	count := 10
+	for i := 0; i <= count; i++ {
+		fmt.Printf("Trying to connect to device %s attempt %d\n", d._Address(), i)
+		res, err := d.Ping()
+		if err != nil {
+			return err
+		}
+		if res {
+			return nil
+		}
+		time.Sleep(5 * time.Second)
+	}
+	return nil
+}
+
+func (d *Device) Ping() (bool, error) {
 	var cmd *exec.Cmd
 
 	if runtime.GOOS == "windows" {
@@ -61,14 +83,14 @@ func (d *Device) Ping() error {
 	out, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return fmt.Errorf("there was an error pinging the host: %e", err)
+		return false, fmt.Errorf("there was an error pinging the host: %e", err)
 	}
 
 	outStr := string(out)
 	if strings.Contains(outStr, "Request timeout") || strings.Contains(outStr, "Destination Host Unreachable") || strings.Contains(outStr, "100% packet loss") {
-		return fmt.Errorf("the host is not reachable")
+		return false, nil
 	} else {
-		return nil
+		return true, nil
 	}
 }
 
