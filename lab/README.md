@@ -10,10 +10,12 @@ Table of contents:
 - [Annet description](#annet-description)
 - [Useful commands](#useful-commands)
 - [Labs](#labs)
-  - [lab00. Cisco Base Scenario](./topologies/lab00_basic_cisco)
-  - [lab01. FRR Base Scenario](./topologies/lab01_basic_frr)
-  - [lab02. Cisco DC Scenario](./topologies/lab10_dc_cisco)
-  - [lab03. Multivendor Lab](./topologies/lab12_dc_arista_cisco_frr)
+  - Basic
+    - [lab00. Cisco Base Scenario](./topologies/lab00_basic_cisco)
+    - [lab01. FRR Base Scenario](./topologies/lab01_basic_frr)
+  - DC
+    - [lab10. DC Scenario](./topologies/lab10_dc_cisco)
+    - [lab12. Multivendor Lab](./topologies/lab12_dc_arista_cisco_frr)
 
 ## Installation
 
@@ -45,7 +47,7 @@ make build
 ```
 
 Now you can choose which scenario you want to run. To start a lab you need to run `make labXX`, where `XX` is an index of the lab.
-For example, `make lab00` will start `lab00. Cisco Base Scenario`.
+For example, `make lab00` will start `lab00. Basic Cisco Scenario`.
 
 ## Annet description
 
