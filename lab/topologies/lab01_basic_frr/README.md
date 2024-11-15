@@ -28,12 +28,13 @@ All the parameters are defined by connections in Netbox.
 
 ### Lab Guide
 
-| Router | CLI |
+| Router | MGMT |
 |:------:|:----|
-| frr-r1 | `docker exec -u root -t -i frr-r1 vtysh` |
-| frr-r2 | `docker exec -u root -t -i frr-r2 vtysh` |
-| frr-r3 | `docker exec -u root -t -i frr-r3 vtysh` |
+| frr-r1 | `172.20.0.110` |
+| frr-r2 | `172.20.0.111` |
+| frr-r3 | `172.20.0.112` |
 
+![devices](./images/devices.png)
 
 **Step 1.**
 If it was not done in one of the previous labs, build Netbox and Annet docker images:
@@ -61,7 +62,7 @@ docker exec -u root -t -i annet /bin/bash
 
 Generate configuration for `frr-r1`, `frr-r2`, `frr-r3`:
 
-`annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+`annet gen frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
 Look at diff:
 
@@ -73,7 +74,9 @@ Deploy it:
 
 **Step 4.**
 
-Remove connection between `frr-r1` and `frr-r2` in Netbox.
+Remove [connection](http://localhost:8000/dcim/devices/5/interfaces/) between `frr-r1` and `frr-r2` in Netbox.
+
+![delete connection](./images/delete_connection.png)
 
 Look at diff:
 
@@ -85,7 +88,9 @@ Deploy it:
 
 **Step 5.**
 
-Restore connection between `frr-r1` and `frr-r2` in Netbox.
+Restore [connection](http://localhost:8000/dcim/cables/add/?a_terminations_type=dcim.interface&a_terminations=17&b_terminations_type=dcim.interface&termination_b_site=1&termination_b_rack=&return_url=/dcim/devices/5/interfaces/) between `frr-r1` and `frr-r2` in Netbox.
+
+![restore connection](./images/restore_connection.png)
 
 Look at diff:
 
@@ -94,3 +99,7 @@ Look at diff:
 Deploy it:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+
+**Step 6.**
+
+Switch off the lab: `make services_stop`

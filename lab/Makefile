@@ -33,7 +33,7 @@ lab00: services_stop
 	cp ./topologies/lab00_basic_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!"
+	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab01: services_stop
@@ -42,13 +42,15 @@ lab01: services_stop
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab10: services_stop
 	cp ./topologies/lab10_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add iol image into ./lab00_basic_cisco/src/ios-7200 folder !!!"
+	echo "!!! Don't forget add iol image into ./lab00_basic_cisco/src/ios-7200 folder !!!" && \
+	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab12: services_stop
 	cp ./topologies/lab12_dc_arista_cisco_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
@@ -56,7 +58,8 @@ lab12: services_stop
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker-compose up -d --build && cd .. && \
-	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json
+	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	eval "docker exec -u root -t -i annet /bin/bash"
 
 # Netbox utilities
 
