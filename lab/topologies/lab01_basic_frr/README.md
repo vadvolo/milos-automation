@@ -54,23 +54,196 @@ make lab01
 
 **Step 3.**
 
-Go to the Annet container:
-
-```bash
-docker exec -u root -t -i annet /bin/bash
-```
-
 Generate configuration for `frr-r1`, `frr-r2`, `frr-r3`:
 
 `annet gen frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+
+<details>
+<summary>Output</summary>
+
+```
+# -------------------- frr-r1.nh.com.cfg/etc/frr/frr.conf --------------------
+frr defaults datacenter
+service integrated-vtysh-config
+
+hostname frr-r1
+log file /var/log/frr/frr.log
+
+interface eth0
+ ip address 172.20.0.110/24
+exit
+
+interface eth1
+ ip address 10.0.1.12/24
+exit
+
+interface eth2
+ description frr-r3.nh.com@eth1
+ ip address 10.0.2.13/24
+exit
+
+router bgp 65001
+ bgp router-id 172.20.0.110
+ neighbor 10.0.2.31 remote-as 65001
+ neighbor 10.0.2.31 interface eth2
+
+line vty
+# -------------------- frr-r2.nh.com.cfg/etc/frr/frr.conf --------------------
+frr defaults datacenter
+service integrated-vtysh-config
+
+hostname frr-r2
+log file /var/log/frr/frr.log
+
+interface eth0
+ ip address 172.20.0.111/24
+exit
+
+interface eth1
+ ip address 10.0.1.21/24
+exit
+
+interface eth2
+ description frr-r3.nh.com@eth2
+ ip address 10.0.3.23/24
+exit
+
+router bgp 65001
+ bgp router-id 172.20.0.111
+ neighbor 10.0.3.32 remote-as 65001
+ neighbor 10.0.3.32 interface eth2
+
+line vty
+# -------------------- frr-r3.nh.com.cfg/etc/frr/frr.conf --------------------
+frr defaults datacenter
+service integrated-vtysh-config
+
+hostname frr-r3
+log file /var/log/frr/frr.log
+
+interface eth0
+ ip address 172.20.0.112/24
+exit
+
+interface eth1
+ description frr-r1.nh.com@eth2
+ ip address 10.0.2.31/24
+exit
+
+interface eth2
+ description frr-r2.nh.com@eth2
+ ip address 10.0.3.32/24
+exit
+
+router bgp 65001
+ bgp router-id 172.20.0.112
+ neighbor 10.0.2.13 remote-as 65001
+ neighbor 10.0.2.13 interface eth1
+ neighbor 10.0.3.23 remote-as 65001
+ neighbor 10.0.3.23 interface eth2
+
+line vty
+```
+
+</details>
 
 Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
+<details>
+<summary>Output</summary>
+
+```diff
+# -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -8,4 +8,21 @@
+  ip address 172.20.0.110/24
+ exit
+ 
++interface eth1
++ description frr-r2.nh.com@eth1
++ ip address 10.0.1.12/24
++exit
++
++interface eth2
++ description frr-r3.nh.com@eth1
++ ip address 10.0.2.13/24
++exit
++
++router bgp 65001
++ bgp router-id 172.20.0.110
++ neighbor 10.0.1.21 remote-as 65001
++ neighbor 10.0.1.21 interface eth1
++ neighbor 10.0.2.31 remote-as 65001
++ neighbor 10.0.2.31 interface eth2
++
+ line vty
+# -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -8,4 +8,21 @@
+  ip address 172.20.0.111/24
+ exit
+ 
++interface eth1
++ description frr-r1.nh.com@eth1
++ ip address 10.0.1.21/24
++exit
++
++interface eth2
++ description frr-r3.nh.com@eth2
++ ip address 10.0.3.23/24
++exit
++
++router bgp 65001
++ bgp router-id 172.20.0.111
++ neighbor 10.0.1.12 remote-as 65001
++ neighbor 10.0.1.12 interface eth1
++ neighbor 10.0.3.32 remote-as 65001
++ neighbor 10.0.3.32 interface eth2
++
+ line vty
+# -------------------- frr-r3.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -8,4 +8,21 @@
+  ip address 172.20.0.112/24
+ exit
+ 
++interface eth1
++ description frr-r1.nh.com@eth2
++ ip address 10.0.2.31/24
++exit
++
++interface eth2
++ description frr-r2.nh.com@eth2
++ ip address 10.0.3.32/24
++exit
++
++router bgp 65001
++ bgp router-id 172.20.0.112
++ neighbor 10.0.2.13 remote-as 65001
++ neighbor 10.0.2.13 interface eth1
++ neighbor 10.0.3.23 remote-as 65001
++ neighbor 10.0.3.23 interface eth2
++
+ line vty
+```
+
+</details>
+
 Deploy it:
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+
+You can check the BGP Peers:
+- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
+
+_password is annet_
 
 **Step 4.**
 
@@ -82,9 +255,62 @@ Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
+<details>
+<summary>Output</summary>
+
+```diff
+# -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -9,7 +9,6 @@
+ exit
+ 
+ interface eth1
+- description frr-r2.nh.com@eth1
+  ip address 10.0.1.12/24
+ exit
+ 
+@@ -20,8 +19,6 @@
+ 
+ router bgp 65001
+  bgp router-id 172.20.0.110
+- neighbor 10.0.1.21 remote-as 65001
+- neighbor 10.0.1.21 interface eth1
+  neighbor 10.0.2.31 remote-as 65001
+  neighbor 10.0.2.31 interface eth2
+ 
+# -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -9,7 +9,6 @@
+ exit
+ 
+ interface eth1
+- description frr-r1.nh.com@eth1
+  ip address 10.0.1.21/24
+ exit
+ 
+@@ -20,8 +19,6 @@
+ 
+ router bgp 65001
+  bgp router-id 172.20.0.111
+- neighbor 10.0.1.12 remote-as 65001
+- neighbor 10.0.1.12 interface eth1
+  neighbor 10.0.3.32 remote-as 65001
+  neighbor 10.0.3.32 interface eth2
+```
+
+</details>
+
 Deploy it:
 
-`annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+`annet deploy frr-r1.nh.com frr-r2.nh.com`
+
+You can check the BGP Peers:
+- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
+
+_password is annet_
 
 **Step 5.**
 
@@ -96,9 +322,61 @@ Look at diff:
 
 `annet diff frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
+<details>
+<summary>Output</summary>
+
+```diff
+# -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -9,6 +9,7 @@
+ exit
+ 
+ interface eth1
++ description frr-r2.nh.com@eth1
+  ip address 10.0.1.12/24
+ exit
+ 
+@@ -19,6 +20,8 @@
+ 
+ router bgp 65001
+  bgp router-id 172.20.0.110
++ neighbor 10.0.1.21 remote-as 65001
++ neighbor 10.0.1.21 interface eth1
+  neighbor 10.0.2.31 remote-as 65001
+  neighbor 10.0.2.31 interface eth2
+ 
+# -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
+--- 
++++ 
+@@ -9,6 +9,7 @@
+ exit
+ 
+ interface eth1
++ description frr-r1.nh.com@eth1
+  ip address 10.0.1.21/24
+ exit
+ 
+@@ -19,6 +20,8 @@
+ 
+ router bgp 65001
+  bgp router-id 172.20.0.111
++ neighbor 10.0.1.12 remote-as 65001
++ neighbor 10.0.1.12 interface eth1
+  neighbor 10.0.3.32 remote-as 65001
+  neighbor 10.0.3.32 interface eth2
+
+```
+
+</details>
+
 Deploy it:
 
-`annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
+`annet deploy frr-r1.nh.com frr-r2.nh.com`
+
+You can check the BGP Peers:
+- `ssh annet@172.20.0.110 "echo "show ip bgp summary" | sudo vtysh"`
+- `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
 
 **Step 6.**
 
