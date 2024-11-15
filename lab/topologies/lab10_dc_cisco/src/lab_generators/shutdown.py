@@ -6,7 +6,7 @@ class Shutdown(PartialGenerator):
     
     TAGS = ["shutdown", "iface"]
     
-    def acl_cisco(self, device):
+    def acl_cisco(self, _):
         return """
         interface
             shutdown

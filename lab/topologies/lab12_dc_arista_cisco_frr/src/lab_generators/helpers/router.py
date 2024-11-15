@@ -19,9 +19,10 @@ class BGPGroup:
     remote_as: int  # Assumed that ASN is an integer, update if required
     import_policy: str
     export_policy: str
+    send_community: bool = False
 
     # Define key fields as a class attribute
-    _key_fields = ('group_name', 'import_policy', 'export_policy')
+    _key_fields = ("group_name", "import_policy", "export_policy", "send_community")
 
     def __eq__(self, other):
         """
@@ -82,9 +83,16 @@ def bgp_groups(mesh_data: MeshExecutionResult) -> list[BGPGroup]:
             group_name=peer.group_name,
             remote_as=peer.remote_as,
             import_policy=peer.import_policy,
-            export_policy=peer.export_policy
+            export_policy=peer.export_policy,
+            send_community=peer.options.send_community,
         ))
     return list(groups)
+
+
+def is_drained_device(device: Device) -> bool:
+    if "maintenance" in [tag.name for tag in device.tags]:
+        return True
+    return False
 
 
 class AutonomusSystemIsNotDefined(Exception):
