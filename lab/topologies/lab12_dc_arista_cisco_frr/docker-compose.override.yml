@@ -94,7 +94,7 @@ x-frr-defaults: &frr-defaults
     - net.ipv6.conf.all.forwarding=1
   tty: true
   command: >
-    sh -c "apk add --no-cache openssh &&
+    sh -c "apk add --no-cache openssh sudo &&
            echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config &&
            echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config &&
            echo 'root:frr' | chpasswd &&
@@ -126,7 +126,7 @@ services:
     volumes:
       - ../annet/config.yaml:/config.yaml
       # lab 02 and lab03 uses the same lab_generators
-      - ../topologies/lab10_dc_cisco/src/lab_generators:/lab_generators
+      - ../topologies/lab12_dc_arista_cisco_frr/src/lab_generators:/lab_generators
 
   ceos-spine-1:
     <<: *ceos-defaults
