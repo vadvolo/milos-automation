@@ -38,7 +38,7 @@ class Bgp(PartialGenerator):
             if device.device_role.name == "ToR":
                 yield "maximum-paths 16"
 
-            if mesh_data.global_options.ipv4_unicast.redistributes:
+            if mesh_data.global_options and mesh_data.global_options.ipv4_unicast and mesh_data.global_options.ipv4_unicast.redistributes:
                 for redistribute in mesh_data.global_options.ipv4_unicast.redistributes:
                     yield "redistribute", redistribute.protocol, "" if not redistribute.policy else f"route-map {redistribute.policy}"
 
