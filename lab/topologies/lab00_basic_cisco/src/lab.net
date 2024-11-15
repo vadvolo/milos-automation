@@ -6,7 +6,7 @@ model = 7200
     idle-pc = 0x60741e9c
 
     [[7200]]
-        image = /home/ubuntu/vm_images/c7200-jk9s-mz.124-13a.bin
+        image = /home/ubuntu/vm_images/c7200-jk9s-mz.124-13a.image
         ram = 176
         npe = npe-400
         slot1 = PA-GE
