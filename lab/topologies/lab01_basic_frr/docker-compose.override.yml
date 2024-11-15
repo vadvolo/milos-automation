@@ -62,7 +62,7 @@ services:
     ports:
       - 8000:8080
     volumes:
-      - ../topologies/lab01_frr-only-test/src/:/home/ubuntu/src
+      - ../topologies/lab00_basic_frr/src/:/home/ubuntu/src
 
   annet:
     container_name: annet
@@ -70,7 +70,7 @@ services:
     image: annet
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab01_frr-only-test/src/lab_generators:/lab_generators
+      - ../topologies/lab00_basic_frr/src/lab_generators:/lab_generators
 
   frr-r1:
     <<: *frr-defaults
@@ -84,7 +84,7 @@ services:
       r1r3_net:
         ipv4_address: 10.0.2.13
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r1.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/lab00_basic_frr/operational_configs/frr-r1.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
@@ -100,7 +100,7 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.23
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r2.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/lab00_basic_frr/operational_configs/frr-r2.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
@@ -116,6 +116,6 @@ services:
       r2r3_net:
         ipv4_address: 10.0.3.32
     volumes:
-      - ../topologies/lab01_frr-only-test/operational_configs/frr-r3.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/lab00_basic_frr/operational_configs/frr-r3.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro

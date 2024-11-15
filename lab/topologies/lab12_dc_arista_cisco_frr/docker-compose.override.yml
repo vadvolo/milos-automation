@@ -112,7 +112,7 @@ services:
     ports:
       - 8000:8080
     volumes:
-      - ../topologies/lab03_multivendor/src:/home/ubuntu/src
+      - ../topologies/lab12_dc_arista_cisco_frr/src:/home/ubuntu/src
 
   annet:
     container_name: annet
@@ -124,7 +124,7 @@ services:
     volumes:
       - ../annet/config.yaml:/config.yaml
       # lab 02 and lab03 uses the same lab_generators
-      - ../topologies/lab02_dc_cisco/src/lab_generators:/lab_generators
+      - ../topologies/lab10_dc_cisco/src/lab_generators:/lab_generators
 
   ceos-spine-1:
     <<: *ceos-defaults
@@ -143,7 +143,7 @@ services:
       t3s1_net:
         ipv4_address: 10.1.3.11
     volumes:
-      - ../topologies/lab03_multivendor/operational_configs/ceos-r2.flash:/mnt/flash/
+      - ../topologies/lab12_dc_arista_cisco_frr/operational_configs/ceos-r2.flash:/mnt/flash/
 
   frr-r1:
     <<: *frr-defaults
@@ -162,7 +162,7 @@ services:
       t3s2_net:
         ipv4_address: 10.2.3.11
     volumes:
-      - ../topologies/lab03_multivendor/operational_configs/frr-r1.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/lab12_dc_arista_cisco_frr/operational_configs/frr-r1.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
@@ -181,7 +181,7 @@ services:
       t2s2_net:
         ipv4_address: 10.2.2.12
     volumes:
-      - ../topologies/lab03_multivendor/operational_configs/frr-r2.frr/frr.conf:/etc/frr/frr.conf
+      - ../topologies/lab12_dc_arista_cisco_frr/operational_configs/frr-r2.frr/frr.conf:/etc/frr/frr.conf
       - ../topologies/common_configs/frr_common_daemons:/etc/frr/daemons:ro
       - ../topologies/common_configs/frr_common_vtysh:/etc/frr/vtysh.conf:ro
 
@@ -194,7 +194,7 @@ services:
     image: ubuntu:bionic
     tty: true
     volumes:
-      - ../topologies/lab03_multivendor/src:/home/ubuntu/
+      - ../topologies/lab12_dc_arista_cisco_frr/src:/home/ubuntu/
       - ../vm_images:/home/ubuntu/vm_images
     command: sh "/home/ubuntu/install.sh"
     cap_add:

@@ -14,7 +14,7 @@ services:
     ports:
       - 8000:8080
     volumes:
-      - ../topologies/lab02_dc_cisco/src:/home/ubuntu/src
+      - ../topologies/lab10_dc_cisco/src:/home/ubuntu/src
 
   annet:
     container_name: annet
@@ -22,7 +22,7 @@ services:
     image: annet
     volumes:
       - ../annet/config.yaml:/config.yaml
-      - ../topologies/lab02_dc_cisco/src/lab_generators:/lab_generators
+      - ../topologies/lab10_dc_cisco/src/lab_generators:/lab_generators
 
   dynamips-lab:
     container_name: dynamips
@@ -30,7 +30,7 @@ services:
     image: ubuntu:bionic
     tty: true
     volumes:
-      - ../topologies/lab02_dc_cisco/src:/home/ubuntu/
+      - ../topologies/lab10_dc_cisco/src:/home/ubuntu/
       - ../vm_images:/home/ubuntu/vm_images
     command: sh "/home/ubuntu/install.sh"
     cap_add:
