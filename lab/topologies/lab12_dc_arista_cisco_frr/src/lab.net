@@ -20,11 +20,11 @@ model = 7200
         gi2/0   = NIO_tap:tap3
         cnfg    = /home/ubuntu/tor-1-1.cnf
 
-    [[router tor-1-2]]
+    [[router tor-1-3]]
         model   = 7200
         console = 2002
         aux     = 3002
         fa0/0   = NIO_tap:tap1
         gi1/0   = NIO_tap:tap4
         gi2/0   = NIO_tap:tap5
-        cnfg    = /home/ubuntu/tor-1-2.cnf
+        cnfg    = /home/ubuntu/tor-1-3.cnf
