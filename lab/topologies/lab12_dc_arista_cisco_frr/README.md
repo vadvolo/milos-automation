@@ -50,6 +50,15 @@ Start the lab:
 ```bash
 make lab12
 ```
+
+NOTE: On Linux, `make` uses root privileges to execute the following command:
+
+```bash
+$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+```
+
+which is required to clear operational configs if they exist.
+
 **Step 3.**
 
 Go to the Annet container:
