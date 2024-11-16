@@ -22,7 +22,7 @@ type NetworkDevice interface {
 	ShowRun() error
 	Ping() (bool, error)
 	SSHEnabled() (bool, error)
-	SetSSH() error
+	SetSSH(keylength string) error
 	WaitExec() error
 }
 

@@ -36,10 +36,16 @@ This steps are the same for all the labs.
   - [Mac](https://docs.docker.com/desktop/install/mac-install/)
   - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
-2. Some labs require OS images (i.e. Arista EOS). Please download it according to Lab Guide and put to `../vm_images` directory. 
+2. Install `make` utility:
 
-3. Clone this repository:
+```bash
+sudo apt install make  # Linux
+brew install make      # MacOS
+```
 
+3. Some labs require OS images (i.e. Arista EOS). Please download it according to Lab Guide and put to `../vm_images` directory. 
+
+4. Clone this repository:
 ```bash
 git clone https://github.com/annetutil/annet.git
 ```
@@ -50,7 +56,7 @@ Navigate to the lab folder:
 cd annetutils/contribs/labs
 ```
 
-4. Build Annet and Netbox Docker images:
+5. Build Annet and Netbox Docker images:
 
 ```bash
 make build

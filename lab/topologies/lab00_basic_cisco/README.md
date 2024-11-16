@@ -24,7 +24,7 @@ Author:
 
 - Netbox url: http://localhost:8000/
 - Netbox login/password: `annet/annet`
-- Device telnet and ssh login/password: `annet/annet`  
+- Device telnet and ssh login/password: `annet/annet`
 - Device mgmt addresses:
    | Router | MGMT |
    |:------:|:----|
@@ -36,12 +36,19 @@ Author:
 
 1. Before you start, please put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
 The image is subject to a license agreement, so it cannot be distributed in the repository.
+
 2. Install Docker and Docker Compose on your device
    - [Docker](https://docs.docker.com/engine/install/)
      - [Linux](https://docs.docker.com/desktop/install/linux/)
      - [Mac](https://docs.docker.com/desktop/install/mac-install/)
      - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
+3. Install `make` utility:
+
+```bash
+sudo apt install make  # Linux
+brew install make      # MacOS
+```
 
 ### Generators
 
