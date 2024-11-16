@@ -50,7 +50,6 @@ Start the lab:
 ```bash
 make lab12
 ```
-
 **Step 3.**
 
 Go to the Annet container:
