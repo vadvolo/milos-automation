@@ -258,11 +258,9 @@ annet patch lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 ```
 interface FastEthernet0/0
   description disconnected
-  mtu 1500
   exit
 interface FastEthernet0/1
   description disconnected
-  mtu 1500
   exit
 interface GigabitEthernet1/0
   description to_lab-r2.nh.com_GigabitEthernet1/0
@@ -270,7 +268,6 @@ interface GigabitEthernet1/0
   exit
 interface GigabitEthernet2/0
   description disconnected
-  mtu 1500
   exit
 ```
 
@@ -282,11 +279,9 @@ interface GigabitEthernet2/0
 ```
 interface FastEthernet0/0
   description disconnected
-  mtu 1500
   exit
 interface FastEthernet0/1
   description disconnected
-  mtu 1500
   exit
 interface GigabitEthernet1/0
   description to_lab-r1.nh.com_GigabitEthernet1/0
@@ -305,11 +300,9 @@ interface GigabitEthernet2/0
 ```
 interface FastEthernet0/0
   description disconnected
-  mtu 1500
   exit
 interface FastEthernet0/1
   description disconnected
-  mtu 1500
   exit
 interface GigabitEthernet1/0
   description to_lab-r2.nh.com_GigabitEthernet2/0
@@ -317,7 +310,6 @@ interface GigabitEthernet1/0
   exit
 interface GigabitEthernet2/0
   description disconnected
-  mtu 1500
   exit
 ```
 
