@@ -35,8 +35,16 @@ Now you're able to run Lab03.
 **Step 1.** Run the lab:
 
 ```bash
-make lab03
+make lab12
 ```
+
+NOTE: Makefile uses root priviliges for the following command:
+
+```bash
+$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+```
+
+which clears nodes' operational configs if they exist.
 
 ```
 for ip in 0 1; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done

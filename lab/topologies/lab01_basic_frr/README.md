@@ -52,6 +52,14 @@ Start the lab:
 make lab01
 ```
 
+NOTE: Makefile uses root priviliges for the following command:
+
+```bash
+$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+```
+
+which clears nodes' operational configs if they exist.
+
 **Step 3.**
 
 Generate configuration for `frr-r1`, `frr-r2`, `frr-r3`:
@@ -156,12 +164,12 @@ Look at diff:
 
 ```diff
 # -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -8,4 +8,21 @@
   ip address 172.20.0.111/24
  exit
- 
+
 +interface eth1
 + description frr-r2.nh.com@eth1
 + ip address 10.0.1.12/24
@@ -181,12 +189,12 @@ Look at diff:
 +
  line vty
 # -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -8,4 +8,21 @@
   ip address 172.20.0.112/24
  exit
- 
+
 +interface eth1
 + description frr-r1.nh.com@eth1
 + ip address 10.0.1.21/24
@@ -206,12 +214,12 @@ Look at diff:
 +
  line vty
 # -------------------- frr-r3.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -8,4 +8,21 @@
   ip address 172.20.0.113/24
  exit
- 
+
 +interface eth1
 + description frr-r1.nh.com@eth2
 + ip address 10.0.2.31/24
@@ -260,38 +268,38 @@ Look at diff:
 
 ```diff
 # -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -9,7 +9,6 @@
  exit
- 
+
  interface eth1
 - description frr-r2.nh.com@eth1
   ip address 10.0.1.12/24
  exit
- 
+
 @@ -20,8 +19,6 @@
- 
+
  router bgp 65001
   bgp router-id 172.20.0.111
 - neighbor 10.0.1.21 remote-as 65001
 - neighbor 10.0.1.21 interface eth1
   neighbor 10.0.2.31 remote-as 65001
   neighbor 10.0.2.31 interface eth2
- 
+
 # -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -9,7 +9,6 @@
  exit
- 
+
  interface eth1
 - description frr-r1.nh.com@eth1
   ip address 10.0.1.21/24
  exit
- 
+
 @@ -20,8 +19,6 @@
- 
+
  router bgp 65001
   bgp router-id 172.20.0.112
 - neighbor 10.0.1.12 remote-as 65001
@@ -327,38 +335,38 @@ Look at diff:
 
 ```diff
 # -------------------- frr-r1.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -9,6 +9,7 @@
  exit
- 
+
  interface eth1
 + description frr-r2.nh.com@eth1
   ip address 10.0.1.12/24
  exit
- 
+
 @@ -19,6 +20,8 @@
- 
+
  router bgp 65001
   bgp router-id 172.20.0.111
 + neighbor 10.0.1.21 remote-as 65001
 + neighbor 10.0.1.21 interface eth1
   neighbor 10.0.2.31 remote-as 65001
   neighbor 10.0.2.31 interface eth2
- 
+
 # -------------------- frr-r2.nh.com/etc/frr/frr.conf --------------------
---- 
-+++ 
+---
++++
 @@ -9,6 +9,7 @@
  exit
- 
+
  interface eth1
 + description frr-r1.nh.com@eth1
   ip address 10.0.1.21/24
  exit
- 
+
 @@ -19,6 +20,8 @@
- 
+
  router bgp 65001
   bgp router-id 172.20.0.112
 + neighbor 10.0.1.12 remote-as 65001
