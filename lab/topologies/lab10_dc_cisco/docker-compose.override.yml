@@ -20,6 +20,11 @@ services:
     container_name: annet
     hostname: annet
     image: annet
+    # since netbox required a lot of resources, but the lab emulators required them too,
+    # to avoid issues that order was applied here and later
+    depends_on:
+      netbox:
+        condition: service_healthy
     volumes:
       - ../annet/config.yaml:/config.yaml
       - ../topologies/lab10_dc_cisco/src/lab_generators:/lab_generators
@@ -28,6 +33,9 @@ services:
     container_name: dynamips
     hostname: dynamips
     image: ubuntu:bionic
+    depends_on:
+      netbox:
+        condition: service_healthy
     tty: true
     volumes:
       - ../topologies/lab10_dc_cisco/src:/home/ubuntu/

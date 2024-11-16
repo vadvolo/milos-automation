@@ -1,0 +1,53 @@
+no aaa root
+aaa authorization serial-console
+aaa authorization exec default local
+aaa authorization exec console none
+!
+username annet privilege 15 role network-admin secret sha512 $6$/HQBVYujkC3z1fz8$mP/2ONe0JRprxSk/rzp.PHhbppMFLyGyROFlHudXAE5Z/.7sKzvBUwhXfqwuytk0KUQT78Vd6TPaXHc7xPHXi/
+!
+switchport default mode routed
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+logging console informational
+!
+hostname spine
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
+interface Ethernet1
+   no switchport
+!
+interface Ethernet2
+   no switchport
+!
+interface Ethernet3
+   no switchport
+!
+interface Management0
+   ip address 172.20.0.110/24
+!
+ip routing
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
