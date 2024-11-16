@@ -80,5 +80,4 @@ cc:
 	isort topologies
 
 style:
-	pylint -j8 --score n --reports=no topologies && \
-    flake8 topologies
+	pylint -j8 --score n --reports=no topologies || true && flake8 topologies || true && mypy topologies

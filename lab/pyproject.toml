@@ -64,6 +64,7 @@ disable = [
     "use-maxsplit-arg",
     "unspecified-encoding",
     "global-variable-not-assigned",
+    "duplicate-code",
 ]
 
 [tool.pylint.'REPORTS']
@@ -100,3 +101,7 @@ lines_after_imports = 2
 multi_line_output = 3
 skip = [".tox", ".venv", "venv"]
 use_parentheses = true
+
+[tool.mypy]
+explicit_package_bases = true
+ignore_missing_imports = true

@@ -9,7 +9,7 @@ RUN python3 -m venv /venv
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/annet/#egg=annet
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli_adapter/#egg=gnetcli_adapter
 RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli#egg=gnetclisdk\&subdirectory=grpc_sdk/python
-RUN /venv/bin/pip install annetbox requests
+RUN /venv/bin/pip install annetbox requests icecream
 RUN /venv/bin/pip install --upgrade protobuf grpcio
 
 # Set environment variables

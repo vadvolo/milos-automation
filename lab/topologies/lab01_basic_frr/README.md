@@ -17,52 +17,49 @@ Authors:
 
 ![Lab Topology](./images/topology.png)
 
+### Environment
+
+- Netbox url: http://localhost:8000/
+- Netbox login/password: `annet/annet`
+- Device telnet and ssh login/password: `annet/annet`  
+- Device mgmt addresses:
+   | Router | MGMT |
+   |:------:|:----|
+   | frr-r1 | `172.20.0.111` |
+   | frr-r2 | `172.20.0.112` |
+   | frr-r3 | `172.20.0.113` |
+
+
 ### Generators
 
-Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the device.
+This lab has single generators `./src/lab_generators/frr.py`.
+
+
+Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the device. [More about Entire generators](https://annetutil.github.io/annet/main/usage/gen.html#entire).  
 FRR can be managed by `vtysh`, a Cisco-like CLI shell, but it also stores its configuration in a `/etc/frr/frr.conf` file.
 We can leverage this fact to manage the routing configuration in a server-like manner, and `Partial` generator will help us to prepare the configuration file.
 
 The generator in this example configures interface descriptions, IP addresses and BGP sessions between FRR routers.
 All the parameters are defined by connections in Netbox.
 
+---
+
 ### Lab Guide
 
-| Router | MGMT |
-|:------:|:----|
-| frr-r1 | `172.20.0.111` |
-| frr-r2 | `172.20.0.112` |
-| frr-r3 | `172.20.0.113` |
-
-![devices](./images/devices.png)
-
-**Step 1.**
-If it was not done in one of the previous labs, build Netbox and Annet docker images:
+**Step 1. If it was not done yet, build Netbox and Annet docker images**
 
 ```bash
 cd annetutils/contribs/labs
 make build
 ```
 
-**Step 2.**
-
-Start the lab:
+**Step 2. Start the lab**
 
 ```bash
 make lab01
 ```
 
-NOTE: Makefile uses root priviliges for the following command:
-
-```bash
-$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
-```
-
-which clears nodes' operational configs if they exist.
-
-**Step 3.**
-
-Generate configuration for `frr-r1`, `frr-r2`, `frr-r3`:
+**Step 3. Generate configuration for devices**
 
 `annet gen frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
@@ -242,7 +239,7 @@ Look at diff:
 
 </details>
 
-Deploy it:
+**Step 4. Deploy it**
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com frr-r3.nh.com`
 
@@ -251,13 +248,12 @@ You can check the BGP Peers:
 - `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.113 "echo "show ip bgp summary" | sudo vtysh"`
 
-_password is annet_
-
-**Step 4.**
+**Step 5. Remove connection in Netbox and deploy configs**
 
 Remove [connection](http://localhost:8000/dcim/devices/5/interfaces/) between `frr-r1` and `frr-r2` in Netbox.
 
-![delete connection](./images/delete_connection.png)
+<img src="./images/delete_connection1.png" alt="delete connection">
+<img src="./images/delete_connection2.png" width="500" alt="delete connection">
 
 Look at diff:
 
@@ -310,7 +306,7 @@ Look at diff:
 
 </details>
 
-Deploy it:
+**Deploy it:**
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com`
 
@@ -318,13 +314,11 @@ You can check the BGP Peers:
 - `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
 
-_password is annet_
-
-**Step 5.**
+**Step 6. Restore connection in Netbox and deploy configs**
 
 Restore [connection](http://localhost:8000/dcim/cables/add/?a_terminations_type=dcim.interface&a_terminations=17&b_terminations_type=dcim.interface&termination_b_site=1&termination_b_rack=&return_url=/dcim/devices/5/interfaces/) between `frr-r1` and `frr-r2` in Netbox.
 
-![restore connection](./images/restore_connection.png)
+<img src="./images/restore_connection.png" width="500" alt="restore connection">
 
 Look at diff:
 
@@ -378,7 +372,7 @@ Look at diff:
 
 </details>
 
-Deploy it:
+**Deploy it:**
 
 `annet deploy frr-r1.nh.com frr-r2.nh.com`
 
@@ -386,6 +380,9 @@ You can check the BGP Peers:
 - `ssh annet@172.20.0.111 "echo "show ip bgp summary" | sudo vtysh"`
 - `ssh annet@172.20.0.112 "echo "show ip bgp summary" | sudo vtysh"`
 
-**Step 6.**
+**Step 7. After finishing the lab, stop it**
 
-Switch off the lab: `make services_stop`
+```bash
+make services_stop
+```
+
