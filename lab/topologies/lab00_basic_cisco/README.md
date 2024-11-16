@@ -26,6 +26,11 @@ Author:
 - Netbox login/password: `annet/annet`
 - Device telnet and ssh login/password: `annet/annet`  
 - Device mgmt addresses: 172.20.0.101, 172.20.0.102, 172.20.0.103
+   | Router | MGMT |
+   |:------:|:----|
+   | lab-r1 | `172.20.0.111` |
+   | lab-r2 | `172.20.0.112` |
+   | lab-r3 | `172.20.0.113` |
 
 ### Preparation
 
@@ -391,7 +396,7 @@ annet deploy --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 
 Change the MTU value on [interface](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
 
-![mtu](./images/mtu.png)
+<img src="./images/mtu.png" width="500" alt="restore connection">
 
 Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are breave enough.
 
