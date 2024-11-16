@@ -16,13 +16,11 @@ lab/topologies/*/src/netbox_data
 
 lab/topologies/*/operational_configs/*
 !lab/topologies/*/operational_configs/.gitkeep
+vm_images
+!vm_images/.gitkeep
 
 .idea/
-c7200*
-cEOS*
-
 __pycache__/
 *.py[cod]
 *$py.class
-
 .DS_Store
