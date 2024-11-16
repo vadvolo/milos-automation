@@ -27,7 +27,7 @@ services_stop:
 	@cd ./netbox-docker && docker-compose down -v && cd ..
 
 check_cisco_image:
-	if [ ! -f "./vm_images/c7200-jk9s-mz.124-13a.bin" ]; then echo "\n\n !!! ./vm_images doesn't have c7200-jk9s-mz.124-13a.bin !!!\n" && exit 1; fi
+	@if !(compgen -G "./vm_images/*.bin" > /dev/null); then echo "\n\n !!! ./vm_images doesn't have any images !!!\n" && exit 1; fi
 
 try_unpack_cisco_image:
 	if [ ! -f "./vm_images/c7200-jk9s-mz.124-13a.image" ]; then unzip -p ./vm_images/c7200-jk9s-mz.124-13a.bin > ./vm_images/c7200-jk9s-mz.124-13a.image; fi

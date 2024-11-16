@@ -15,15 +15,16 @@ func Execute() {
 }
 
 var (
-	hostname string
-	ipdomain string
-	login    string
-	password string
-	vendor   string
-	breed    string
-	address  string
-	protocol string
-	device   NetworkDevice
+	hostname  string
+	ipdomain  string
+	login     string
+	password  string
+	vendor    string
+	breed     string
+	address   string
+	protocol  string
+	keylength string
+	device    NetworkDevice
 
 	rootCmd = &cobra.Command{
 		Use:   "netsshsetup",
@@ -58,7 +59,7 @@ var (
 			sshCheck, err := device.SSHEnabled()
 			if !sshCheck {
 				cmd.Println("SSH is not active on the device")
-				err = device.SetSSH()
+				err = device.SetSSH(keylength)
 				if err != nil {
 					return err
 				}
@@ -77,6 +78,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&breed, "breed", "b", "", "set up breed from list: ios")
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "set up ip address")
 	rootCmd.PersistentFlags().StringVarP(&protocol, "protocol", "P", "", "set up ip protocol from list: ssh, telnet")
+	rootCmd.PersistentFlags().StringVarP(&keylength, "ssh-key-length", "", "", "set up ssh key length. Default: 512")
 }
 
 func main() {
