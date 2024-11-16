@@ -146,35 +146,76 @@ Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>Example if Spine's configuration</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's configuration</summary>
+
+```
+
+```
+
+</details>
+
 Look at diff:
 ```bash
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
+
+<details>
+<summary>Example if Spine's Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+
+<details>
+<summary>Example if Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's Patch</summary>
+
+```
+
+```
+
+</details>
 
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 5. Change device role in Netbox and deploy configuration**
-
-Go to the [Netbox](http://localhost:8000/dcim/devices/7/), assign `tor-1-1.nh.com` role `Unknown`.
-
-Look at diff:
-
-```bash
-annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
-```
-
-Deploy it:
-```bash
-annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
-```
-
-**Step 6. Restore the role and repeat the actions**
-
-
-**Step 7. Break a connection and check what happens**
+**Step 6.** Break a connection and check what happens**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/7/), delete the connection between `tor-1-1.nh.com` and `spine-1-1.nh.com`.
 
@@ -183,14 +224,54 @@ Look at diff:
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>spine-1-1 Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+<details>
+<summary>tor-1-1 Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>spine-1-1 Patch</summary>
+
+```diff
+
+```
+
+</details>
+
+<details>
+<summary>tor-1-1 Patch</summary>
+
+```diff
+
+```
+
+</details>
+
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 8. Restore the connection and repeat the actions**
+**Step 7. Restore the connection and repeat the actions**
 
-**Step 9. Drain traffic from one of the spines**
+**Step 8. Drain traffic from one of the spines**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/5/), assign `spine-1-1.nh.com` tag `maintenance`.
 
@@ -199,6 +280,28 @@ Look at diff:
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>spine-1-1 Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>spine-1-1 Patch</summary>
+
+```diff
+
+```
+
+</details>
+
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
@@ -206,7 +309,7 @@ annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor
 
 Remove the tag and repeat the actions.
 
-**Step 10. After finishing the lab, stop it**
+**Step 9. After finishing the lab, stop it**
 
 ```bash
 make services_stop

@@ -85,31 +85,127 @@ Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 
 `annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
+<details>
+<summary>Arista Spine's configuration</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's configuration</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's configuration</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's configuration</summary>
+
+```
+
+```
+
+</details>
+
 Look at diff:
 
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>Arista Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>Arista Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Patch</summary>
+
+```
+
+```
+
+</details>
 
 Deploy it:
 
 `annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 **Step 5.**
-
-Assign "Unknown" role to one of the ToRs and deploy configuration on the ToR and every spine.
-
-Go to the [Netbox](http://localhost:8000/), use annet:annet as login:password. Assign tor-1-1.nh.com role "Unknown".
-
-Look at diff:
-
-`annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
-
-Deploy it:
-
-`annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
-
-Restore the role and repeat the actions.
-
-**Step 6.**
 
 Break a connection and check what happens.
 
@@ -119,13 +215,89 @@ Look at diff:
 
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
+<details>
+<summary>Arista Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>Arista Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Patch</summary>
+
+```
+
+```
+
+</details>
+
 Deploy it:
 
 `annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Restore the connection and repeat the actions.
 
-**Step 7.**
+**Step 6.**
 
 Drain traffic from one of the spines.
 
@@ -135,13 +307,89 @@ Look at diff:
 
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
+<details>
+<summary>Arista Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Diff</summary>
+
+```
+
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>Arista Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Spine's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>Cisco Tor's Patch</summary>
+
+```
+
+```
+
+</details>
+
+<details>
+<summary>FRR Tor's Patch</summary>
+
+```
+
+```
+
+</details>
+
 Deploy it:
 
 `annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 Remove the tag and repeat the actions.
 
-**Step 8.**
+**Step 7.**
 
 After finishing the lab, stop it:
 
