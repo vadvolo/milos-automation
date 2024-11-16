@@ -57,7 +57,7 @@ lab10: services_stop
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
-lab12: services_stop check_cisco_image try_unpack_cisco_image
+lab12: services_stop check_cisco_image unpack_cisco_image
 	@cp ./topologies/lab12_dc_arista_cisco_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd topologies/lab12_dc_arista_cisco_frr && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
