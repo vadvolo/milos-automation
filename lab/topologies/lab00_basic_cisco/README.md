@@ -137,7 +137,7 @@ Check that all devices were imported into [Netbox](http://localhost:8000/dcim/de
 for ip in 1 2 3; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
 ```
 
-This script generates 2048 bit RSA keys and enable SSH. It takes a while.
+This script generates 2048 bit RSA keys and enables SSH. It takes a while.
 
 **Step 5. Generate configuration for devices**
 
