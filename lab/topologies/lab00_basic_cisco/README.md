@@ -194,16 +194,13 @@ annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 ```diff
   interface FastEthernet0/0
 +   description disconnected
-+   mtu 1500
   interface FastEthernet0/1
 +   description disconnected
-+   mtu 1500
   interface GigabitEthernet1/0
 +   description to_lab-r2.nh.com_GigabitEthernet1/0
 +   mtu 4000
   interface GigabitEthernet2/0
 +   description disconnected
-+   mtu 1500
 ```
 
 </details>
@@ -214,10 +211,8 @@ annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 ```diff
   interface FastEthernet0/0
 +   description disconnected
-+   mtu 1500
   interface FastEthernet0/1
 +   description disconnected
-+   mtu 1500
   interface GigabitEthernet1/0
 +   description to_lab-r1.nh.com_GigabitEthernet1/0
 +   mtu 4000
@@ -234,16 +229,13 @@ annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 ```diff
   interface FastEthernet0/0
 +   description disconnected
-+   mtu 1500
   interface FastEthernet0/1
 +   description disconnected
-+   mtu 1500
   interface GigabitEthernet1/0
 +   description to_lab-r2.nh.com_GigabitEthernet2/0
 +   mtu 4000
   interface GigabitEthernet2/0
 +   description disconnected
-+   mtu 1500
 ```
 
 </details>
