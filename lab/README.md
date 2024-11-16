@@ -2,13 +2,12 @@
 
 ## General information
 
-This repo contains virtual lab equipment for demonstrating network automation scenarios.
+This repo contains virtual lab equipment for demonstrating network automation scenarios with `annet`.
 
 Table of contents:
 
 - [Installation](#installation)
 - [Annet description](#annet-description)
-- [Useful commands](#useful-commands)
 - [Labs](#labs)
   - Basic
     - [lab00. Cisco Base Scenario](./topologies/lab00_basic_cisco)
@@ -17,74 +16,73 @@ Table of contents:
     - [lab10. DC Scenario](./topologies/lab10_dc_cisco)
     - [lab12. Multivendor Lab](./topologies/lab12_dc_arista_cisco_frr)
 
-## Installation
+
+### Environment
+
+- Netbox url: http://localhost:8000/
+- Netbox login/password: `annet/annet`
+- Device telnet and ssh login/password: `annet/annet`  
+
+## Lab installation
 
 ### Preparation
 
-First of all, you need to install Docker and Docker Compose on your device:
+This steps are the same for all the labs.
+
+1. First of all, you need to install Docker and Docker Compose on your device:
 
 - [Docker](https://docs.docker.com/engine/install/)
   - [Linux](https://docs.docker.com/desktop/install/linux/)
   - [Mac](https://docs.docker.com/desktop/install/mac-install/)
   - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
-Clone this repository:
+2. Some labs require OS images (i.e. Arista EOS). Please download it according to Lab Guide and put to `../vm_images` directory. 
+
+3. Clone this repository:
 
 ```bash
-git clone https://github.com/vadvolo/milos-automation.git
+git clone https://github.com/annetutil/annet.git
 ```
 
 Navigate to the lab folder:
 
 ```bash
-cd milos-automation/lab
+cd annetutils/contribs/labs
 ```
 
-Build Annet and Netbox Docker images:
+4. Build Annet and Netbox Docker images:
 
 ```bash
 make build
 ```
 
+After some changes you have to run `make rebuild`. It doesn't relate to changes in generators and mesh.
+
+6. Run the Lab
 Now you can choose which scenario you want to run. To start a lab you need to run `make labXX`, where `XX` is an index of the lab.
 For example, `make lab00` will start `lab00. Basic Cisco Scenario`.
+
+After this step you will be automatically logged in to annet container as a root. You can also login manually by `docker exec -u root -t -i annet /bin/bash`.
 
 ## Annet description
 
 [Annet](https://annetutil.github.io/annet/main/index.html) is a network configuration management system. It provides capabilities for storing configuration templates, generating and deploying network configurations.
 Annet has four main arguments:
 
-- `gen`
-- `diff`
-- `patch`
-- `deploy`
+- `gen` — `annet gen $HOST` to generate desired configuration
+- `diff` — `annet diff $HOST` to show text diff between desired and actual configurations
+- `patch` — `annet patch $HOST` to prepare configuration patch with related commands
+- `deploy` — `annet deploy $HOST` to generate patch and deploy it to devices
 
-To use annet in the lab topologies presented in this repository, you should prepare generators located in the `topologies/lab*/src/lab_generators/` folder.
+`$HOST` can be a single device or list of devices separated by spaces.
 
-### How to use Annet
+There are two main things which you will need to know and change to accomplish this labs:
 
-Go to the Annet container:
+- [generators](https://annetutil.github.io/annet/main/usage/gen.html) — python classes to yield configuration lines
+- [mesh](https://annetutil.github.io/annet/main/mesh/index.html) — python classes to describe BGP design according to connections between devices.
 
-```bash
-docker exec -u root -t -i annet /bin/bash
-```
+To use annet in the lab topologies presented in this repository, you should prepare generators and mesh located in the `topologies/lab*/src/lab_generators/` folder.
 
-Run:
+---
 
-- diff
-
-```bash
-annet diff lab-r1.nh.com
-```
-
-- patch
-
-```bash
-annet patch lab-r1.nh.com
-```
-
-- deploy
-
-```bash
-annet deploy lab-r1.nh.com
-```
+Good luck, fellow kids!
