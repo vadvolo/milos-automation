@@ -5,13 +5,19 @@ from annet.generators import PartialGenerator
 from annet.mesh.executor import MeshExecutionResult
 from annet.storage import Device
 
-from .helpers.router import AutonomusSystemIsNotDefined, bgp_asnum, bgp_mesh, router_id
+from .helpers.router import (
+    AutonomusSystemIsNotDefined,
+    bgp_asnum,
+    bgp_groups,
+    bgp_mesh,
+    router_id,
+)
 
 
 class Bgp(PartialGenerator):
-    
+
     TAGS = ["bgp", "routing"]
-    
+
     def acl_cisco(self, _: Device) -> str:
         return """
         router bgp
@@ -20,14 +26,14 @@ class Bgp(PartialGenerator):
             redistribute connected
             maximum-paths
         """
-    
+
     def run_cisco(self, device: Device):
         mesh_data: MeshExecutionResult = bgp_mesh(device)
         rid: Optional[str] = router_id(mesh_data)
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
 
         if not asnum or not rid:
             return
@@ -58,3 +64,42 @@ class Bgp(PartialGenerator):
                 # define peers specific attrs
                 yield "neighbor", peer.addr, "peer-group", peer.group_name
                 yield "neighbor", peer.addr, "remote-as", peer.remote_as
+
+    def acl_arista(self, _: Device) -> str:
+        return """
+        router bgp
+            router-id
+            neighbor
+            redistribute connected
+            maximum-paths
+            address-family
+                neighbor
+        """
+
+    def run_arista(self, device: Device):
+        mesh_data: MeshExecutionResult = bgp_mesh(device)
+        rid: Optional[str] = router_id(mesh_data)
+        try:
+            asnum: Optional[ASN] = bgp_asnum(mesh_data)
+        except AutonomusSystemIsNotDefined as err:
+            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+
+        if not asnum or not rid:
+            return
+        with self.block("router bgp", asnum):
+            yield "router-id", rid
+
+            for group in bgp_groups(mesh_data):
+                yield "neighbor", group.group_name, "peer group"
+                yield "neighbor", group.group_name, "route-map", group.import_policy, "in"
+                yield "neighbor", group.group_name, "route-map", group.export_policy, "out"
+                if group.send_community:
+                    yield "neighbor", group.group_name, "send-community"
+
+            for peer in mesh_data.peers:
+                yield "neighbor", peer.addr, "peer group", peer.group_name
+                yield "neighbor", peer.addr, "remote-as", peer.remote_as
+
+            with self.block("address-family ipv4"):
+                for group in bgp_groups(mesh_data):
+                    yield "neighbor", group.group_name, "activate"

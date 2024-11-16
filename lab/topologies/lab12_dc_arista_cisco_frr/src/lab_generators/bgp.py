@@ -4,7 +4,6 @@ from annet.bgp_models import ASN
 from annet.generators import PartialGenerator
 from annet.mesh.executor import MeshExecutionResult
 from annet.storage import Device
-from icecream import ic
 
 from .helpers.router import (
     AutonomusSystemIsNotDefined,
@@ -16,9 +15,9 @@ from .helpers.router import (
 
 
 class Bgp(PartialGenerator):
-    
+
     TAGS = ["bgp", "routing"]
-    
+
     def acl_cisco(self, _: Device) -> str:
         return """
         router bgp
@@ -27,14 +26,14 @@ class Bgp(PartialGenerator):
             redistribute connected
             maximum-paths
         """
-    
+
     def run_cisco(self, device: Device):
         mesh_data: MeshExecutionResult = bgp_mesh(device)
         rid: Optional[str] = router_id(mesh_data)
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
 
         if not asnum or not rid:
             return
@@ -83,7 +82,7 @@ class Bgp(PartialGenerator):
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
 
         if not asnum or not rid:
             return

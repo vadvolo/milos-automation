@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from annet.adapters.netbox.common.models import IpAddress
 from annet.bgp_models import ASN
 from annet.mesh import MeshExecutor
 from annet.mesh.executor import MeshExecutionResult
@@ -68,7 +67,7 @@ def bgp_asnum(mesh_data: MeshExecutionResult) -> Optional[ASN]:
     return None
 
 
-def router_id(mesh_data: MeshExecutionResult) ->Optional[str]:
+def router_id(mesh_data: MeshExecutionResult) -> Optional[str]:
     """Return router id for the device"""
     if mesh_data.global_options.router_id:
         return mesh_data.global_options.router_id

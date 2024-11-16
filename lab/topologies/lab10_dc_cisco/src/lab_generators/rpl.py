@@ -5,9 +5,9 @@ from .helpers.router import is_drained_device
 
 
 class RoutePolicy(PartialGenerator):
-    
+
     TAGS = ["rpl", "routing"]
-    
+
     def acl_cisco(self, _: Device):
         return """
         ip bgp-community new-format
@@ -15,7 +15,7 @@ class RoutePolicy(PartialGenerator):
         route-map
             ~ %global=1
         """
-    
+
     def run_cisco(self, device: Device):
         yield "ip bgp-community new-format"
         yield "ip community-list standard TOR_NETS permit 65000:1"
@@ -66,5 +66,3 @@ route-map TOR_IMPORT deny 9999
                 if is_drained_device(device):
                     yield "set community 65535:0 additive"
             yield "route-map TOR_EXPORT deny 9999"
-
-

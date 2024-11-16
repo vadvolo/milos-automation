@@ -1,11 +1,13 @@
 from annet.generators import PartialGenerator
 from annet.storage import Device
 
+from .helpers.router import is_drained_device
+
 
 class RoutePolicy(PartialGenerator):
-    
+
     TAGS = ["rpl", "routing"]
-    
+
     def acl_cisco(self, _: Device):
         return """
         ip bgp-community new-format
@@ -13,7 +15,7 @@ class RoutePolicy(PartialGenerator):
         route-map
             ~ %global=1
         """
-    
+
     def run_cisco(self, device: Device):
         yield "ip bgp-community new-format"
         yield "ip community-list standard TOR_NETS permit 65000:1"
@@ -48,8 +50,19 @@ route-map TOR_IMPORT deny 9999
                     yield "set community 65535:0 additive"
             yield "route-map TOR_EXPORT deny 9999"
 
+    def acl_arista(self, _: Device):
+        return """
+        ip bgp-community new-format
+        ip community-list
+        route-map
+            ~ %global=1
+        """
 
-def is_drained_device(device: Device) -> bool:
-    if "maintenance" in [tag.name for tag in device.tags]:
-        return True
-    return False
+    def run_arista(self, device: Device):
+        yield "ip community-list TOR_NETS permit 65000:1"
+        if device.device_role.name == "Spine":
+            with self.block("route-map TOR_EXPORT permit 10"):
+                yield "match community TOR_NETS"
+                if is_drained_device(device):
+                    yield "set community 65535:0 additive"
+            yield "route-map TOR_EXPORT deny 9999"

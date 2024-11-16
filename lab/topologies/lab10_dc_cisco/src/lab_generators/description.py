@@ -4,15 +4,15 @@ from annet.storage import Device
 
 
 class Description(PartialGenerator):
-    
+
     TAGS = ["description", "iface"]
-    
+
     def acl_cisco(self, _: Device):
         return """
         interface
             description
         """
-    
+
     def run_cisco(self, device: Device):
         for interface in device.interfaces:
             if interface.connected_endpoints:

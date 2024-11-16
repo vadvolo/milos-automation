@@ -15,6 +15,7 @@ def global_options(global_opts: GlobalOptions):
     )
 
 
+# pylint: disable=unused-argument
 @registry.direct("tor-{pod}-{num}", "spine-{pod}-{plane}")
 def tor_to_spine(tor: DirectPeer, spine: DirectPeer, session: MeshSession):
     tor.asnum = BASE_ASNUM + 100 + tor.match.pod * 10 + tor.match.num

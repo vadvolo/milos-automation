@@ -1,4 +1,4 @@
-from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
+from ipaddress import IPv4Address, IPv4Network
 
 from annet.generators import PartialGenerator
 from annet.storage import Device
@@ -7,16 +7,16 @@ from .helpers.router import bgp_mesh
 
 
 class IpAddresses(PartialGenerator):
-    
+
     TAGS = ["l3", "iface"]
-    
+
     def acl_cisco(self, _: Device):
         return """
         interface
             ip address
             ipv6 address
         """
-    
+
     def run_cisco(self, device: Device):
         # enrich interfaces by mesh
         bgp_mesh(device)
@@ -38,9 +38,8 @@ class IpAddresses(PartialGenerator):
                                 count_ipv4 += 1
                             elif ip_address.family.value == 6:
                                 secondary: str = "" if count_ipv6 == 0 else "secondary"
-                                yield f"ipv6 address", ip_address.address, secondary
+                                yield "ipv6 address", ip_address.address, secondary
                                 count_ipv6 += 1
-
 
     def acl_arista(self, _: Device):
         return """
@@ -68,5 +67,5 @@ class IpAddresses(PartialGenerator):
                                 count_ipv4 += 1
                             elif ip_address.family.value == 6:
                                 secondary: str = "" if count_ipv6 == 0 else "secondary"
-                                yield f"ipv6 address", ip_address.address, secondary
+                                yield "ipv6 address", ip_address.address, secondary
                                 count_ipv6 += 1

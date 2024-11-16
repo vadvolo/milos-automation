@@ -4,7 +4,6 @@ from annet.bgp_models import ASN
 from annet.generators import Entire
 from annet.mesh.executor import MeshExecutionResult
 from annet.storage import Device
-from icecream import ic
 
 from .helpers.router import (
     AutonomusSystemIsNotDefined,
@@ -16,9 +15,9 @@ from .helpers.router import (
 
 
 class Frr(Entire):
-    
+
     TAGS = ["frr"]
-    
+
     def path(self, device: Device):
         if device.hw.PC:
             return "/etc/frr/frr.conf"
@@ -29,8 +28,6 @@ class Frr(Entire):
     def run(self, device: Device):
 
         mesh_data: MeshExecutionResult = bgp_mesh(device)
-
-        # ic(bgp_groups(mesh_data))
 
         # base configuration
         yield "frr defaults datacenter"
@@ -64,10 +61,10 @@ class Frr(Entire):
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
 
-        yield "router bgp", asnum
-        if router_id:
+        if asnum and rid:
+            yield "router bgp", asnum
             yield " bgp router-id", rid
 
             for group in bgp_groups(mesh_data):
