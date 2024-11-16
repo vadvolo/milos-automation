@@ -27,15 +27,14 @@ services_stop:
 	@cd ./netbox-docker && docker-compose down -v && cd ..
 
 check_cisco_image:
-	@if !(compgen -G "./vm_images/*.bin" > /dev/null); then echo "\n\n !!! ./vm_images doesn't have any images !!!\n" && exit 1; fi
+	@if !(ls ./vm_images/*.bin 1> /dev/null 2>&1); then echo "\n\n !!! ./vm_images doesn't have any images !!!\n" && exit 1; fi
 
-try_unpack_cisco_image:
-	if [ ! -f "./vm_images/c7200-jk9s-mz.124-13a.image" ]; then unzip -p ./vm_images/c7200-jk9s-mz.124-13a.bin > ./vm_images/c7200-jk9s-mz.124-13a.image; fi
+unpack_cisco_image:
+	@cd vm_images && find . -name '*.bin' -exec sh -c 'f=$$(echo $$1 | cut -d "." -f 2,3); echo $$f ; unzip -p ".$$f.bin" > ".$$f.image"' _ {} \; && cd ..
 
 # Build and destroy architecture
 
-
-lab00: services_stop check_cisco_image try_unpack_cisco_image
+lab00: services_stop check_cisco_image unpack_cisco_image
 	@cp ./topologies/lab00_basic_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker-compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
