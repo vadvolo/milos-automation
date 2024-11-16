@@ -148,12 +148,12 @@ for ip in 0 1 2; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P te
 annet gen $HOST
 ```
 
-For example
+For example:
 ```bash
 annet gen lab-r1.nh.com
 ```
 
-You aslo can list devices
+You also can put list of devices:
 
 ```bash
 annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
@@ -391,11 +391,11 @@ annet deploy --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 
 Change the MTU value on [interface](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
 
-Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are breave enough.
+Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are brave enough.
 
 **Step 11. Change generator**
 
-Change the way how description if formed:
+Change the way how description is formed:
 
 ```diff
 class IfaceDescriptions(PartialGenerator):
@@ -404,7 +404,7 @@ class IfaceDescriptions(PartialGenerator):
 + neighbor += f"to_{connection.device.name}"
 ```
 
-Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You can directly run `deploy`.
+Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You also can directly run `deploy`.
 
 **Step 12. After finishing the lab, stop it**
 
