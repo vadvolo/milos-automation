@@ -64,6 +64,10 @@ disable = [
     "use-maxsplit-arg",
     "unspecified-encoding",
     "global-variable-not-assigned",
+    "duplicate-code",
+    "missing-module-docstring",
+    "missing-function-docstring",
+    "missing-class-docstring"
 ]
 
 [tool.pylint.'REPORTS']
