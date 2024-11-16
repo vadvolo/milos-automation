@@ -28,6 +28,13 @@ First of all, you need to install Docker and Docker Compose on your device:
   - [Mac](https://docs.docker.com/desktop/install/mac-install/)
   - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
+And `make` utility:
+
+```bash
+sudo apt install make  # Linux
+brew install make      # MacOS
+```
+
 Clone this repository:
 
 ```bash
