@@ -48,7 +48,7 @@ NOTE: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../
 Start the lab:
 
 ```bash
-make lab02
+make lab12
 ```
 
 **Step 3.**
