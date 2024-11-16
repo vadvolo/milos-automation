@@ -37,7 +37,7 @@ class IpAddresses(PartialGenerator):
                                 yield "ip address", ip_addr, ip_mask, secondary
                                 count_ipv4 += 1
                             elif ip_address.family.value == 6:
-                                secondary: str = "" if count_ipv6 == 0 else "secondary"
+                                secondary = "" if count_ipv6 == 0 else "secondary"
                                 yield "ipv6 address", ip_address.address, secondary
                                 count_ipv6 += 1
 
@@ -66,6 +66,6 @@ class IpAddresses(PartialGenerator):
                                 yield "ip address", ip_address.address, secondary
                                 count_ipv4 += 1
                             elif ip_address.family.value == 6:
-                                secondary: str = "" if count_ipv6 == 0 else "secondary"
+                                secondary = "" if count_ipv6 == 0 else "secondary"
                                 yield "ipv6 address", ip_address.address, secondary
                                 count_ipv6 += 1
