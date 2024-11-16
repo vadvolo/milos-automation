@@ -54,67 +54,14 @@ brew install make      # MacOS
 
 In this lab, generators are organized within the `./src/lab_generators` directory. The lab utilizes two specific generators:
 
-<details>
-<summary>Description Generator</summary>
+- Description generator  
+  In this generator, we employ a description pattern for device neighbors formatted as `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. The device connection map is located in Netbox and is utilized by Annet.
 
-In this generator, we employ a description pattern for device neighbors formatted as `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. The device connection map is located in Netbox and is utilized by Annet.
+- Mtu generator  
+  In this generator, we retrieve MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use a default MTU value of 1500.
 
-```python
-class IfaceDescriptions(PartialGenerator):
+[Interfaces generator src](./src/lab_generators/interfaces.py)
 
-    TAGS = ["description"]
-
-    def acl_cisco(self, device):
-        return """
-        interface
-            description
-        """
-
-    def run_cisco(self, device):
-        for interface in device.interfaces:
-            neighbor = ""
-            if interface.connected_endpoints:
-                for connection in interface.connected_endpoints:
-                    neighbor += f"to_{connection.device.name}_{connection.name}"
-                with self.block(f"interface {interface.name}"):
-                    yield f"description {neighbor}"
-            else:
-                with self.block(f"interface {interface.name}"):
-                    yield f"description disconnected"
-```
-
-</details>
-
-<details>
-<summary>Mtu Generator</summary>
-
-In this generator, we retrieve MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use a default MTU value of 1500.
-
-```python
-MTU = 1500
-
-class IfaceMtu(PartialGenerator):
-
-    TAGS = ["description"]
-
-    def acl_cisco(self, device):
-        return """
-        interface
-            mtu
-        """
-
-    def run_cisco(self, device):
-        for interface in device.interfaces:
-            if interface.mtu:
-                mtu = interface.mtu
-            else:
-                mtu = MTU
-            with self.block(f"interface {interface.name}"):
-                yield f"mtu {mtu}"
-
-```
-
-</details>
 
 ---
 ### Lab Guide
