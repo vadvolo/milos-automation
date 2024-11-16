@@ -1,4 +1,5 @@
 import os
+import subprocess
 import unittest
 
 
@@ -6,7 +7,7 @@ class TestLab(unittest.TestCase):
     def test_gen(self):
         # exec -u root -t -i annet annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
         genInfo = os.popen(
-            "docker exec -u root -t -i annet annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com"
+            "docker exec -u root -t -i annet annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com",
         ).read()
         self.assertEqual(
             genInfo,
@@ -24,9 +25,9 @@ class TestLab(unittest.TestCase):
         self.assertEqual(
             diffInfo,
             "\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r2.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r1.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r3.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r1.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r2.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r3.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r2.nh.com_GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[32m+   mtu 1500\x1b[0m\n\x1b[0m",
+            + "# -------------------- lab-r2.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r1.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r3.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[42m"
+            + "# -------------------- lab-r1.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r2.nh.com_GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[42m"
+            + "# -------------------- lab-r3.nh.com.cfg --------------------\x1b[49m\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface FastEthernet0/1\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet1/0\x1b[0m\n\x1b[1m\x1b[32m+   description to_lab-r2.nh.com_GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   mtu 4000\x1b[0m\n\x1b[1m\x1b[36m  interface GigabitEthernet2/0\x1b[0m\n\x1b[1m\x1b[32m+   description disconnected\x1b[0m\n\x1b[0m"
         )
 
     def test_patch(self):
@@ -37,9 +38,9 @@ class TestLab(unittest.TestCase):
         self.assertEqual(
             patchInfo,
             "\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r1.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  mtu 1500\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  mtu 1500\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r2.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description disconnected\n  mtu 1500\n  exit\n\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r2.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  mtu 1500\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  mtu 1500\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r1.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description to_lab-r3.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\n\x1b[1m\x1b[42m"
-            + "# -------------------- lab-r3.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  mtu 1500\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  mtu 1500\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r2.nh.com_GigabitEthernet2/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description disconnected\n  mtu 1500\n  exit\n\x1b[0m"
+            + "# -------------------- lab-r1.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r2.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description disconnected\n  exit\n\x1b[1m\x1b[42m"
+            + "# -------------------- lab-r2.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r1.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description to_lab-r3.nh.com_GigabitEthernet1/0\n  mtu 4000\n  exit\n\x1b[1m\x1b[42m"
+            + "# -------------------- lab-r3.nh.com.patch --------------------\x1b[49m\x1b[0m\ninterface FastEthernet0/0\n  description disconnected\n  exit\ninterface FastEthernet0/1\n  description disconnected\n  exit\ninterface GigabitEthernet1/0\n  description to_lab-r2.nh.com_GigabitEthernet2/0\n  mtu 4000\n  exit\ninterface GigabitEthernet2/0\n  description disconnected\n  exit\n\x1b[0m"
         )
 
 
