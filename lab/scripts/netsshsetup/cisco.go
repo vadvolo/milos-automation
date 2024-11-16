@@ -38,8 +38,11 @@ func (d *CiscoDevice) SSHEnabled() (bool, error) {
 	return false, nil
 }
 
-func (d *CiscoDevice) SetSSH() (error) {
+func (d *CiscoDevice) SetSSH(keylength string) (error) {
 	fmt.Println("SSH enabling process has been started for device... It can be up to 240 seconds")
+	if keylength == "" {
+		keylength = "512"
+	}
 	cmds := cmd.NewCmdList(
 		[]string{
 			"conf t",
@@ -47,7 +50,7 @@ func (d *CiscoDevice) SetSSH() (error) {
 		},
 	)
 	cmds = append(cmds, cmd.NewCmd("crypto key generate rsa", cmd.WithAnswers(
-		cmd.NewAnswer("How many bits in the modulus [512]:", "2048"),
+		cmd.NewAnswer("How many bits in the modulus [512]:", keylength),
 	), cmd.WithReadTimeout(time.Duration(240*time.Second)), cmd.WithCmdTimeout(time.Duration(600*time.Second))))
 	_, err := d.Device.SendCommands(cmds...)
 	if err != nil {
