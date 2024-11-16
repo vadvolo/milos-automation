@@ -41,6 +41,9 @@ lab00: services_stop check_cisco_image unpack_cisco_image
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
+lab00_test:
+	@python3 ./topologies/lab00_basic_cisco/lab_test.py
+
 lab01: services_stop
 	@cp ./topologies/lab01_basic_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd topologies/lab01_basic_frr && \

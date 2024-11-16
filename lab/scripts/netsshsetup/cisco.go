@@ -31,7 +31,7 @@ func (d *CiscoDevice) SSHEnabled() (bool, error) {
 		txtlines = append(txtlines, scanner.Text())
 	}
 	for _, line := range txtlines {
-		if strings.Contains(line, "SSH was enabled successfully") {
+		if (strings.Contains(line, "SSH was enabled successfully") || (strings.Contains(line, "SSH Enabled"))) {
 			return true, nil
 		}
 	}

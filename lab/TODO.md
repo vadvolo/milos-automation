@@ -25,7 +25,7 @@
 
 ## Makefile
 
-- [ ] Makefile: проверять что в папке ./vm_images есть образ
+- [x] Makefile: проверять что в папке ./vm_images есть образ
 - [ ] Makefile: убрать SUDO
 
 ## lab00
