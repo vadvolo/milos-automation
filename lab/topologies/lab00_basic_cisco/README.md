@@ -25,7 +25,12 @@ Author:
 - Netbox url: http://localhost:8000/
 - Netbox login/password: `annet/annet`
 - Device telnet and ssh login/password: `annet/annet`  
-- Device mgmt addresses: 172.20.0.101, 172.20.0.102, 172.20.0.103
+- Device mgmt addresses:
+   | Router | MGMT |
+   |:------:|:----|
+   | lab-r1 | `172.20.0.111` |
+   | lab-r2 | `172.20.0.112` |
+   | lab-r3 | `172.20.0.113` |
 
 ### Preparation
 
@@ -145,12 +150,12 @@ This script generates 2048 bit RSA keys and enables SSH. It takes a while.
 annet gen $HOST
 ```
 
-For example
+For example:
 ```bash
 annet gen lab-r1.nh.com
 ```
 
-You aslo can list devices
+You also can put the list of devices:
 
 ```bash
 annet gen lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
@@ -388,13 +393,13 @@ annet deploy --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 
 Change the MTU value on [interface](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
 
-![mtu](./images/mtu.png)
+<img src="./images/mtu.png" width="500" alt="restore connection">
 
-Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are breave enough.
+Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are brave enough.
 
 **Step 10. Change generator**
 
-Change the way how description if formed:
+Change the way how description is formed:
 
 ```diff
 class IfaceDescriptions(PartialGenerator):
@@ -403,7 +408,7 @@ class IfaceDescriptions(PartialGenerator):
 + neighbor += f"to_{connection.device.name}"
 ```
 
-Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You can directly run `deploy`.
+Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You also can directly run `deploy`.
 
 **Step 11. After finishing the lab, stop it**
 
