@@ -142,3 +142,4 @@ exit
 """
 
         yield "line vty"
+        yield ""

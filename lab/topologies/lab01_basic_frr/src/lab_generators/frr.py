@@ -64,6 +64,7 @@ class Frr(Entire):
 
         yield ""
         yield "line vty"
+        yield ""
 
 
 def _bgp_peers(device: Device) -> list[BgpPeer]:
