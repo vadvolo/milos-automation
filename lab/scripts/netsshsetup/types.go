@@ -80,11 +80,11 @@ func (d *Device) Ping() (bool, error) {
 		cmd = exec.Command("ping", "-c", "1", d.Address)
 	}
 
-	out, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return false, fmt.Errorf("there was an error pinging the host: %e", err)
-	}
+	out, _ := cmd.CombinedOutput()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return false, fmt.Errorf("there was an error pinging the host: %e", err)
+	// }
 
 	outStr := string(out)
 	if strings.Contains(outStr, "Request timeout") || strings.Contains(outStr, "Destination Host Unreachable") || strings.Contains(outStr, "100% packet loss") {
