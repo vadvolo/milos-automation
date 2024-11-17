@@ -67,20 +67,6 @@ Go to the Annet container:
 docker exec -u root -t -i annet /bin/bash
 ```
 
-Enable SSH on Cisco routers by executing the script:
-
-```bash
-for ip in 0 1; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
-```
-
-**Step 4.**
-
-Go to the Annet container:
-
-```bash
-docker exec -u root -t -i annet /bin/bash
-```
-
 Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 
 `annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
@@ -840,7 +826,7 @@ Deploy it:
 
 `annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
-**Step 5.**
+**Step 4.**
 
 Break a connection and check what happens.
 
@@ -990,7 +976,7 @@ Deploy it:
 
 Restore the connection and repeat the actions.
 
-**Step 6.**
+**Step 5.**
 
 Drain traffic from one of the spines.
 
@@ -1117,7 +1103,7 @@ Deploy it:
 
 Remove the tag and repeat the actions.
 
-**Step 7.**
+**Step 6.**
 
 After finishing the lab, stop it:
 
