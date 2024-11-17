@@ -11,7 +11,7 @@ BASE_ASNUM = 65000
 def global_options(global_opts: GlobalOptions):
     global_opts.router_id = f"1.1.{global_opts.match.pod}.{global_opts.match.num}"
     global_opts.ipv4_unicast.redistributes = (
-        Redistribute(protocol="connected", policy="CONNECTED"),
+        Redistribute(protocol="connected", policy="IMPORT_CONNECTED"),
     )
 
 
@@ -22,8 +22,8 @@ def tor_to_spine(tor: DirectPeer, spine: DirectPeer, session: MeshSession):
     tor.addr = f"10.{spine.match.plane}.{tor.match.num}.12/24"
     tor.families = ["ipv4_unicast"]
     tor.group_name = "TOR"
-    tor.import_policy = "TOR_IMPORT"
-    tor.export_policy = "TOR_EXPORT"
+    tor.import_policy = "TOR_IMPORT_SPINE"
+    tor.export_policy = "TOR_EXPORT_SPINE"
     tor.send_community = True
     tor.soft_reconfiguration_inbound = True
 
@@ -31,7 +31,7 @@ def tor_to_spine(tor: DirectPeer, spine: DirectPeer, session: MeshSession):
     spine.addr = f"10.{spine.match.plane}.{tor.match.num}.11/24"
     spine.families = ["ipv4_unicast"]
     spine.group_name = "SPINE"
-    spine.import_policy = "SPINE_IMPORT"
-    spine.export_policy = "SPINE_EXPORT"
+    spine.import_policy = "SPINE_IMPORT_TOR"
+    spine.export_policy = "SPINE_EXPORT_TOR"
     spine.send_community = True
     spine.soft_reconfiguration_inbound = True
