@@ -42,7 +42,7 @@ The image is subject to a license agreement, so it cannot be distributed in the 
 - Device mgmt addresses:
    | Router | MGMT |
    |:------:|:----|
-   | spine-1-1 | `172.20.0.100	` |
+   | spine-1-1 | `172.20.0.100` |
    | spine-1-2 | `172.20.0.101` |
    | tor-1-1 | `172.20.0.102` |
    | tor-1-2 | `172.20.0.103` |
