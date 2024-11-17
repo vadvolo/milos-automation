@@ -56,7 +56,7 @@ func (d *Device) _Address() string {
 }
 
 func (d *Device) WaitExec() error {
-	count := 10
+	count := 24
 	for i := 0; i <= count; i++ {
 		fmt.Printf("Trying to connect to device %s attempt %d\n", d._Address(), i)
 		res, err := d.Ping()
@@ -68,7 +68,7 @@ func (d *Device) WaitExec() error {
 		}
 		time.Sleep(5 * time.Second)
 	}
-	return nil
+	return fmt.Errorf("Device %s is not available", d.Address)
 }
 
 func (d *Device) Ping() (bool, error) {

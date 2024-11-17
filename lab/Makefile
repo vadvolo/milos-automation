@@ -41,7 +41,6 @@ lab00: services_stop check_cisco_image unpack_cisco_image
 	docker exec -u root -t -i annet netsshsetup -a 172.20.0.101 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
 	docker exec -u root -t -i annet netsshsetup -a 172.20.0.102 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
 	docker exec -u root -t -i annet netsshsetup -a 172.20.0.103 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab00_test:
@@ -56,11 +55,15 @@ lab01: services_stop
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
-lab10: services_stop
+lab10: services_stop check_cisco_image unpack_cisco_image
 	@cp ./topologies/lab10_dc_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.100 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.101 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.102 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.103 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.104 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 lab12: services_stop check_cisco_image unpack_cisco_image
