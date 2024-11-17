@@ -131,14 +131,7 @@ make lab10
 
 After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.
 
-**Step 3. Enable SSH on Cisco routers by executing the script**
-
-```bash
-for ip in 0 1 2 3 4; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
-```
-This script generates 2048 bit RSA keys and enables SSH. It takes a while.
-
-**Step 4. Deploy configuration to devices**
+**Step 3. Deploy configuration to devices**
 
 Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 
@@ -485,7 +478,7 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 5.** Break a connection and check what happens**
+**Step 4.** Break a connection and check what happens**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/7/), delete the connection between `tor-1-1.nh.com` and `spine-1-1.nh.com`.
 
@@ -563,9 +556,9 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 6. Restore the connection and repeat the actions**
+**Step 5. Restore the connection and repeat the actions**
 
-**Step 7. Drain traffic from one of the spines**
+**Step 6. Drain traffic from one of the spines**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/5/), assign `spine-1-1.nh.com` tag `maintenance`.
 
@@ -608,7 +601,7 @@ Unfortunately Cisco IOS does not apply changes of policies after changes, it req
 
 Remove the tag and repeat the actions.
 
-**Step 8. After finishing the lab, stop it**
+**Step 7. After finishing the lab, stop it**
 
 ```bash
 make services_stop
