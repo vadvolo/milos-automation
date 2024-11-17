@@ -10,7 +10,8 @@ from .helpers.router import (
     bgp_asnum,
     bgp_groups,
     bgp_mesh,
-    router_id, is_drained_device,
+    is_drained_device,
+    router_id,
 )
 
 
