@@ -10,6 +10,7 @@ from .helpers.router import (
     bgp_asnum,
     bgp_groups,
     bgp_mesh,
+    is_drained_device,
     router_id,
 )
 
@@ -93,46 +94,51 @@ class Frr(Entire):
 
         # route-map configuration
         yield "bgp community-list standard TOR_NETS seq 5 permit 65000:1"
+        yield "bgp community-list standard GSHUT seq 5 permit graceful-shutdown"
+
         if device.device_role.name == "ToR":
             yield """
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 5 permit 65000:1
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 10 permit graceful-shutdown
-
-route-map SPINE_IMPORT permit 10
- match community TOR_NETS_WITH_GSHUT exact-match
+route-map TOR_IMPORT_SPINE permit 10
+ match community GSHUT
  set local-preference 0
-exit
 
-route-map SPINE_IMPORT permit 20
- match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
  set local-preference 100
-exit
 
-route-map SPINE_IMPORT deny 9999
-exit
-
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
  match community TOR_NETS
 exit
 
-route-map SPINE_EXPORT deny 9999
+route-map TOR_EXPORT_SPINE deny 9999
 exit
 
-route-map CONNECTED permit 10
+route-map IMPORT_CONNECTED permit 10
  match interface lo
  set community 65000:1
 exit
 
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 exit
 """
         elif device.device_role.name == "Spine":
             yield """
-route-map TOR_IMPORT permit 10
+route-map SPINE_IMPORT_TOR permit 10
  match community TOR_NETS
 exit
 
-route-map TOR_IMPORT deny 9999
+route-map SPINE_IMPORT_TOR deny 9999
 exit
 """
+            yield """
+route-map SPINE_EXPORT_TOR permit 10
+ match community TOR_NETS"""
+            if is_drained_device(device):
+                 yield " set community 65535:0 additive"
+            yield "exit"
+
+            yield """
+route-map SPINE_EXPORT_TOR deny 9999
+exit
+"""
+
         yield "line vty"

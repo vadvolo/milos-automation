@@ -18,51 +18,57 @@ class RoutePolicy(PartialGenerator):
 
     def run_cisco(self, device: Device):
         yield "ip bgp-community new-format"
+        yield "ip community-list standard GSHUT permit 65535:0"
         yield "ip community-list standard TOR_NETS permit 65000:1"
-        yield "ip community-list standard GRACEFUL_SHUTDOWN permit 65535:0"
 
         if device.device_role.name == "ToR":
             yield """
-route-map SPINE_IMPORT permit 10
-  match community TOR_NETS GRACEFUL_SHUTDOWN
-  set local-preference 0
-route-map SPINE_IMPORT permit 20
-  match community TOR_NETS
-  set local-preference 100
-route-map SPINE_IMPORT deny 9999
-route-map SPINE_EXPORT permit 10
-  match community TOR_NETS
-route-map SPINE_EXPORT deny 9999
-route-map CONNECTED permit 10
-  match interface Loopback0
-  set community 65000:1
-route-map CONNECTED deny 9999
+route-map TOR_IMPORT_SPINE permit 10
+ match community GSHUT
+ set local-preference 0
+route-map TOR_IMPORT_SPINE permit 20
+ set local-preference 100
+
+route-map TOR_EXPORT_SPINE permit 10
+ match community TOR_NETS
+route-map TOR_EXPORT_SPINE deny 9999
+
+route-map IMPORT_CONNECTED permit 10
+ match interface Loopback0
+ set community 65000:1
+route-map IMPORT_CONNECTED deny 9999
 """
         elif device.device_role.name == "Spine":
             yield """
-route-map TOR_IMPORT permit 10
-  match community TOR_NETS
-route-map TOR_IMPORT deny 9999
+route-map SPINE_IMPORT_TOR permit 10
+ match community TOR_NETS
+route-map SPINE_IMPORT_TOR deny 9999
 """
-            with self.block("route-map TOR_EXPORT permit 10"):
-                yield "match community TOR_NETS"
+
+            with self.block("route-map SPINE_EXPORT_TOR permit 10"):
+                yield " match community TOR_NETS"
                 if is_drained_device(device):
-                    yield "set community 65535:0 additive"
-            yield "route-map TOR_EXPORT deny 9999"
+                    yield " set community 65535:0 additive"
+            yield "route-map SPINE_EXPORT_TOR deny 9999"
 
     def acl_arista(self, _: Device):
         return """
-        ip bgp-community new-format
         ip community-list
         route-map
             ~ %global=1
         """
 
     def run_arista(self, device: Device):
-        yield "ip community-list TOR_NETS permit 65000:1"
         if device.device_role.name == "Spine":
-            with self.block("route-map TOR_EXPORT permit 10"):
+            yield "ip community-list GSHUT permit GSHUT"
+            yield "ip community-list TOR_NETS permit 65000:1"
+
+            with self.block("route-map SPINE_IMPORT_TOR permit 10"):
+                yield "match community TOR_NETS"
+            yield "route-map SPINE_IMPORT_TOR deny 9999"
+
+            with self.block("route-map SPINE_EXPORT_TOR permit 10"):
                 yield "match community TOR_NETS"
                 if is_drained_device(device):
                     yield "set community 65535:0 additive"
-            yield "route-map TOR_EXPORT deny 9999"
+            yield "route-map SPINE_EXPORT_TOR deny 9999"

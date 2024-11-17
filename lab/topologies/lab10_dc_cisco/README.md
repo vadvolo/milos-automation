@@ -146,35 +146,346 @@ Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>Example if Spine's configuration</summary>
+
+```
+hostname spine-1-1
+ip bgp-community new-format
+ip community-list standard GSHUT permit 65535:0
+ip community-list standard TOR_NETS permit 65000:1
+interface GigabitEthernet1/0
+  no shutdown
+  ip address 10.1.1.11 255.255.255.0
+  description tor-1-1@Gi1/0
+interface GigabitEthernet2/0
+  no shutdown
+  ip address 10.1.2.11 255.255.255.0
+  description tor-1-2@Gi1/0
+interface GigabitEthernet3/0
+  no shutdown
+  ip address 10.1.3.11 255.255.255.0
+  description tor-1-3@Gi1/0
+interface FastEthernet0/0
+  no shutdown
+  ip address 172.20.0.100 255.255.255.0
+interface FastEthernet0/1
+  no shutdown
+route-map SPINE_IMPORT_TOR permit 10
+  match community TOR_NETS
+route-map SPINE_IMPORT_TOR deny 9999
+route-map SPINE_EXPORT_TOR permit 10
+  match community TOR_NETS
+route-map SPINE_EXPORT_TOR deny 9999
+router bgp 65201
+  bgp router-id 1.2.1.1
+  bgp log-neighbor-changes
+  neighbor TOR peer-group
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
+  neighbor TOR soft-reconfiguration inbound
+  neighbor TOR send-community both
+  neighbor 10.1.1.12 remote-as 65111
+  neighbor 10.1.2.12 remote-as 65112
+  neighbor 10.1.3.12 remote-as 65113
+  neighbor 10.1.1.12 peer-group TOR
+  neighbor 10.1.2.12 peer-group TOR
+  neighbor 10.1.3.12 peer-group TOR
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's configuration</summary>
+
+```
+hostname tor-1-1
+ip bgp-community new-format
+ip community-list standard GSHUT permit 65535:0
+ip community-list standard TOR_NETS permit 65000:1
+interface GigabitEthernet1/0
+  no shutdown
+  ip address 10.1.1.12 255.255.255.0
+  description spine-1-1@Gi1/0
+interface GigabitEthernet2/0
+  no shutdown
+  ip address 10.2.1.12 255.255.255.0
+  description spine-1-2@Gi1/0
+interface FastEthernet0/0
+  no shutdown
+  ip address 172.20.0.102 255.255.255.0
+interface Loopback0
+  no shutdown
+  ip address 10.0.0.1 255.255.255.255
+interface FastEthernet0/1
+  no shutdown
+interface GigabitEthernet3/0
+  no shutdown
+route-map TOR_IMPORT_SPINE permit 10
+  match community GSHUT
+  set local-preference 0
+route-map TOR_IMPORT_SPINE permit 20
+  set local-preference 100
+route-map TOR_EXPORT_SPINE permit 10
+  match community TOR_NETS
+route-map TOR_EXPORT_SPINE deny 9999
+route-map IMPORT_CONNECTED permit 10
+  match interface Loopback0
+  set community 65000:1
+route-map IMPORT_CONNECTED deny 9999
+router bgp 65111
+  bgp router-id 1.1.1.1
+  bgp log-neighbor-changes
+  maximum-paths 16
+  redistribute connected route-map IMPORT_CONNECTED
+  neighbor SPINE peer-group
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
+  neighbor SPINE soft-reconfiguration inbound
+  neighbor SPINE send-community both
+  neighbor 10.1.1.11 remote-as 65201
+  neighbor 10.2.1.11 remote-as 65201
+  neighbor 10.1.1.11 peer-group SPINE
+  neighbor 10.2.1.11 peer-group SPINE
+```
+
+</details>
+
 Look at diff:
 ```bash
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
+
+<details>
+<summary>Example if Spine's Diff</summary>
+
+```diff
++ hostname spine-1-1
+- hostname spine
++ ip bgp-community new-format
++ route-map SPINE_IMPORT_TOR permit 10
++   match community TOR_NETS
++ route-map SPINE_IMPORT_TOR deny 9999
++ route-map SPINE_EXPORT_TOR permit 10
++   match community TOR_NETS
++ route-map SPINE_EXPORT_TOR deny 9999
++ ip community-list standard GSHUT permit 65535:0
++ ip community-list standard TOR_NETS permit 65000:1
++ router bgp 65201
++   bgp router-id 1.2.1.1
++   bgp log-neighbor-changes
++   neighbor TOR peer-group
++   neighbor TOR route-map SPINE_IMPORT_TOR in
++   neighbor TOR route-map SPINE_EXPORT_TOR out
++   neighbor TOR soft-reconfiguration inbound
++   neighbor TOR send-community both
++   neighbor 10.1.1.12 remote-as 65111
++   neighbor 10.1.2.12 remote-as 65112
++   neighbor 10.1.3.12 remote-as 65113
++   neighbor 10.1.1.12 peer-group TOR
++   neighbor 10.1.2.12 peer-group TOR
++   neighbor 10.1.3.12 peer-group TOR
+  interface GigabitEthernet1/0
+-   shutdown
++   ip address 10.1.1.11 255.255.255.0
++   description tor-1-1@Gi1/0
+  interface GigabitEthernet2/0
+-   shutdown
++   ip address 10.1.2.11 255.255.255.0
++   description tor-1-2@Gi1/0
+  interface GigabitEthernet3/0
+-   shutdown
++   ip address 10.1.3.11 255.255.255.0
++   description tor-1-3@Gi1/0
+  interface FastEthernet0/1
+-   shutdown
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's Diff</summary>
+
+```diff
++ hostname tor-1-1
+- hostname tor
++ ip bgp-community new-format
++ interface Loopback0
++   no shutdown
++   ip address 10.0.0.1 255.255.255.255
++ route-map TOR_IMPORT_SPINE permit 10
++   match community GSHUT
++   set local-preference 0
++ route-map TOR_IMPORT_SPINE permit 20
++   set local-preference 100
++ route-map TOR_EXPORT_SPINE permit 10
++   match community TOR_NETS
++ route-map TOR_EXPORT_SPINE deny 9999
++ route-map IMPORT_CONNECTED permit 10
++   match interface Loopback0
++   set community 65000:1
++ route-map IMPORT_CONNECTED deny 9999
++ ip community-list standard GSHUT permit 65535:0
++ ip community-list standard TOR_NETS permit 65000:1
++ router bgp 65111
++   bgp router-id 1.1.1.1
++   bgp log-neighbor-changes
++   maximum-paths 16
++   redistribute connected route-map IMPORT_CONNECTED
++   neighbor SPINE peer-group
++   neighbor SPINE route-map TOR_IMPORT_SPINE in
++   neighbor SPINE route-map TOR_EXPORT_SPINE out
++   neighbor SPINE soft-reconfiguration inbound
++   neighbor SPINE send-community both
++   neighbor 10.1.1.11 remote-as 65201
++   neighbor 10.2.1.11 remote-as 65201
++   neighbor 10.1.1.11 peer-group SPINE
++   neighbor 10.2.1.11 peer-group SPINE
+  interface GigabitEthernet1/0
+-   shutdown
++   ip address 10.1.1.12 255.255.255.0
++   description spine-1-1@Gi1/0
+  interface GigabitEthernet2/0
+-   shutdown
++   ip address 10.2.1.12 255.255.255.0
++   description spine-1-2@Gi1/0
+  interface FastEthernet0/1
+-   shutdown
+  interface GigabitEthernet3/0
+-   shutdown
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+
+<details>
+<summary>Example if Spine's Patch</summary>
+
+```
+no hostname spine
+hostname spine-1-1
+ip community-list standard GSHUT permit 65535:0
+ip community-list standard TOR_NETS permit 65000:1
+ip bgp-community new-format
+interface GigabitEthernet1/0
+  no shutdown
+  ip address 10.1.1.11 255.255.255.0
+  description tor-1-1@Gi1/0
+  exit
+interface GigabitEthernet2/0
+  no shutdown
+  ip address 10.1.2.11 255.255.255.0
+  description tor-1-2@Gi1/0
+  exit
+interface GigabitEthernet3/0
+  no shutdown
+  ip address 10.1.3.11 255.255.255.0
+  description tor-1-3@Gi1/0
+  exit
+interface FastEthernet0/1
+  no shutdown
+  exit
+route-map SPINE_IMPORT_TOR permit 10
+  match community TOR_NETS
+  exit
+route-map SPINE_IMPORT_TOR deny 9999
+route-map SPINE_EXPORT_TOR permit 10
+  match community TOR_NETS
+  exit
+route-map SPINE_EXPORT_TOR deny 9999
+router bgp 65201
+  bgp router-id 1.2.1.1
+  bgp log-neighbor-changes
+  neighbor TOR peer-group
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
+  neighbor TOR soft-reconfiguration inbound
+  neighbor TOR send-community both
+  neighbor 10.1.1.12 remote-as 65111
+  neighbor 10.1.2.12 remote-as 65112
+  neighbor 10.1.3.12 remote-as 65113
+  neighbor 10.1.1.12 peer-group TOR
+  neighbor 10.1.2.12 peer-group TOR
+  neighbor 10.1.3.12 peer-group TOR
+  exit
+```
+
+</details>
+
+<details>
+<summary>Example if Tor's Patch</summary>
+
+```
+no hostname tor
+hostname tor-1-1
+ip community-list standard GSHUT permit 65535:0
+ip community-list standard TOR_NETS permit 65000:1
+ip bgp-community new-format
+interface GigabitEthernet1/0
+  no shutdown
+  ip address 10.1.1.12 255.255.255.0
+  description spine-1-1@Gi1/0
+  exit
+interface GigabitEthernet2/0
+  no shutdown
+  ip address 10.2.1.12 255.255.255.0
+  description spine-1-2@Gi1/0
+  exit
+interface FastEthernet0/1
+  no shutdown
+  exit
+interface GigabitEthernet3/0
+  no shutdown
+  exit
+interface Loopback0
+  ip address 10.0.0.1 255.255.255.255
+  no shutdown
+  exit
+route-map TOR_IMPORT_SPINE permit 10
+  match community GSHUT
+  set local-preference 0
+  exit
+route-map TOR_IMPORT_SPINE permit 20
+  set local-preference 100
+  exit
+route-map TOR_EXPORT_SPINE permit 10
+  match community TOR_NETS
+  exit
+route-map TOR_EXPORT_SPINE deny 9999
+route-map IMPORT_CONNECTED permit 10
+  match interface Loopback0
+  set community 65000:1
+  exit
+route-map IMPORT_CONNECTED deny 9999
+router bgp 65111
+  bgp router-id 1.1.1.1
+  bgp log-neighbor-changes
+  maximum-paths 16
+  redistribute connected route-map IMPORT_CONNECTED
+  neighbor SPINE peer-group
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
+  neighbor SPINE soft-reconfiguration inbound
+  neighbor SPINE send-community both
+  neighbor 10.1.1.11 remote-as 65201
+  neighbor 10.2.1.11 remote-as 65201
+  neighbor 10.1.1.11 peer-group SPINE
+  neighbor 10.2.1.11 peer-group SPINE
+  exit
+```
+
+</details>
 
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 5. Change device role in Netbox and deploy configuration**
-
-Go to the [Netbox](http://localhost:8000/dcim/devices/7/), assign `tor-1-1.nh.com` role `Unknown`.
-
-Look at diff:
-
-```bash
-annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
-```
-
-Deploy it:
-```bash
-annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
-```
-
-**Step 6. Restore the role and repeat the actions**
-
-
-**Step 7. Break a connection and check what happens**
+**Step 5.** Break a connection and check what happens**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/7/), delete the connection between `tor-1-1.nh.com` and `spine-1-1.nh.com`.
 
@@ -183,14 +494,78 @@ Look at diff:
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>spine-1-1 Diff</summary>
+
+```diff
+  router bgp 65201
+-   neighbor 10.1.1.12 remote-as 65111
+-   neighbor 10.1.1.12 peer-group TOR
+  interface GigabitEthernet1/0
+-   description tor-1-1@Gi1/0
+-   ip address 10.1.1.11 255.255.255.0
+```
+
+</details>
+
+<details>
+<summary>tor-1-1 Diff</summary>
+
+```diff
+  router bgp 65111
+-   neighbor 10.1.1.11 remote-as 65201
+-   neighbor 10.1.1.11 peer-group SPINE
+  interface GigabitEthernet1/0
+-   description spine-1-1@Gi1/0
+-   ip address 10.1.1.12 255.255.255.0
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>spine-1-1 Patch</summary>
+
+```diff
+interface GigabitEthernet1/0
+no description
+no ip address 10.1.1.11 255.255.255.0
+exit
+router bgp 65201
+no neighbor 10.1.1.12 peer-group TOR
+no neighbor 10.1.1.12 remote-as 65111
+exit
+```
+
+</details>
+
+<details>
+<summary>tor-1-1 Patch</summary>
+
+```
+interface GigabitEthernet1/0
+no description
+no ip address 10.1.1.12 255.255.255.0
+exit
+router bgp 65111
+no neighbor 10.1.1.11 peer-group SPINE
+no neighbor 10.1.1.11 remote-as 65201
+exit
+```
+
+</details>
+
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 8. Restore the connection and repeat the actions**
+**Step 6. Restore the connection and repeat the actions**
 
-**Step 9. Drain traffic from one of the spines**
+**Step 7. Drain traffic from one of the spines**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/5/), assign `spine-1-1.nh.com` tag `maintenance`.
 
@@ -199,14 +574,41 @@ Look at diff:
 annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+<details>
+<summary>spine-1-1 Diff</summary>
+
+```diff
+  route-map SPINE_EXPORT_TOR permit 10
++   set community 65535:0 additive
+```
+
+</details>
+
+Look at patch:
+
+`annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
+
+<details>
+<summary>spine-1-1 Patch</summary>
+
+```
+route-map SPINE_EXPORT_TOR permit 10
+  set community 65535:0 additive
+  exit
+```
+
+</details>
+
 Deploy it:
 ```bash
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
+Unfortunately Cisco IOS does not apply changes of policies after changes, it required re-pass bgp routes through changes policies again by execute `clear ip bgp * soft`
+
 Remove the tag and repeat the actions.
 
-**Step 10. After finishing the lab, stop it**
+**Step 8. After finishing the lab, stop it**
 
 ```bash
 make services_stop

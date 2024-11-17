@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-venv python3 git golang-go vim net-tools iproute2 inetutils-ping telnet
+    python3-venv python3 git golang-go vim net-tools iproute2 inetutils-ping telnet openssh-client
 
 # Setup Python environment
 RUN python3 -m venv /venv
