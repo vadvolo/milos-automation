@@ -6,11 +6,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Setup Python environment
 RUN python3 -m venv /venv
-RUN /venv/bin/pip install -e git+https://github.com/annetutil/annet/#egg=annet
-RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli_adapter/#egg=gnetcli_adapter
-RUN /venv/bin/pip install -e git+https://github.com/annetutil/gnetcli#egg=gnetclisdk\&subdirectory=grpc_sdk/python
-RUN /venv/bin/pip install annetbox requests icecream
-RUN /venv/bin/pip install --upgrade protobuf grpcio
+RUN /venv/bin/pip install annet[sync]==v0.16.15
+RUN /venv/bin/pip install gnetcli_adapter==1.0.9
+RUN /venv/bin/pip install gnetclisdk==1.0.43
 
 # Set environment variables
 ENV PATH=/venv/bin:$PATH
