@@ -52,10 +52,10 @@ var (
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := device.WaitExec()
 			if err != nil {
-				return fmt.Errorf("device is not available")
+				return fmt.Errorf("device is not available %e", err)
 			}
 			cmd.Printf("Device %s is available\n", device._Address())
-			cmd.Println("Checking is SSH enabled\n")
+			cmd.Println("Checking is SSH enabled")
 			sshCheck, err := device.SSHEnabled()
 			if !sshCheck {
 				cmd.Println("SSH is not active on the device")

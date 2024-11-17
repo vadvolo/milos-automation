@@ -30,7 +30,7 @@ check_cisco_image:
 	@if !(ls ./vm_images/*.bin 1> /dev/null 2>&1); then echo "\n\n !!! ./vm_images doesn't have any images !!!\n" && exit 1; fi
 
 unpack_cisco_image:
-	@cd vm_images && find . -name '*.bin' -exec sh -c 'f=$$(echo $$1 | cut -d "." -f 2,3); echo $$f ; unzip -p ".$$f.bin" > ".$$f.image"' _ {} \; && cd ..
+	@cd vm_images && find . -name '*.bin' -exec sh -c 'f=$$(echo $$1 | cut -d "." -f 2,3); unzip -p ".$$f.bin" > ".$$f.image"' _ {} \; && cd ..
 
 # Build and destroy architecture
 
@@ -38,6 +38,9 @@ lab00: services_stop check_cisco_image unpack_cisco_image
 	@cp ./topologies/lab00_basic_cisco/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd netbox-docker/ && docker compose up -d && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.101 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.102 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
+	docker exec -u root -t -i annet netsshsetup -a 172.20.0.103 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
 	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
