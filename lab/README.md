@@ -13,8 +13,9 @@ Table of contents:
     - [lab00. Cisco Base Scenario](./topologies/lab00_basic_cisco)
     - [lab01. FRR Base Scenario](./topologies/lab01_basic_frr)
   - DC
-    - [lab10. DC Scenario](./topologies/lab10_dc_cisco)
-    - [lab12. Multivendor Lab](./topologies/lab12_dc_arista_cisco_frr)
+    - [lab10. Cisco DC Scenario](./topologies/lab10_dc_cisco)
+    - [lab11. FRR DC Scenario](./topologies/lab11_dc_frr)
+    - [lab12. Multivendor DC Scenario](./topologies/lab12_dc_arista_cisco_frr)
 
 
 ### Environment
