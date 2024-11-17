@@ -101,15 +101,19 @@ interface Ethernet3
   ip address 10.1.3.11/24
 interface Management0
   ip address 172.20.0.110/24
+ip community-list GSHUT permit GSHUT
 ip community-list TOR_NETS permit 65000:1
-route-map TOR_EXPORT permit 10
+route-map SPINE_IMPORT_TOR permit 10
   match community TOR_NETS
-route-map TOR_EXPORT deny 9999
+route-map SPINE_IMPORT_TOR deny 9999
+route-map SPINE_EXPORT_TOR permit 10
+  match community TOR_NETS
+route-map SPINE_EXPORT_TOR deny 9999
 router bgp 65201
   router-id 1.2.1.1
   neighbor TOR peer group
-  neighbor TOR route-map SPINE_IMPORT in
-  neighbor TOR route-map SPINE_EXPORT out
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
   neighbor TOR send-community
   neighbor 10.1.1.12 peer group TOR
   neighbor 10.1.1.12 remote-as 65111
@@ -162,18 +166,27 @@ router bgp 65201
  neighbor 10.2.3.12 remote-as 65113
  neighbor 10.2.3.12 peer-group TOR
  address-family ipv4 unicast
-  neighbor TOR route-map SPINE_IMPORT in
-  neighbor TOR route-map SPINE_EXPORT out
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
  exit-address-family
 exit
 
 bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 
-route-map TOR_IMPORT permit 10
+route-map SPINE_IMPORT_TOR permit 10
  match community TOR_NETS
 exit
 
-route-map TOR_IMPORT deny 9999
+route-map SPINE_IMPORT_TOR deny 9999
+exit
+
+
+route-map SPINE_EXPORT_TOR permit 10
+ match community TOR_NETS
+exit
+
+route-map SPINE_EXPORT_TOR deny 9999
 exit
 
 line vty
@@ -187,8 +200,8 @@ line vty
 ```
 hostname tor-1-1
 ip bgp-community new-format
+ip community-list standard GSHUT permit 65535:0
 ip community-list standard TOR_NETS permit 65000:1
-ip community-list standard GRACEFUL_SHUTDOWN permit 65535:0
 interface GigabitEthernet1/0
   no shutdown
   ip address 10.1.1.12 255.255.255.0
@@ -205,28 +218,26 @@ interface Loopback0
   ip address 10.0.0.1 255.255.255.255
 interface FastEthernet0/1
   no shutdown
-route-map SPINE_IMPORT permit 10
-  match community TOR_NETS GRACEFUL_SHUTDOWN
+route-map TOR_IMPORT_SPINE permit 10
+  match community GSHUT
   set local-preference 0
-route-map SPINE_IMPORT permit 20
-  match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
   set local-preference 100
-route-map SPINE_IMPORT deny 9999
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
   match community TOR_NETS
-route-map SPINE_EXPORT deny 9999
-route-map CONNECTED permit 10
+route-map TOR_EXPORT_SPINE deny 9999
+route-map IMPORT_CONNECTED permit 10
   match interface Loopback0
   set community 65000:1
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 router bgp 65111
   bgp router-id 1.1.1.1
   bgp log-neighbor-changes
   maximum-paths 16
-  redistribute connected route-map CONNECTED
+  redistribute connected route-map IMPORT_CONNECTED
   neighbor SPINE peer-group
-  neighbor SPINE route-map TOR_IMPORT in
-  neighbor SPINE route-map TOR_EXPORT out
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
   neighbor SPINE soft-reconfiguration inbound
   neighbor SPINE send-community both
   neighbor 10.1.1.11 remote-as 65201
@@ -276,44 +287,36 @@ router bgp 65112
  neighbor 10.2.2.11 remote-as 65201
  neighbor 10.2.2.11 peer-group SPINE
  address-family ipv4 unicast
-  redistribute connected route-map CONNECTED
-  neighbor SPINE route-map TOR_IMPORT in
-  neighbor SPINE route-map TOR_EXPORT out
+  redistribute connected route-map IMPORT_CONNECTED
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
   maximum-paths 16
  exit-address-family
 exit
 
 bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 5 permit 65000:1
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 10 permit graceful-shutdown
-
-route-map SPINE_IMPORT permit 10
- match community TOR_NETS_WITH_GSHUT exact-match
+route-map TOR_IMPORT_SPINE permit 10
+ match community GSHUT
  set local-preference 0
-exit
 
-route-map SPINE_IMPORT permit 20
- match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
  set local-preference 100
-exit
 
-route-map SPINE_IMPORT deny 9999
-exit
-
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
  match community TOR_NETS
 exit
 
-route-map SPINE_EXPORT deny 9999
+route-map TOR_EXPORT_SPINE deny 9999
 exit
 
-route-map CONNECTED permit 10
+route-map IMPORT_CONNECTED permit 10
  match interface lo
  set community 65000:1
 exit
 
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 exit
 
 line vty
@@ -331,6 +334,7 @@ Look at diff:
 ```diff
 + hostname spine-1-1
 - hostname spine
++ ip community-list GSHUT permit GSHUT
 + ip community-list TOR_NETS permit 65000:1
   interface Ethernet1
 +   description tor-1-1@GigabitEthernet1/0
@@ -341,14 +345,17 @@ Look at diff:
   interface Ethernet3
 +   description tor-1-3@GigabitEthernet1/0
 +   ip address 10.1.3.11/24
-+ route-map TOR_EXPORT permit 10
++ route-map SPINE_IMPORT_TOR permit 10
 +   match community TOR_NETS
-+ route-map TOR_EXPORT deny 9999
++ route-map SPINE_IMPORT_TOR deny 9999
++ route-map SPINE_EXPORT_TOR permit 10
++   match community TOR_NETS
++ route-map SPINE_EXPORT_TOR deny 9999
 + router bgp 65201
 +   router-id 1.2.1.1
 +   neighbor TOR peer group
-+   neighbor TOR route-map SPINE_IMPORT in
-+   neighbor TOR route-map SPINE_EXPORT out
++   neighbor TOR route-map SPINE_IMPORT_TOR in
++   neighbor TOR route-map SPINE_EXPORT_TOR out
 +   neighbor TOR send-community
 +   neighbor 10.1.1.12 peer group TOR
 +   neighbor 10.1.1.12 remote-as 65111
@@ -377,7 +384,7 @@ Look at diff:
  log file /var/log/frr/frr.log
 
  interface eth0
-@@ -9,15 +9,42 @@
+@@ -9,15 +9,51 @@
  exit
 
  interface eth1
@@ -408,18 +415,27 @@ Look at diff:
 + neighbor 10.2.3.12 remote-as 65113
 + neighbor 10.2.3.12 peer-group TOR
 + address-family ipv4 unicast
-+  neighbor TOR route-map SPINE_IMPORT in
-+  neighbor TOR route-map SPINE_EXPORT out
++  neighbor TOR route-map SPINE_IMPORT_TOR in
++  neighbor TOR route-map SPINE_EXPORT_TOR out
 + exit-address-family
 +exit
 +
 +bgp community-list standard TOR_NETS seq 5 permit 65000:1
++bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 +
-+route-map TOR_IMPORT permit 10
++route-map SPINE_IMPORT_TOR permit 10
 + match community TOR_NETS
 +exit
 +
-+route-map TOR_IMPORT deny 9999
++route-map SPINE_IMPORT_TOR deny 9999
++exit
++
++
++route-map SPINE_EXPORT_TOR permit 10
++ match community TOR_NETS
++exit
++
++route-map SPINE_EXPORT_TOR deny 9999
  exit
 
  line vty
@@ -437,30 +453,28 @@ Look at diff:
 + interface Loopback0
 +   no shutdown
 +   ip address 10.0.0.1 255.255.255.255
-+ route-map SPINE_IMPORT permit 10
-+   match community TOR_NETS GRACEFUL_SHUTDOWN
++ route-map TOR_IMPORT_SPINE permit 10
++   match community GSHUT
 +   set local-preference 0
-+ route-map SPINE_IMPORT permit 20
-+   match community TOR_NETS
++ route-map TOR_IMPORT_SPINE permit 20
 +   set local-preference 100
-+ route-map SPINE_IMPORT deny 9999
-+ route-map SPINE_EXPORT permit 10
++ route-map TOR_EXPORT_SPINE permit 10
 +   match community TOR_NETS
-+ route-map SPINE_EXPORT deny 9999
-+ route-map CONNECTED permit 10
++ route-map TOR_EXPORT_SPINE deny 9999
++ route-map IMPORT_CONNECTED permit 10
 +   match interface Loopback0
 +   set community 65000:1
-+ route-map CONNECTED deny 9999
++ route-map IMPORT_CONNECTED deny 9999
++ ip community-list standard GSHUT permit 65535:0
 + ip community-list standard TOR_NETS permit 65000:1
-+ ip community-list standard GRACEFUL_SHUTDOWN permit 65535:0
 + router bgp 65111
 +   bgp router-id 1.1.1.1
 +   bgp log-neighbor-changes
 +   maximum-paths 16
-+   redistribute connected route-map CONNECTED
++   redistribute connected route-map IMPORT_CONNECTED
 +   neighbor SPINE peer-group
-+   neighbor SPINE route-map TOR_IMPORT in
-+   neighbor SPINE route-map TOR_EXPORT out
++   neighbor SPINE route-map TOR_IMPORT_SPINE in
++   neighbor SPINE route-map TOR_EXPORT_SPINE out
 +   neighbor SPINE soft-reconfiguration inbound
 +   neighbor SPINE send-community both
 +   neighbor 10.1.1.11 remote-as 65201
@@ -496,7 +510,7 @@ Look at diff:
  log file /var/log/frr/frr.log
 
  interface eth0
-@@ -9,15 +9,68 @@
+@@ -9,15 +9,60 @@
  exit
 
  interface eth1
@@ -527,44 +541,36 @@ Look at diff:
 + neighbor 10.2.2.11 remote-as 65201
 + neighbor 10.2.2.11 peer-group SPINE
 + address-family ipv4 unicast
-+  redistribute connected route-map CONNECTED
-+  neighbor SPINE route-map TOR_IMPORT in
-+  neighbor SPINE route-map TOR_EXPORT out
++  redistribute connected route-map IMPORT_CONNECTED
++  neighbor SPINE route-map TOR_IMPORT_SPINE in
++  neighbor SPINE route-map TOR_EXPORT_SPINE out
 +  maximum-paths 16
 + exit-address-family
 +exit
 +
 +bgp community-list standard TOR_NETS seq 5 permit 65000:1
++bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 +
-+bgp community-list standard TOR_NETS_WITH_GSHUT seq 5 permit 65000:1
-+bgp community-list standard TOR_NETS_WITH_GSHUT seq 10 permit graceful-shutdown
-+
-+route-map SPINE_IMPORT permit 10
-+ match community TOR_NETS_WITH_GSHUT exact-match
++route-map TOR_IMPORT_SPINE permit 10
++ match community GSHUT
 + set local-preference 0
-+exit
 +
-+route-map SPINE_IMPORT permit 20
-+ match community TOR_NETS
++route-map TOR_IMPORT_SPINE permit 20
 + set local-preference 100
-+exit
 +
-+route-map SPINE_IMPORT deny 9999
-+exit
-+
-+route-map SPINE_EXPORT permit 10
++route-map TOR_EXPORT_SPINE permit 10
 + match community TOR_NETS
 +exit
 +
-+route-map SPINE_EXPORT deny 9999
++route-map TOR_EXPORT_SPINE deny 9999
 +exit
 +
-+route-map CONNECTED permit 10
++route-map IMPORT_CONNECTED permit 10
 + match interface lo
 + set community 65000:1
 +exit
 +
-+route-map CONNECTED deny 9999
++route-map IMPORT_CONNECTED deny 9999
  exit
 
  line vty
@@ -594,17 +600,23 @@ interface Ethernet3
   description tor-1-3@GigabitEthernet1/0
   ip address 10.1.3.11/24
   exit
+ip community-list GSHUT permit GSHUT
 ip community-list TOR_NETS permit 65000:1
-route-map TOR_EXPORT permit 10
+route-map SPINE_IMPORT_TOR permit 10
   match community TOR_NETS
   exit
-route-map TOR_EXPORT deny 9999
+route-map SPINE_IMPORT_TOR deny 9999
+  exit
+route-map SPINE_EXPORT_TOR permit 10
+  match community TOR_NETS
+  exit
+route-map SPINE_EXPORT_TOR deny 9999
   exit
 router bgp 65201
   router-id 1.2.1.1
   neighbor TOR peer group
-  neighbor TOR route-map SPINE_IMPORT in
-  neighbor TOR route-map SPINE_EXPORT out
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
   neighbor TOR send-community
   neighbor 10.1.1.12 peer group TOR
   neighbor 10.1.1.12 remote-as 65111
@@ -659,22 +671,30 @@ router bgp 65201
  neighbor 10.2.3.12 remote-as 65113
  neighbor 10.2.3.12 peer-group TOR
  address-family ipv4 unicast
-  neighbor TOR route-map SPINE_IMPORT in
-  neighbor TOR route-map SPINE_EXPORT out
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
  exit-address-family
 exit
 
 bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 
-route-map TOR_IMPORT permit 10
+route-map SPINE_IMPORT_TOR permit 10
  match community TOR_NETS
 exit
 
-route-map TOR_IMPORT deny 9999
+route-map SPINE_IMPORT_TOR deny 9999
+exit
+
+
+route-map SPINE_EXPORT_TOR permit 10
+ match community TOR_NETS
+exit
+
+route-map SPINE_EXPORT_TOR deny 9999
 exit
 
 line vty
-
 ```
 
 </details>
@@ -685,8 +705,8 @@ line vty
 ```
 no hostname lab-r1
 hostname tor-1-1
+ip community-list standard GSHUT permit 65535:0
 ip community-list standard TOR_NETS permit 65000:1
-ip community-list standard GRACEFUL_SHUTDOWN permit 65535:0
 ip bgp-community new-format
 interface GigabitEthernet1/0
   no shutdown
@@ -705,32 +725,30 @@ interface Loopback0
   ip address 10.0.0.1 255.255.255.255
   no shutdown
   exit
-route-map SPINE_IMPORT permit 10
-  match community TOR_NETS GRACEFUL_SHUTDOWN
+route-map TOR_IMPORT_SPINE permit 10
+  match community GSHUT
   set local-preference 0
   exit
-route-map SPINE_IMPORT permit 20
-  match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
   set local-preference 100
   exit
-route-map SPINE_IMPORT deny 9999
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
   match community TOR_NETS
   exit
-route-map SPINE_EXPORT deny 9999
-route-map CONNECTED permit 10
+route-map TOR_EXPORT_SPINE deny 9999
+route-map IMPORT_CONNECTED permit 10
   match interface Loopback0
   set community 65000:1
   exit
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 router bgp 65111
   bgp router-id 1.1.1.1
   bgp log-neighbor-changes
   maximum-paths 16
-  redistribute connected route-map CONNECTED
+  redistribute connected route-map IMPORT_CONNECTED
   neighbor SPINE peer-group
-  neighbor SPINE route-map TOR_IMPORT in
-  neighbor SPINE route-map TOR_EXPORT out
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
   neighbor SPINE soft-reconfiguration inbound
   neighbor SPINE send-community both
   neighbor 10.1.1.11 remote-as 65201
@@ -781,44 +799,36 @@ router bgp 65112
  neighbor 10.2.2.11 remote-as 65201
  neighbor 10.2.2.11 peer-group SPINE
  address-family ipv4 unicast
-  redistribute connected route-map CONNECTED
-  neighbor SPINE route-map TOR_IMPORT in
-  neighbor SPINE route-map TOR_EXPORT out
+  redistribute connected route-map IMPORT_CONNECTED
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
   maximum-paths 16
  exit-address-family
 exit
 
 bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 5 permit 65000:1
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 10 permit graceful-shutdown
-
-route-map SPINE_IMPORT permit 10
- match community TOR_NETS_WITH_GSHUT exact-match
+route-map TOR_IMPORT_SPINE permit 10
+ match community GSHUT
  set local-preference 0
-exit
 
-route-map SPINE_IMPORT permit 20
- match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
  set local-preference 100
-exit
 
-route-map SPINE_IMPORT deny 9999
-exit
-
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
  match community TOR_NETS
 exit
 
-route-map SPINE_EXPORT deny 9999
+route-map TOR_EXPORT_SPINE deny 9999
 exit
 
-route-map CONNECTED permit 10
+route-map IMPORT_CONNECTED permit 10
  match interface lo
  set community 65000:1
 exit
 
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 exit
 
 line vty
@@ -937,44 +947,36 @@ router bgp 65112
  neighbor 10.2.2.11 remote-as 65201
  neighbor 10.2.2.11 peer-group SPINE
  address-family ipv4 unicast
-  redistribute connected route-map CONNECTED
-  neighbor SPINE route-map TOR_IMPORT in
-  neighbor SPINE route-map TOR_EXPORT out
+  redistribute connected route-map IMPORT_CONNECTED
+  neighbor SPINE route-map TOR_IMPORT_SPINE in
+  neighbor SPINE route-map TOR_EXPORT_SPINE out
   maximum-paths 16
  exit-address-family
 exit
 
 bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
 
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 5 permit 65000:1
-bgp community-list standard TOR_NETS_WITH_GSHUT seq 10 permit graceful-shutdown
-
-route-map SPINE_IMPORT permit 10
- match community TOR_NETS_WITH_GSHUT exact-match
+route-map TOR_IMPORT_SPINE permit 10
+ match community GSHUT
  set local-preference 0
-exit
 
-route-map SPINE_IMPORT permit 20
- match community TOR_NETS
+route-map TOR_IMPORT_SPINE permit 20
  set local-preference 100
-exit
 
-route-map SPINE_IMPORT deny 9999
-exit
-
-route-map SPINE_EXPORT permit 10
+route-map TOR_EXPORT_SPINE permit 10
  match community TOR_NETS
 exit
 
-route-map SPINE_EXPORT deny 9999
+route-map TOR_EXPORT_SPINE deny 9999
 exit
 
-route-map CONNECTED permit 10
+route-map IMPORT_CONNECTED permit 10
  match interface lo
  set community 65000:1
 exit
 
-route-map CONNECTED deny 9999
+route-map IMPORT_CONNECTED deny 9999
 exit
 
 line vty
@@ -1002,7 +1004,8 @@ Look at diff:
 <summary>spine-1-1 Diff</summary>
 
 ```
-
+  route-map SPINE_EXPORT_TOR permit 10
++   set community 65535:0 additive
 ```
 
 </details>
@@ -1011,7 +1014,16 @@ Look at diff:
 <summary>FRR Spine's Diff</summary>
 
 ```
+---
++++
+@@ -51,6 +51,7 @@
 
+ route-map SPINE_EXPORT_TOR permit 10
+  match community TOR_NETS
++ set community 65535:0 additive
+ exit
+
+ route-map SPINE_EXPORT_TOR deny 9999
 ```
 
 </details>
@@ -1024,7 +1036,9 @@ Look at patch:
 <summary>spine-1-1 Patch</summary>
 
 ```
-
+route-map SPINE_EXPORT_TOR permit 10
+  set community 65535:0 additive
+  exit
 ```
 
 </details>
@@ -1033,7 +1047,66 @@ Look at patch:
 <summary>FRR Spine's Patch</summary>
 
 ```
+frr defaults datacenter
+service integrated-vtysh-config
 
+hostname spine-1-2
+log file /var/log/frr/frr.log
+
+interface eth0
+ ip address 172.20.0.111/24
+exit
+
+interface eth1
+ description tor-1-1.nh.com@GigabitEthernet2/0
+ ip address 10.2.1.11/24
+exit
+
+interface eth2
+ description tor-1-2.nh.com@eth2
+ ip address 10.2.2.11/24
+exit
+
+interface eth3
+ description tor-1-3.nh.com@GigabitEthernet2/0
+ ip address 10.2.3.11/24
+exit
+
+router bgp 65201
+ bgp router-id 1.2.1.2
+ neighbor TOR peer-group
+ neighbor 10.2.1.12 remote-as 65111
+ neighbor 10.2.1.12 peer-group TOR
+ neighbor 10.2.2.12 remote-as 65112
+ neighbor 10.2.2.12 peer-group TOR
+ neighbor 10.2.3.12 remote-as 65113
+ neighbor 10.2.3.12 peer-group TOR
+ address-family ipv4 unicast
+  neighbor TOR route-map SPINE_IMPORT_TOR in
+  neighbor TOR route-map SPINE_EXPORT_TOR out
+ exit-address-family
+exit
+
+bgp community-list standard TOR_NETS seq 5 permit 65000:1
+bgp community-list standard GSHUT seq 5 permit graceful-shutdown
+
+route-map SPINE_IMPORT_TOR permit 10
+ match community TOR_NETS
+exit
+
+route-map SPINE_IMPORT_TOR deny 9999
+exit
+
+
+route-map SPINE_EXPORT_TOR permit 10
+ match community TOR_NETS
+ set community 65535:0 additive
+exit
+
+route-map SPINE_EXPORT_TOR deny 9999
+exit
+
+line vty
 ```
 
 </details>
