@@ -82,7 +82,6 @@ lab12: services_stop check_cisco_image unpack_cisco_image
 	cp -r default_configs/* operational_configs/ && \
 	cd ../../netbox-docker/ && docker compose up -d --build && cd .. && \
 	docker exec --user root netbox /opt/netbox/netbox/manage.py loaddata /home/ubuntu/src/netbox-dump.json && \
-	echo "!!! Don't forget add Cisco IOS image into ../vm_images folder !!!" && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
 # Netbox utilities
