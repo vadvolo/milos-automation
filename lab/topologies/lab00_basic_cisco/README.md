@@ -35,7 +35,7 @@ Author:
 ### Preparation
 
 1. Before you start, please put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
-The image is subject to a license agreement, so it cannot be distributed in the repository.
+   The image is subject to a license agreement, so it cannot be distributed in the repository.
 
 2. Install Docker and Docker Compose on your device
    - [Docker](https://docs.docker.com/engine/install/)
@@ -44,11 +44,10 @@ The image is subject to a license agreement, so it cannot be distributed in the 
      - [Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 3. Install `make` utility:
-
-```bash
-sudo apt install make  # Linux
-brew install make      # MacOS
-```
+   ```bash
+   sudo apt install make  # Linux
+   brew install make      # MacOS
+   ```
 
 ### Generators
 
@@ -81,7 +80,8 @@ make build
 make lab00
 ```
 
-After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.
+After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.  
+Also 512 bit RSA keys will be generated and SSH enabled. It can take a while. After that annet can log in to device.
 
 
 **Step 3. Check Netbox**
@@ -90,15 +90,8 @@ Check that all devices were imported into [Netbox](http://localhost:8000/dcim/de
 
 ![Netbox devices](./images/netbox-devices.png)
 
-**Step 4. Enable SSH on Cisco routers by executing the script**
 
-```bash
-for ip in 1 2 3; do netsshsetup -a 172.20.0.10$ip -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com; done
-```
-
-This script generates 2048 bit RSA keys and enables SSH. It takes a while.
-
-**Step 5. Generate configuration for devices**
+**Step 4. Generate configuration for devices**
 
 ```bash
 annet gen $HOST
@@ -175,7 +168,7 @@ interface GigabitEthernet2/0
 
 </details>
 
-**Step 6. Generate diff for devices**
+**Step 5. Generate diff for devices**
 
 ```bash
 annet diff $HOST
@@ -240,7 +233,7 @@ annet diff lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 
 </details>
 
-**Step 7. Generate patch for devices**
+**Step 6. Generate patch for devices**
 
 ```bash
 annet patch $HOST
@@ -315,7 +308,7 @@ interface GigabitEthernet2/0
 
 </details>
 
-**Step 8. Deploy configuration to devices**
+**Step 7. Deploy configuration to devices**
 
 ```bash
 annet deploy $HOST
@@ -327,7 +320,7 @@ or:
 annet deploy --no-ask-deploy lab-r1.nh.com lab-r2.nh.com lab-r3.nh.com
 ```
 
-**Step 9. Change information in Netbox**
+**Step 8. Change information in Netbox**
 
 Change the MTU value on [interface](http://localhost:8000/dcim/interfaces/8/) from 4000 to 3000.
 
@@ -335,7 +328,7 @@ Change the MTU value on [interface](http://localhost:8000/dcim/interfaces/8/) fr
 
 Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for lab-r2. You can directly run `deploy --no-ask-deploy` if you are brave enough.
 
-**Step 10. Change generator**
+**Step 9. Change generator**
 
 Change the way how description is formed:
 
@@ -348,7 +341,7 @@ class IfaceDescriptions(PartialGenerator):
 
 Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You also can directly run `deploy`.
 
-**Step 11. After finishing the lab, stop it**
+**Step 10. After finishing the lab, stop it**
 
 ```bash
 make services_stop
