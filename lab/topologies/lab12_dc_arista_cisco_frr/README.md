@@ -22,9 +22,23 @@ Author:
 2. Log in or register at Arista.com
 3. Go to https://www.arista.com/en/support/software-download
 4. Download the `cEOS64-lab-4.33.0F.tar.xz`
-5. Prepare docker image: `docker image import cEOS64-lab-4.33.0F.tar.xz arista-ceos:4.33.0F`
+5. Prepare docker image: `docker image import cEOS64-lab-4.33.0F.tar.xz arista-ceos:4.33.0F --platform linux/amd64`
 
 Now you're able to run Lab03.
+
+### Environment
+
+- Netbox url: http://localhost:8000/
+- Netbox login/password: `annet/annet`
+- Device telnet and ssh login/password: `annet/annet`  
+- Device mgmt addresses:
+   | Router | MGMT |
+   |:------:|:----|
+   | spine-1-1 | `172.20.0.101` |
+   | spine-1-2 | `172.20.0.102` |
+   | tor-1-1 | `172.20.0.103` |
+   | tor-1-2 | `172.20.0.104` |
+   | tor-1-3 | `172.20.0.105` |
 
 ### Topology
 

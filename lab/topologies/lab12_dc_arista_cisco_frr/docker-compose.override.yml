@@ -136,7 +136,7 @@ services:
         condition: service_healthy
     networks:
       default:
-        ipv4_address: 172.20.0.110
+        ipv4_address: 172.20.0.101
       t1s1_net:
         ipv4_address: 10.1.1.11
       t2s1_net:
@@ -155,7 +155,7 @@ services:
         condition: service_healthy
     networks:
       default:
-        ipv4_address: 172.20.0.111
+        ipv4_address: 172.20.0.102
       t1s2_net:
         ipv4_address: 10.2.1.11
       t2s2_net:
@@ -176,7 +176,7 @@ services:
         condition: service_healthy
     networks:
       default:
-        ipv4_address: 172.20.0.113
+        ipv4_address: 172.20.0.104
       t2s1_net:
         ipv4_address: 10.1.2.12
       t2s2_net:
