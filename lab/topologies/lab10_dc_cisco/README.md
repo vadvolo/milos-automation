@@ -2,11 +2,11 @@
 
 ### Introduction
 
-This lab shows an example of DC networks. During the lab you will:
+This lab shows an example of DC networks built on Cisco. During the lab you will:
 
 - Deploy the whole configuration on ToRs and spines
-- Change the role of one of the ToRs to an unknown role and deploy configuration on the ToR and every spine
-- Set maintenance tag on one of the spines and deploy configuration on the spine
+- Break connection between Spine and ToR and deploy configuration on the switches
+- Set maintenance tag on one of the spines to drain traffic and deploy configuration
 
 Author:
 
@@ -140,7 +140,7 @@ annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-
 ```
 
 <details>
-<summary>Example if Spine's configuration</summary>
+<summary>Example of spine target configuration</summary>
 
 ```
 hostname spine-1-1
@@ -189,7 +189,7 @@ router bgp 65201
 </details>
 
 <details>
-<summary>Example if Tor's configuration</summary>
+<summary>Example of tor target configuration</summary>
 
 ```
 hostname tor-1-1
@@ -250,7 +250,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>Example if Spine's Diff</summary>
+<summary>Example of spine diff</summary>
 
 ```diff
 + hostname spine-1-1
@@ -297,7 +297,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 </details>
 
 <details>
-<summary>Example if Tor's Diff</summary>
+<summary>Example of tor diff</summary>
 
 ```diff
 + hostname tor-1-1
@@ -356,7 +356,7 @@ Look at patch:
 
 
 <details>
-<summary>Example if Spine's Patch</summary>
+<summary>Example of spine patch</summary>
 
 ```
 no hostname spine
@@ -410,7 +410,7 @@ router bgp 65201
 </details>
 
 <details>
-<summary>Example if Tor's Patch</summary>
+<summary>Example of tor patch</summary>
 
 ```
 no hostname tor
@@ -488,7 +488,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```diff
   router bgp 65201
@@ -502,7 +502,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 </details>
 
 <details>
-<summary>tor-1-1 Diff</summary>
+<summary>tor-1-1 diff</summary>
 
 ```diff
   router bgp 65111
@@ -520,7 +520,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```diff
 interface GigabitEthernet1/0
@@ -536,7 +536,7 @@ exit
 </details>
 
 <details>
-<summary>tor-1-1 Patch</summary>
+<summary>tor-1-1 patch</summary>
 
 ```
 interface GigabitEthernet1/0
@@ -568,7 +568,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```diff
   route-map SPINE_EXPORT_TOR permit 10
@@ -582,7 +582,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```
 route-map SPINE_EXPORT_TOR permit 10
@@ -597,7 +597,7 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-Unfortunately Cisco IOS does not apply changes of policies after changes, it required re-pass bgp routes through changes policies again by execute `clear ip bgp * soft`
+Unfortunately Cisco IOS does not apply policies on changes. It is required to readvertise BGP routes manually by executing `clear ip bgp * soft`.
 
 Remove the tag and repeat the actions.
 
