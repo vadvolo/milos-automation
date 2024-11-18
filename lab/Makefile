@@ -66,7 +66,7 @@ lab10: services_stop check_cisco_image unpack_cisco_image
 	docker exec -u root -t -i annet netsshsetup -a 172.20.0.104 -b ios -l annet -p annet -P telnet -v cisco --ipdomain nh.com && \
 	eval "docker exec -u root -t -i annet /bin/bash"
 
-lab11: services_stop check_cisco_image unpack_cisco_image
+lab11: services_stop
 	@cp ./topologies/lab11_dc_frr/docker-compose.override.yml ./netbox-docker/docker-compose.override.yml && \
 	cd topologies/lab11_dc_frr && \
 	$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
