@@ -2,11 +2,11 @@
 
 ### Introduction
 
-This lab shows an example of DC networks. During the lab you will:
+This lab shows an example of DC networks built on FRR. During the lab you will:
 
 - Deploy the whole configuration on ToRs and spines
-- Change the role of one of the ToRs to an unknown role and deploy configuration on the ToR and every spine
-- Set maintenance tag on one of the spines and deploy configuration on the spine
+- Break connection between Spine and ToR and deploy configuration on the switches
+- Set maintenance tag on one of the spines to drain traffic and deploy configuration
 
 Author:
 
@@ -92,7 +92,7 @@ make lab11
 
 After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.
 
-**Step 4. Deploy configuration to devices**
+**Step 3. Deploy configuration to devices**
 
 Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 
@@ -101,7 +101,7 @@ annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-
 ```
 
 <details>
-<summary>Example if Spine's configuration</summary>
+<summary>Example of spine target configuration</summary>
 
 ```
 frr defaults datacenter
@@ -168,7 +168,7 @@ line vty
 </details>
 
 <details>
-<summary>Example if Tor's configuration</summary>
+<summary>Example of tor target configuration</summary>
 
 ```
 frr defaults datacenter
@@ -249,7 +249,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>Example if Spine's Diff</summary>
+<summary>Example of spine diff</summary>
 
 ```diff
 ---
@@ -323,7 +323,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 </details>
 
 <details>
-<summary>Example if Tor's Diff</summary>
+<summary>Example of tor diff</summary>
 
 ```diff
 ---
@@ -411,7 +411,7 @@ Look at patch:
 
 
 <details>
-<summary>Example if Spine's Patch</summary>
+<summary>Example of spine patch</summary>
 
 ```
 frr defaults datacenter
@@ -478,7 +478,7 @@ line vty
 </details>
 
 <details>
-<summary>Example if Tor's Patch</summary>
+<summary>Example of tor patch</summary>
 
 ```
 frr defaults datacenter
@@ -558,7 +558,7 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 5.** Break a connection and check what happens**
+**Step 4.** Break a connection and check what happens**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/7/), delete the connection between `tor-1-1.nh.com` and `spine-1-1.nh.com`.
 
@@ -568,7 +568,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```diff
 ---
@@ -596,7 +596,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 </details>
 
 <details>
-<summary>tor-1-1 Diff</summary>
+<summary>tor-1-1 diff</summary>
 
 ```diff
 ---
@@ -628,7 +628,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```
 frr defaults datacenter
@@ -691,7 +691,7 @@ line vty
 </details>
 
 <details>
-<summary>tor-1-1 Patch</summary>
+<summary>tor-1-1 patch</summary>
 
 ```
 frr defaults datacenter
@@ -767,9 +767,9 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-**Step 6. Restore the connection and repeat the actions**
+**Step 5. Restore the connection and repeat the actions**
 
-**Step 7. Drain traffic from one of the spines**
+**Step 6. Drain traffic from one of the spines**
 
 Go to [Netbox](http://localhost:8000/dcim/devices/5/), assign `spine-1-1.nh.com` tag `maintenance`.
 
@@ -779,7 +779,7 @@ annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1
 ```
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```diff
 ---
@@ -801,7 +801,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```
 frr defaults datacenter
@@ -873,11 +873,9 @@ Deploy it:
 annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com
 ```
 
-Unfortunately Cisco IOS does not apply changes of policies after changes, it required re-pass bgp routes through changes policies again by execute `clear ip bgp * soft`
-
 Remove the tag and repeat the actions.
 
-**Step 8. After finishing the lab, stop it**
+**Step 7. After finishing the lab, stop it**
 
 ```bash
 make services_stop
