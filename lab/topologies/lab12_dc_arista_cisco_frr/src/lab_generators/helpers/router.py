@@ -11,9 +11,8 @@ from ..mesh_views import registry
 
 @dataclass
 class BGPGroup:
-    """
-    Represents a BGP group with specific attributes for configuration.
-    """
+    """Represents a BGP group with specific attributes for configuration."""
+
     group_name: str
     remote_as: int  # Assumed that ASN is an integer, update if required
     import_policy: str
@@ -89,10 +88,12 @@ def bgp_groups(mesh_data: MeshExecutionResult) -> list[BGPGroup]:
 
 
 def is_drained_device(device: Device) -> bool:
+    """Definition of devices in maintenance mode"""
+
     if "maintenance" in [tag.name for tag in device.tags]:
         return True
     return False
 
 
 class AutonomusSystemIsNotDefined(Exception):
-    pass
+    """Autonomus system is not defined exception"""

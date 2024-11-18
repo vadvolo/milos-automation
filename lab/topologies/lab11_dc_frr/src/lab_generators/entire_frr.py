@@ -16,14 +16,17 @@ from .helpers.router import (
 
 
 class Frr(Entire):
+    """Entire generator class for Frrouting"""
 
     TAGS = ["frr"]
 
     def path(self, device: Device):
+        # define vendor and path to the configuration file
         if device.hw.PC:
             return "/etc/frr/frr.conf"
 
     def reload(self, _) -> str:
+        # define action which should be done in case of configuration file changes
         return "sudo /etc/init.d/frr reload"
 
     def run(self, device: Device):
@@ -133,7 +136,7 @@ exit
 route-map SPINE_EXPORT_TOR permit 10
  match community TOR_NETS"""
             if is_drained_device(device):
-                 yield " set community 65535:0 additive"
+                yield " set community 65535:0 additive"
             yield "exit"
 
             yield """

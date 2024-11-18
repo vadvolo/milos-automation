@@ -5,6 +5,8 @@ from . import bgp, description, entire_frr, hostname, ip_addresses, rpl, shutdow
 
 
 def get_generators(store: Storage) -> list[BaseGenerator]:
+    """All the generators should be returned by the function"""
+
     return [
         bgp.Bgp(store),
         description.Description(store),

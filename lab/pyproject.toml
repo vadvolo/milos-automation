@@ -65,6 +65,7 @@ disable = [
     "unspecified-encoding",
     "global-variable-not-assigned",
     "duplicate-code",
+    "missing-module-docstring"
 ]
 
 [tool.pylint.'REPORTS']
