@@ -6,26 +6,34 @@ from annet.storage import Device
 
 MTU = 1500
 
+
 @dataclass
 class BgpPeer:
+    """Structure of BGP peer"""
+
     addr: str
     asnum: str
     source: str
 
 
 class Frr(Entire):
-    
+    """Entire generator class for Frrouting"""
+
     TAGS = ["frr"]
-    
+
     def path(self, device: Device):
+        """Define vendor and path to the configuration file"""
+
         if device.hw.PC:
             return "/etc/frr/frr.conf"
 
     def reload(self, _) -> str:
+        """define action which should be done in case of configuration file changes"""
+
         return "sudo /etc/init.d/frr reload"
 
     def run(self, device: Device):
-
+        """Generate configuration file content"""
 
         yield "frr defaults datacenter"
         yield "service integrated-vtysh-config"
@@ -89,6 +97,8 @@ def _bgp_peers(device: Device) -> list[BgpPeer]:
 
 
 def _get_neighbor_iface_address(device: Device, remote_host: str, remote_iface: str) -> str:
+    """Return IP address of remote peer"""
+
     for neighbour in device.neighbours:
         if neighbour.name == remote_host:
             for interface in neighbour.interfaces:

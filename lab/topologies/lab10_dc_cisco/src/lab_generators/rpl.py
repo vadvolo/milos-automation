@@ -5,10 +5,13 @@ from .helpers.router import is_drained_device
 
 
 class RoutePolicy(PartialGenerator):
+    """Partial generator class of routing policies"""
 
     TAGS = ["rpl", "routing"]
 
     def acl_cisco(self, _: Device):
+        """ACL for Cisco devices"""
+
         return """
         ip bgp-community new-format
         ip community-list
@@ -17,6 +20,8 @@ class RoutePolicy(PartialGenerator):
         """
 
     def run_cisco(self, device: Device):
+        """Generator for Cisco devices"""
+
         yield "ip bgp-community new-format"
         yield "ip community-list standard GSHUT permit 65535:0"
         yield "ip community-list standard TOR_NETS permit 65000:1"
@@ -52,6 +57,8 @@ route-map SPINE_IMPORT_TOR deny 9999
             yield "route-map SPINE_EXPORT_TOR deny 9999"
 
     def acl_arista(self, _: Device):
+        """ACL for Arista devices"""
+
         return """
         ip community-list
         route-map
@@ -59,6 +66,8 @@ route-map SPINE_IMPORT_TOR deny 9999
         """
 
     def run_arista(self, device: Device):
+        """Generator for Arista devices"""
+
         if device.device_role.name == "Spine":
             yield "ip community-list GSHUT permit GSHUT"
             yield "ip community-list TOR_NETS permit 65000:1"

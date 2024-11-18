@@ -7,10 +7,13 @@ from .helpers.router import bgp_mesh
 
 
 class IpAddresses(PartialGenerator):
+    """Partial generator class of IPv4 and IPv6 addresses on interfaces"""
 
     TAGS = ["l3", "iface"]
 
     def acl_cisco(self, _: Device):
+        """ACL for Cisco devices"""
+
         return """
         interface
             ip address
@@ -18,6 +21,8 @@ class IpAddresses(PartialGenerator):
         """
 
     def run_cisco(self, device: Device):
+        """Generator for Cisco devices"""
+
         # enrich interfaces by mesh
         bgp_mesh(device)
         for interface in device.interfaces:
@@ -42,6 +47,7 @@ class IpAddresses(PartialGenerator):
                                 count_ipv6 += 1
 
     def acl_arista(self, _: Device):
+        """ACL for Arista devices"""
         return """
         interface
             ip address
@@ -49,6 +55,8 @@ class IpAddresses(PartialGenerator):
         """
 
     def run_arista(self, device: Device):
+        """Generator for Arista devices"""
+
         # enrich interfaces by mesh
         bgp_mesh(device)
         for interface in device.interfaces:

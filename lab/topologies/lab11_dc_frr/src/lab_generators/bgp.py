@@ -15,10 +15,13 @@ from .helpers.router import (
 
 
 class Bgp(PartialGenerator):
+    """Partial generator class of BGP process and neighbors"""
 
     TAGS = ["bgp", "routing"]
 
     def acl_cisco(self, _: Device) -> str:
+        """ACL for Cisco devices"""
+
         return """
         router bgp
             bgp
@@ -28,6 +31,8 @@ class Bgp(PartialGenerator):
         """
 
     def run_cisco(self, device: Device):
+        """Generator for Cisco devices"""
+
         mesh_data: MeshExecutionResult = bgp_mesh(device)
         rid: Optional[str] = router_id(mesh_data)
         try:
@@ -66,6 +71,8 @@ class Bgp(PartialGenerator):
                 yield "neighbor", peer.addr, "remote-as", peer.remote_as
 
     def acl_arista(self, _: Device) -> str:
+        """ACL for Arista devices"""
+
         return """
         router bgp
             router-id
@@ -77,6 +84,8 @@ class Bgp(PartialGenerator):
         """
 
     def run_arista(self, device: Device):
+        """Generator for Arista devices"""
+
         mesh_data: MeshExecutionResult = bgp_mesh(device)
         rid: Optional[str] = router_id(mesh_data)
         try:
