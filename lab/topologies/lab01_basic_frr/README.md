@@ -32,7 +32,7 @@ Authors:
 
 ### Generators
 
-This lab has single generators `./src/lab_generators/frr.py`.
+This lab has single generator `./src/lab_generators/frr.py`.
 
 
 Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the device. [More about Entire generators in annet documentation](https://annetutil.github.io/annet/main/usage/gen.html#entire).  
@@ -61,13 +61,10 @@ make build
 make lab01
 ```
 
-NOTE: On Linux, `make` uses root privileges to execute the following command:
-
-```bash
-$(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
-```
-
-which is required to clear operational configs if they exist.
+> NOTE: On Linux, `make` uses root privileges to execute the following command which is required to clear operational configs if they exist:
+> ```bash
+> $(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
+> ```
 
 **Step 3. Generate configuration for devices**
 
@@ -263,6 +260,7 @@ You can check the BGP Peers:
 Remove [connection](http://localhost:8000/dcim/devices/5/interfaces/) between `frr-r1` and `frr-r2` in Netbox.
 
 <img src="./images/delete_connection1.png" alt="delete connection">
+
 <img src="./images/delete_connection2.png" width="500" alt="delete connection">
 
 Look at diff:
