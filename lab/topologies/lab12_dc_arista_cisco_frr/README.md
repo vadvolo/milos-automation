@@ -16,15 +16,16 @@ Author:
 
 ### Preparation
 
-#### How to get Arista image
-
-1. Go to https://www.arista.com/en/login
-2. Log in or register at Arista.com
-3. Go to https://www.arista.com/en/support/software-download
-4. Download the `cEOS64-lab-4.33.0F.tar.xz`
-5. Prepare docker image: `docker image import cEOS64-lab-4.33.0F.tar.xz arista-ceos:4.33.0F --platform linux/amd64`
-
-Now you're able to run Lab03.
+1. Put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.  
+   The image is subject to a license agreement, so it cannot be distributed in the repository.
+2. Prepare docker image for Arista EOS.  
+   **How to get Arista image**  
+   1. Log in or register at [Arista.com](https://www.arista.com/en/login). Make sure you are not using some generic domains like gmail.
+   2. Download the `cEOS64-lab-4.33.0F.tar.xz` from [web-site](https://www.arista.com/en/support/software-download) to `lab/vm_images`.
+   3. Prepare docker image: `docker image import cEOS64-lab-4.33.0F.tar.xz arista-ceos:4.33.0F`
+   ```bash
+   docker image import vm_images/cEOS64-lab-4.33.0F.tar  arista-ceos:4.33.0F --platform linux/amd64
+   ```
 
 ### Environment
 
@@ -44,20 +45,22 @@ Now you're able to run Lab03.
 
 ![Lab Topology](./images/topology.png)
 
+---
+
 ### Lab Guide
 
-**Step 1.**
+**Step 1. Build Annet and Netbox Docker images**
 
-If it was not done in one of the previous labs, build Netbox and Annet docker images:
+If it was not done yet, build Netbox and Annet docker images:
 
 ```bash
 cd annetutils/contribs/labs
 make build
 ```
 
-**Step 2.**
+**Step 2. Start the lab**
 
-NOTE: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm_images` directory and Arista image import.
+> NOTE: Do not forget to put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `../vm_images` directory and Arista image import.
 
 Start the lab:
 
@@ -65,28 +68,22 @@ Start the lab:
 make lab12
 ```
 
-NOTE: On Linux, `make` uses root privileges to execute the following command:
+> NOTE: On Linux, `make` uses root privileges to execute the following command, which is required to clear operational configs if they exist:
 
 ```bash
 $(SUDO) find operational_configs -mindepth 1 -not -name '.gitkeep' -delete || true && \
 ```
 
-which is required to clear operational configs if they exist.
+After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.
 
-**Step 3.**
-
-Go to the Annet container:
-
-```bash
-docker exec -u root -t -i annet /bin/bash
-```
+**Step 3. Deploy configuration to devices**
 
 Generate configuration for spine-1-1, spine-1-2, tor-1-1, tor-1-2, tor-1-3:
 
 `annet gen spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>Arista Spine's configuration</summary>
+<summary>Arista spine target configuration</summary>
 
 ```
 hostname spine-1-1
@@ -128,7 +125,7 @@ router bgp 65201
 </details>
 
 <details>
-<summary>FRR Spine's configuration</summary>
+<summary>FRR spine target configuration</summary>
 
 ```
 frr defaults datacenter
@@ -195,7 +192,7 @@ line vty
 </details>
 
 <details>
-<summary>Cisco Tor's configuration</summary>
+<summary>Cisco tor target configuration</summary>
 
 ```
 hostname tor-1-1
@@ -249,7 +246,7 @@ router bgp 65111
 </details>
 
 <details>
-<summary>FRR Tor's configuration</summary>
+<summary>FRR tor target configuration</summary>
 
 ```
 frr defaults datacenter
@@ -329,7 +326,7 @@ Look at diff:
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>Arista Spine's Diff</summary>
+<summary>Arista spine diff</summary>
 
 ```diff
 + hostname spine-1-1
@@ -370,7 +367,7 @@ Look at diff:
 </details>
 
 <details>
-<summary>FRR Spine's Diff</summary>
+<summary>FRR spine diff</summary>
 
 ```diff
 ---
@@ -444,7 +441,7 @@ Look at diff:
 </details>
 
 <details>
-<summary>Cisco Tor's Diff</summary>
+<summary>Cisco tor diff</summary>
 
 ```diff
 + hostname tor-1-1
@@ -496,7 +493,7 @@ Look at diff:
 </details>
 
 <details>
-<summary>FRR Tor's Diff</summary>
+<summary>FRR tor diff</summary>
 
 ```diff
 ---
@@ -583,7 +580,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>Arista Spine's Patch</summary>
+<summary>Arista spine patch</summary>
 
 ```
 no hostname spine
@@ -633,7 +630,7 @@ router bgp 65201
 </details>
 
 <details>
-<summary>FRR Spine's Patch</summary>
+<summary>FRR spine patch</summary>
 
 ```
 frr defaults datacenter
@@ -700,7 +697,7 @@ line vty
 </details>
 
 <details>
-<summary>Cisco Tor's Patch</summary>
+<summary>Cisco tor patch</summary>
 
 ```
 no hostname lab-r1
@@ -761,7 +758,7 @@ router bgp 65111
 </details>
 
 <details>
-<summary>FRR Tor's Patch</summary>
+<summary>FRR tor patch</summary>
 
 ```
 frr defaults datacenter
@@ -840,18 +837,16 @@ Deploy it:
 
 `annet deploy spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
-**Step 4.**
+**Step 4. Break a connection and check what happens**
 
-Break a connection and check what happens.
-
-Go to [Netbox](http://localhost:8000/), use annet:annet as login:password. Delete the connection between tor-1-2.nh.com and spine-1-1.nh.com.
+Go to [Netbox](http://localhost:8000/), delete the connection between `tor-1-2.nh.com` and `spine-1-1.nh.com`.
 
 Look at diff:
 
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```
   interface Ethernet2
@@ -865,7 +860,7 @@ Look at diff:
 </details>
 
 <details>
-<summary>tor-1-2 Diff</summary>
+<summary>tor-1-2 diff</summary>
 
 ```
 ---
@@ -897,7 +892,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```
 interface Ethernet2
@@ -913,7 +908,7 @@ router bgp 65201
 </details>
 
 <details>
-<summary>tor-1-2 Patch</summary>
+<summary>tor-1-2 patch</summary>
 
 ```
 frr defaults datacenter
@@ -990,18 +985,16 @@ Deploy it:
 
 Restore the connection and repeat the actions.
 
-**Step 5.**
+**Step 5. Drain traffic from one of the spines**
 
-Drain traffic from one of the spines.
-
-Go to [Netbox](http://localhost:8000/), use annet:annet as login:password. Assign spine-1-1.nh.com or spine-1-2.nh.com tag "maintenance".
+Go to [Netbox](http://localhost:8000/), assign spine-1-1.nh.com or spine-1-2.nh.com tag `maintenance`.
 
 Look at diff:
 
 `annet diff spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Diff</summary>
+<summary>spine-1-1 diff</summary>
 
 ```
   route-map SPINE_EXPORT_TOR permit 10
@@ -1011,7 +1004,7 @@ Look at diff:
 </details>
 
 <details>
-<summary>FRR Spine's Diff</summary>
+<summary>FRR Spine's diff</summary>
 
 ```
 ---
@@ -1033,7 +1026,7 @@ Look at patch:
 `annet patch spine-1-1.nh.com spine-1-2.nh.com tor-1-1.nh.com tor-1-2.nh.com tor-1-3.nh.com`
 
 <details>
-<summary>spine-1-1 Patch</summary>
+<summary>spine-1-1 patch</summary>
 
 ```
 route-map SPINE_EXPORT_TOR permit 10
@@ -1044,7 +1037,7 @@ route-map SPINE_EXPORT_TOR permit 10
 </details>
 
 <details>
-<summary>FRR Spine's Patch</summary>
+<summary>FRR spine patch</summary>
 
 ```
 frr defaults datacenter
@@ -1117,10 +1110,7 @@ Deploy it:
 
 Remove the tag and repeat the actions.
 
-**Step 6.**
-
-After finishing the lab, stop it:
-
+**Step 6. After finishing the lab, stop it**
 ```bash
 make services_stop
 ```
