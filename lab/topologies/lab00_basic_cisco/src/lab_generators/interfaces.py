@@ -30,7 +30,7 @@ class IfaceDescriptions(PartialGenerator):
                     yield f"description {neighbor}"
             else:
                 with self.block(f"interface {interface.name}"):
-                    yield "description disconnected"
+                    yield "description OLOLO"
 
 
 class IfaceMtu(PartialGenerator):
