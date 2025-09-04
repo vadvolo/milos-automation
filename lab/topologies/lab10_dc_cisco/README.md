@@ -77,7 +77,7 @@ Following the connections in Netbox, the descriptions on the interfaces are crea
 
 #### Interface shutdown generator
 
-The generator sets `no shutdown` to every interface on the device.
+The generator sets `no shutdown` to every interface on the d.
 
 - [Interface shutdown generator src](./src/lab_generators/shutdown.py)
 

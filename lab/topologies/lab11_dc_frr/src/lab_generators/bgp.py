@@ -30,15 +30,15 @@ class Bgp(PartialGenerator):
             maximum-paths
         """
 
-    def run_cisco(self, device: Device):
+    def run_cisco(self, d: Device):
         """Generator for Cisco devices"""
 
-        mesh_data: MeshExecutionResult = bgp_mesh(device)
+        mesh_data: MeshExecutionResult = bgp_mesh(d)
         rid: Optional[str] = router_id(mesh_data)
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {d.name} has more than one defined autonomus system: {err}")
 
         if not asnum or not rid:
             return
@@ -46,7 +46,7 @@ class Bgp(PartialGenerator):
             yield "bgp router-id", rid
             yield "bgp log-neighbor-changes"
 
-            if device.device_role.name == "ToR":
+            if d.device_role.name == "ToR":
                 yield "maximum-paths 16"
 
             if mesh_data.global_options and mesh_data.global_options.ipv4_unicast and mesh_data.global_options.ipv4_unicast.redistributes:
@@ -83,15 +83,15 @@ class Bgp(PartialGenerator):
                 neighbor
         """
 
-    def run_arista(self, device: Device):
+    def run_arista(self, d: Device):
         """Generator for Arista devices"""
 
-        mesh_data: MeshExecutionResult = bgp_mesh(device)
+        mesh_data: MeshExecutionResult = bgp_mesh(d)
         rid: Optional[str] = router_id(mesh_data)
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {d.name} has more than one defined autonomus system: {err}")
 
         if not asnum or not rid:
             return

@@ -37,7 +37,7 @@ Author:
 1. Before you start, please put Cisco IOS image `c7200-jk9s-mz.124-13a.bin` into `lab/vm_images` directory.
    The image is subject to a license agreement, so it cannot be distributed in the repository.
 
-2. Install Docker and Docker Compose on your device
+2. Install Docker and Docker Compose on your d
    - [Docker](https://docs.docker.com/engine/install/)
      - [Linux](https://docs.docker.com/desktop/install/linux/)
      - [Mac](https://docs.docker.com/desktop/install/mac-install/)
@@ -54,7 +54,7 @@ Author:
 In this lab, generators are organized within the `./src/lab_generators` directory. The lab utilizes two specific generators:
 
 - Description generator  
-  In this generator, we employ a description pattern for device neighbors formatted as `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. The device connection map is located in Netbox and is utilized by Annet.
+  In this generator, we employ a description pattern for d neighbors formatted as `to_<NEIGHBOR_NAME>_<NEIGHBOR_PORT>`. The d connection map is located in Netbox and is utilized by Annet.
 
 - Mtu generator  
   In this generator, we retrieve MTU information for interfaces from Netbox if it has been configured. If no specific MTU setting is provided, we use a default MTU value of 1500.
@@ -81,7 +81,7 @@ make lab00
 ```
 
 After this step you will be automatically logged in to annet container as a root. You can login manually by `docker exec -u root -t -i annet /bin/bash`.  
-Also 512 bit RSA keys will be generated and SSH enabled. It can take a while. After that annet can log in to device.
+Also 512 bit RSA keys will be generated and SSH enabled. It can take a while. After that annet can log in to d.
 
 
 **Step 3. Check Netbox**
@@ -335,8 +335,8 @@ Change the way how description is formed:
 ```diff
 class IfaceDescriptions(PartialGenerator):
 
-- neighbor += f"to_{connection.device.name}_{connection.name}"
-+ neighbor += f"to_{connection.device.name}"
+- neighbor += f"to_{connection.d.name}_{connection.name}"
++ neighbor += f"to_{connection.d.name}"
 ```
 
 Ceckout all commands: `gen`, `diff`, `patch`, `deploy` for any router. You also can directly run `deploy`.

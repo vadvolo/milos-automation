@@ -35,7 +35,7 @@ Authors:
 This lab has single generator `./src/lab_generators/frr.py`.
 
 
-Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the device. [More about Entire generators in annet documentation](https://annetutil.github.io/annet/main/usage/gen.html#entire).  
+Unlike the `Partial` generators from the previous lab, which create and apply configuration line-by-line, the `Entire` type generates a whole configuration file in one go, which is then copied to the d. [More about Entire generators in annet documentation](https://annetutil.github.io/annet/main/usage/gen.html#entire).  
 FRR can be managed by `vtysh`, a Cisco-like CLI shell, but it also stores its configuration in a `/etc/frr/frr.conf` file.
 We can leverage this fact to manage the routing configuration in a server-like manner, and `Partial` generator will help us to prepare the configuration file.
 

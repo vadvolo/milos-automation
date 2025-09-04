@@ -20,10 +20,10 @@ class Frr(Entire):
 
     TAGS = ["frr"]
 
-    def path(self, device: Device):
+    def path(self, d: Device):
         """Define vendor and path to the configuration file"""
 
-        if device.hw.PC:
+        if d.hw.PC:
             return "/etc/frr/frr.conf"
 
     def reload(self, _) -> str:
@@ -31,26 +31,26 @@ class Frr(Entire):
 
         return "sudo /etc/init.d/frr reload"
 
-    def run(self, device: Device):
+    def run(self, d: Device):
         """Generate configuration file content"""
 
-        mesh_data: MeshExecutionResult = bgp_mesh(device)
+        mesh_data: MeshExecutionResult = bgp_mesh(d)
 
         # base configuration
         yield "frr defaults datacenter"
         yield "service integrated-vtysh-config"
         yield ""
-        yield "hostname", device.hostname.split(".")[0]
+        yield "hostname", d.hostname.split(".")[0]
         yield "log file /var/log/frr/frr.log"
         yield ""
 
         # interface configuration
-        for interface in device.interfaces:
+        for interface in d.interfaces:
             yield "interface", interface.name
             description = ""
             if interface.connected_endpoints:
                 remote = interface.connected_endpoints[0]
-                description = f"{remote.device.name}@{remote.name}"
+                description = f"{remote.d.name}@{remote.name}"
 
             if description:
                 yield " description", description
@@ -68,7 +68,7 @@ class Frr(Entire):
         try:
             asnum: Optional[ASN] = bgp_asnum(mesh_data)
         except AutonomusSystemIsNotDefined as err:
-            raise RuntimeError(f"Device {device.name} has more than one defined autonomus system: {err}")
+            raise RuntimeError(f"Device {d.name} has more than one defined autonomus system: {err}")
 
         if asnum and rid:
             yield "router bgp", asnum
@@ -91,7 +91,7 @@ class Frr(Entire):
                 yield "  neighbor", group.group_name, "route-map", group.import_policy, "in"
                 yield "  neighbor", group.group_name, "route-map", group.export_policy, "out"
 
-            if device.device_role.name == "ToR":
+            if d.device_role.name == "ToR":
                 yield "  maximum-paths 16"
 
             yield " exit-address-family"
@@ -102,7 +102,7 @@ class Frr(Entire):
         yield "bgp community-list standard TOR_NETS seq 5 permit 65000:1"
         yield "bgp community-list standard GSHUT seq 5 permit graceful-shutdown"
 
-        if device.device_role.name == "ToR":
+        if d.device_role.name == "ToR":
             yield """
 route-map TOR_IMPORT_SPINE permit 10
  match community GSHUT
@@ -126,7 +126,7 @@ exit
 route-map IMPORT_CONNECTED deny 9999
 exit
 """
-        elif device.device_role.name == "Spine":
+        elif d.device_role.name == "Spine":
             yield """
 route-map SPINE_IMPORT_TOR permit 10
  match community TOR_NETS
@@ -138,7 +138,7 @@ exit
             yield """
 route-map SPINE_EXPORT_TOR permit 10
  match community TOR_NETS"""
-            if is_drained_device(device):
+            if is_drained_device(d):
                 yield " set community 65535:0 additive"
             yield "exit"
 

@@ -30,7 +30,7 @@ Table of contents:
 
 This steps are the same for all the labs.
 
-1. First of all, you need to install Docker and Docker Compose on your device:
+1. First of all, you need to install Docker and Docker Compose on your d:
    - [Docker](https://docs.docker.com/engine/install/)
      - [Linux](https://docs.docker.com/desktop/install/linux/)
      - [Mac](https://docs.docker.com/desktop/install/mac-install/)
@@ -83,7 +83,7 @@ Annet has four main arguments:
 - `patch` — `annet patch $HOST` to prepare configuration patch with related commands
 - `deploy` — `annet deploy $HOST` to generate patch and deploy it to devices
 
-`$HOST` can be a single device or list of devices separated by spaces.
+`$HOST` can be a single d or list of devices separated by spaces.
 
 There are two main things which you will need to know and change to accomplish this labs:
 

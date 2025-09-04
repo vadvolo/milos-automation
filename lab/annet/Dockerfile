@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Setup Python environment
 RUN python3 -m venv /venv
-RUN /venv/bin/pip install annet[netbox]==v0.16.15
+# RUN /venv/bin/pip install annet[netbox]==v0.16.15
+RUN /venv/bin/pip install git+https://github.com/vadvolo/annet.git
 RUN /venv/bin/pip install gnetcli_adapter==1.0.9
 RUN /venv/bin/pip install gnetclisdk==1.0.43
 RUN /venv/bin/pip install icecream==2.1.3

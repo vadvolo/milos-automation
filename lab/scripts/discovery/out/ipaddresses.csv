@@ -1,4 +1,4 @@
-device,interface,address,status
+d,interface,address,status
 lab-r1.nh.com,FastEthernet0/0,172.20.0.100,active
 lab-r1.nh.com,FastEthernet0/1,unassigned,active
 lab-r1.nh.com,GigabitEthernet1/0,10.0.0.2,active

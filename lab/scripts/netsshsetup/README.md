@@ -8,7 +8,7 @@ This script was created for enabling SSH on Network Devices. How to use it:
 
 ```
 ./netsshsetup --help
-Enable SSH on the network device
+Enable SSH on the network d
 
 Usage:
   netsshsetup [flags]

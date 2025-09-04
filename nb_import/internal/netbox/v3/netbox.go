@@ -1,9 +1,9 @@
-package main
+package v3
 
 import (
 	"encoding/csv"
 	"fmt"
-	"log"
+	"nb_import/internal/device"
 	"os"
 	"reflect"
 	"strings"
@@ -68,25 +68,25 @@ func NewInventoryDevice(name string, opts ...InventoryDeviceOption) *InventoryDe
 	return device
 }
 
-func ImportInventoryDevices(devices []AbstractDevice) []*InventoryDevice {
+func ImportInventoryDevices(devices []device.AbstractDevice) []*InventoryDevice {
 	var inventoryDevices []*InventoryDevice
-	for _, device := range devices {
-		fmt.Println(device._Hostname())
-		if device.GetStatus() {
+	for _, d := range devices {
+		fmt.Println(d.GetHostname())
+		if d.GetStatus() {
 			inventoryDevice := NewInventoryDevice(
-				device._Hostname(),
+				d.GetHostname(),
 				WithStatus("ACTIVE"),
-				WithManufacturer(device._Vendor()),
-				WithIPv4Address(device._Address()),
-				WithInterfaces(device.ShowInterfaces()),
+				WithManufacturer(d.GetVendor()),
+				WithIPv4Address(d.GetAddress()),
+				WithInterfaces(d.ShowInterfaces()),
 			)
 			inventoryDevices = append(inventoryDevices, inventoryDevice)
 		} else {
 			inventoryDevice := NewInventoryDevice(
-				device._Hostname(),
+				d.GetHostname(),
 				WithStatus("NOTACTIVE"),
-				WithIPv4Address(device._Address()),
-				WithManufacturer(device._Vendor()),
+				WithIPv4Address(d.GetAddress()),
+				WithManufacturer(d.GetVendor()),
 			)
 			inventoryDevices = append(inventoryDevices, inventoryDevice)
 		}
@@ -94,38 +94,41 @@ func ImportInventoryDevices(devices []AbstractDevice) []*InventoryDevice {
 	return inventoryDevices
 }
 
+const InventoryFileName = "exportInventory.csv"
+
 func WriteInventoryToCSV(devices []*InventoryDevice) error {
-	var data [][]string
-	csvFile, err := os.Create("exportInventory.csv")
+	csvFile, err := os.Create(InventoryFileName)
 	if err != nil {
-		log.Fatalf("failed creating file: %s", err)
+		return fmt.Errorf("failed creating file: %w", err)
 	}
-	csvwriter := csv.NewWriter(csvFile)
-	csvwriter.Comma = ','
 	defer csvFile.Close()
-	for _, device := range devices {
-		s := reflect.ValueOf(device).Elem()
-		row := []string{}
-		for i := 0; i < s.NumField(); i++ {
-			if s.Field(i).Kind() == reflect.Slice {
-				val := s.Field(i)
-				ret := new(strings.Builder)
-				delim := ";"
-				for i := 0; i < val.Len(); i++ {
-					if val.Index(i).Kind() == reflect.String {
-						ret.WriteString(val.Index(i).String())
-						ret.WriteString(delim)
-					}
+
+	csvwriter := csv.NewWriter(csvFile)
+	defer csvwriter.Flush()
+
+	for _, dev := range devices {
+		v := reflect.Indirect(reflect.ValueOf(dev))
+		row := make([]string, v.NumField())
+
+		for i := 0; i < v.NumField(); i++ {
+			field := v.Field(i)
+			switch field.Kind() {
+			case reflect.Slice:
+				var parts []string
+				for j := 0; j < field.Len(); j++ {
+					parts = append(parts, fmt.Sprint(field.Index(j)))
 				}
-				row = append(row, ret.String())
-			} else {
-				row = append(row, s.Field(i).String())
+				row[i] = strings.Join(parts, ";")
+			default:
+				row[i] = fmt.Sprint(field.Interface())
 			}
 		}
-		data = append(data, row)
+
+		if err := csvwriter.Write(row); err != nil {
+			return fmt.Errorf("error writing row: %w", err)
+		}
 	}
-	csvwriter.WriteAll(data)
-	return nil
+	return csvwriter.Error()
 }
 
 type InventoryDeviceOption func(*InventoryDevice)
