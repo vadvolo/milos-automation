@@ -1,0 +1,18 @@
+[
+  {
+    "role": "Router",
+    "manufacturer": "Cisco",
+    "device_type": "7200",
+    "status": "active",
+    "site": "lab",
+    "name": "sw-3750"
+  },
+  {
+    "role": "Router",
+    "manufacturer": "Cisco",
+    "device_type": "7200",
+    "status": "active",
+    "site": "lab",
+    "name": "voip-switch"
+  }
+]

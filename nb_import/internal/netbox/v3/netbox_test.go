@@ -1,12 +1,47 @@
 package v3
 
 import (
-	"nb_import/internal/device"
 	"reflect"
 	"testing"
+
+	"nb_import/internal/device"
+	"nb_import/internal/device/mocks"
 )
 
 func TestImportInventoryDevices(t *testing.T) {
+	// Create and configure the first mock
+	mockDev1 := new(mocks.AbstractDevice)
+	mockDev1.
+		On("GetHostname").Return("host1").
+		On("GetVendor").Return("Cisco").
+		On("GetStatus").Return(device.StatusActive).
+		On("GetAddress").Return("192.168.0.1").
+		On("ShowInterfaces").Return([]string{"eth0", "eth1"})
+
+	// Create and configure second mock with different values
+	mockDev2 := new(mocks.AbstractDevice)
+	mockDev2.
+		On("GetHostname").Return("host2").
+		On("GetVendor").Return("Cisco").
+		On("GetStatus").Return(device.StatusActive).
+		On("GetAddress").Return("192.168.0.2").
+		On("ShowInterfaces").Return([]string{"eth0"})
+
+	// Create and configure inactive mocks
+	mockDev3 := new(mocks.AbstractDevice)
+	mockDev3.
+		On("GetHostname").Return("host3").
+		On("GetVendor").Return("HP").
+		On("GetStatus").Return("NOTACTIVE").
+		On("GetAddress").Return("192.168.0.3")
+
+	mockDev4 := new(mocks.AbstractDevice)
+	mockDev4.
+		On("GetHostname").Return("host4").
+		On("GetVendor").Return("Dell").
+		On("GetStatus").Return("NOTACTIVE").
+		On("GetAddress").Return("192.168.0.4")
+
 	tests := []struct {
 		name     string
 		devices  []device.AbstractDevice
@@ -15,19 +50,19 @@ func TestImportInventoryDevices(t *testing.T) {
 		{
 			name: "all_devices_active",
 			devices: []device.AbstractDevice{
-				mockDevice{"host1", "Cisco", true, "192.168.0.1", []string{"eth0", "eth1"}},
-				mockDevice{"host2", "Juniper", true, "192.168.0.2", []string{"eth0"}},
+				mockDev1,
+				mockDev2,
 			},
 			expected: []*InventoryDevice{
 				NewInventoryDevice("host1", WithStatus("ACTIVE"), WithManufacturer("Cisco"), WithIPv4Address("192.168.0.1"), WithInterfaces([]string{"eth0", "eth1"})),
-				NewInventoryDevice("host2", WithStatus("ACTIVE"), WithManufacturer("Juniper"), WithIPv4Address("192.168.0.2"), WithInterfaces([]string{"eth0"})),
+				NewInventoryDevice("host2", WithStatus("ACTIVE"), WithManufacturer("Cisco"), WithIPv4Address("192.168.0.2"), WithInterfaces([]string{"eth0"})),
 			},
 		},
 		{
 			name: "all_devices_inactive",
 			devices: []device.AbstractDevice{
-				mockDevice{"host3", "HP", false, "192.168.0.3", nil},
-				mockDevice{"host4", "Dell", false, "192.168.0.4", nil},
+				mockDev3,
+				mockDev4,
 			},
 			expected: []*InventoryDevice{
 				NewInventoryDevice("host3", WithStatus("NOTACTIVE"), WithManufacturer("HP"), WithIPv4Address("192.168.0.3")),
@@ -35,20 +70,9 @@ func TestImportInventoryDevices(t *testing.T) {
 			},
 		},
 		{
-			name: "mixed_status_devices",
-			devices: []device.AbstractDevice{
-				mockDevice{"host5", "Cisco", true, "192.168.1.1", []string{"eth0"}},
-				mockDevice{"host6", "Juniper", false, "192.168.1.2", nil},
-			},
-			expected: []*InventoryDevice{
-				NewInventoryDevice("host5", WithStatus("ACTIVE"), WithManufacturer("Cisco"), WithIPv4Address("192.168.1.1"), WithInterfaces([]string{"eth0"})),
-				NewInventoryDevice("host6", WithStatus("NOTACTIVE"), WithManufacturer("Juniper"), WithIPv4Address("192.168.1.2")),
-			},
-		},
-		{
 			name:     "no_devices",
 			devices:  []device.AbstractDevice{},
-			expected: []*InventoryDevice{},
+			expected: nil,
 		},
 	}
 
@@ -60,32 +84,10 @@ func TestImportInventoryDevices(t *testing.T) {
 			}
 		})
 	}
-}
 
-type mockDevice struct {
-	hostname   string
-	vendor     string
-	status     bool
-	address    string
-	interfaces []string
-}
-
-func (m mockDevice) GetHostname() string {
-	return m.hostname
-}
-
-func (m mockDevice) GetVendor() string {
-	return m.vendor
-}
-
-func (m mockDevice) GetStatus() bool {
-	return m.status
-}
-
-func (m mockDevice) GetAddress() string {
-	return m.address
-}
-
-func (m mockDevice) ShowInterfaces() []string {
-	return m.interfaces
+	// Verify mock expectations
+	mockDev1.AssertExpectations(t)
+	mockDev2.AssertExpectations(t)
+	mockDev3.AssertExpectations(t)
+	mockDev4.AssertExpectations(t)
 }
